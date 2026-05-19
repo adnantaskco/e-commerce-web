@@ -21,9 +21,9 @@ const socialIcons = [
 ];
 
   return (
-    <footer className="bg-[#1E1E1E] text-white">
+  <footer className="bg-secondary text-white">
       {/* TOP SECTION */}
-      <div className="container mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+      <div className=" mx-auto px-6 md:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
         
         {/* STORE INFO */}
         <div>
@@ -48,10 +48,10 @@ const socialIcons = [
         </div>
 
         {/* FIND PRODUCT */}
-        <div className="pl-28">
+        <div className="md:pl-28">
           <h2 className="text-xl font-bold mb-3">Find Product</h2>
 
-          <div className="w-16 h-[2px] bg-[#E38B75] mb-6"></div>
+          <div className="w-16 h-[2px] bg-primary mb-6"></div>
 
           <ul className="space-y-2 text-md">
             <li>Prices drop</li>

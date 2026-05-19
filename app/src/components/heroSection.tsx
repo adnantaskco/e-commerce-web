@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import bg from "../components/image/img.png";
-import img from "../components/image/img2.png";
+import img from "../components/image/12173.jpg";
 import Image from "next/image";
 
 const slides = [
@@ -51,7 +51,7 @@ export default function HeroCarousel() {
               
             ) : (
               <Image
-                src={slide.img}
+                src={img}
                 alt="slide"
                 className="w-full h-full object-cover rounded-xl z-10"
               />

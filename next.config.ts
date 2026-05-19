@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["azseller.s3.amazonaws.com"],
+    domains: [
+      "azseller.s3.amazonaws.com",
+      "upload.wikimedia.org",
+    ],
   },
 };
 

@@ -18,7 +18,7 @@ function DiscountBanners2() {
          
 
           <div className="relative z-10 p-6">
-            <p className="text-md bg-primary font-semibold uppercase tracking-widest text-secondary">
+            <p className="text-md bg-primary w-fit p-2 rounded-4xl font-semibold uppercase tracking-widest text-secondary">
               FLAT 25% OFF
             </p>
             <h2 className="text-2xl md:text-4xl text-black font-bold mt-2">
@@ -34,7 +34,7 @@ function DiscountBanners2() {
 
         {/* Banner 2 */}
         <div
-          className="relative h-[280px] flex items-center text-white rounded-xl overflow-hidden"
+          className="relative  flex items-center text-white rounded-xl overflow-hidden"
           style={{
             backgroundImage:
               "url('https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-2.jpg')",
@@ -45,7 +45,7 @@ function DiscountBanners2() {
           
 
           <div className="relative z-10 p-6">
-            <p className="text-md font-semibold uppercase tracking-widest text-secondary">
+            <p className="text-md w-fit p-2 bg-primary rounded-4xl font-semibold uppercase tracking-widest text-secondary">
                FLAT 25% OFF
             </p>
             <h2 className="text-2xl md:text-4xl text-black font-bold mt-2">
@@ -61,7 +61,7 @@ function DiscountBanners2() {
 
         {/* banner 3 */}
         <div
-          className="relative h-[280px] flex items-center text-white rounded-xl overflow-hidden"
+          className="relative  flex items-center text-white rounded-xl overflow-hidden"
           style={{
             backgroundImage:
               "url('https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-3.jpg')",
@@ -72,7 +72,7 @@ function DiscountBanners2() {
           
 
           <div className="relative z-10 p-6">
-            <p className="text-md font-semibold uppercase tracking-widest text-secondary">
+            <p className="text-md w-fit p-2 rounded-4xl bg-primary font-semibold uppercase tracking-widest text-secondary">
                  FLAT 35% OFF
             </p>
             <h2 className="text-2xl md:text-4xl text-black font-bold mt-2">

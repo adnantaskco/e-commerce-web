@@ -25,6 +25,7 @@ export default function HeroCarousel() {
         <>
         {/* hero section  */}
             <div
+            id="top"
             className="w-full  overflow-hidden relative bg-cover bg-center rounded-xl"
            
           >

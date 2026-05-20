@@ -1,64 +1,70 @@
 import React from "react";
 
 function DiscountBanners() {
+  const banners = [
+    {
+      id: 1,
+      image:
+        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/sub-banner-1.jpg",
+      discount: "Flat 25% Off",
+      title: "Nike Air Force",
+      subtitle: "Men's Shoes",
+    },
+    {
+      id: 2,
+      image:
+        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/sub-banner-2.jpg",
+      discount: "Flat 30% Off",
+      title: "Trendy Analog",
+      subtitle: "Women Watch",
+    },
+  ];
+
   return (
-    <section className="py-10 ">
-      <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        {/* Banner 1 */}
-        <div
-          className="relative  flex items-center text-white rounded-xl overflow-hidden"
-          style={{
-            backgroundImage:
-              "url('https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/sub-banner-1.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-         
-
-          <div className="relative z-10 p-6">
-            <p className="text-md font-semibold uppercase tracking-widest text-secondary">
-              Flat 25% Off
-            </p>
-            <h2 className="text-2xl md:text-4xl text-black font-bold mt-2">
-              Nike Air Force
-            </h2>
-            <p className="text-secondary text-2xl md:text-3xl">Men's Shoes</p>
-
-            <button className="mt-4 px-5 py-2 bg-primary hover:bg-white hover:text-black transition rounded-md font-semibold">
-              Shop Now
-            </button>
-          </div>
-        </div>
-
-        {/* Banner 2 */}
-        <div
-          className="relative h-[280px] flex items-center text-white rounded-xl overflow-hidden"
-          style={{
-            backgroundImage:
-              "url('https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/sub-banner-2.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
+    <section className="py-8 md:py-12">
+      <div className="container mx-auto px-4 sm:px-6">
+        
+        {/* Responsive Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
           
+          {banners.map((banner) => (
+            <div
+              key={banner.id}
+              className="relative min-h-[260px] sm:min-h-[320px] lg:min-h-[360px] flex items-center rounded-2xl overflow-hidden group"
+              style={{
+                backgroundImage: `url(${banner.image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition duration-300"></div>
 
-          <div className="relative z-10 p-6">
-            <p className="text-md font-semibold uppercase tracking-widest text-secondary">
-               Flat 30% Off
-            </p>
-            <h2 className="text-2xl md:text-4xl text-black font-bold mt-2">
-             Trendy Analog
-            </h2>
-            <p className="text-secondary text-2xl md:text-3xl">Women Watch</p>
+              {/* Content */}
+              <div className="relative z-10 p-5 sm:p-7">
+                
+                <p className="text-sm sm:text-base font-semibold uppercase tracking-widest text-secondary">
+                  {banner.discount}
+                </p>
 
-            <button className="mt-4 px-5 py-2 bg-primary hover:bg-white hover:text-black transition rounded-md font-semibold">
-              Shop Now
-            </button>
-          </div>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl text-black font-bold mt-2 leading-tight">
+                  {banner.title}
+                </h2>
+
+                <p className="text-xl sm:text-2xl lg:text-3xl text-secondary mt-1">
+                  {banner.subtitle}
+                </p>
+
+                <button className="mt-5 px-5 py-2 bg-primary hover:bg-white hover:text-black transition duration-300 rounded-md font-semibold text-sm sm:text-base">
+                  Shop Now
+                </button>
+
+              </div>
+            </div>
+          ))}
+
         </div>
-
       </div>
     </section>
   );

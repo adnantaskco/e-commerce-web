@@ -1,91 +1,76 @@
 import React from "react";
 
 function DiscountBanners2() {
+  const banners = [
+    {
+      id: 1,
+      image:
+        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-1.jpg",
+      discount: "FLAT 25% OFF",
+      title: "Model Fashion",
+      subtitle: "Influencer",
+    },
+    {
+      id: 2,
+      image:
+        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-2.jpg",
+      discount: "FLAT 25% OFF",
+      title: "Feminine Pink",
+      subtitle: "Clothes",
+    },
+    {
+      id: 3,
+      image:
+        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-3.jpg",
+      discount: "FLAT 35% OFF",
+      title: "Men's Stylish",
+      subtitle: "Half T-Shirt",
+    },
+  ];
+
   return (
-    <section className="py-10 ">
-      <div className="container mx-auto px-6 grid grid-cols-2 md:grid-cols-3 gap-6">
-
-        {/* Banner 1 */}
-        <div
-          className="relative  flex items-center text-white rounded-xl overflow-hidden"
-          style={{
-            backgroundImage:
-              "url('https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-1.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-         
-
-          <div className="relative z-10 p-6">
-            <p className="text-md bg-primary w-fit p-2 rounded-4xl font-semibold uppercase tracking-widest text-secondary">
-              FLAT 25% OFF
-            </p>
-            <h2 className="text-2xl md:text-4xl text-black font-bold mt-2">
-              Model Fashion
-            </h2>
-            <p className="text-secondary text-2xl md:text-3xl">Influencer</p>
-
-            <button className="mt-4 px-5 py-2  underline text-black transition rounded-md font-semibold">
-              Shop Now
-            </button>
-          </div>
-        </div>
-
-        {/* Banner 2 */}
-        <div
-          className="relative  flex items-center text-white rounded-xl overflow-hidden"
-          style={{
-            backgroundImage:
-              "url('https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-2.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
+    <section className="py-8 md:py-12">
+      <div className="container mx-auto px-4 sm:px-6">
+        
+        {/* Responsive Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           
+          {banners.map((banner) => (
+            <div
+              key={banner.id}
+              className="relative min-h-[280px] sm:min-h-[320px] lg:min-h-[360px] flex items-center rounded-2xl overflow-hidden group"
+              style={{
+                backgroundImage: `url(${banner.image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition duration-300"></div>
 
-          <div className="relative z-10 p-6">
-            <p className="text-md w-fit p-2 bg-primary rounded-4xl font-semibold uppercase tracking-widest text-secondary">
-               FLAT 25% OFF
-            </p>
-            <h2 className="text-2xl md:text-4xl text-black font-bold mt-2">
-             Feminine Pink
-            </h2>
-            <p className="text-secondary text-2xl md:text-3xl">Clothes</p>
+              {/* Content */}
+              <div className="relative z-10 p-5 sm:p-7">
+                <p className="text-xs sm:text-sm md:text-base bg-primary text-secondary w-fit px-4 py-2 rounded-full font-semibold uppercase tracking-wider">
+                  {banner.discount}
+                </p>
 
-            <button className="mt-4 px-5 py-2 underline text-black transition rounded-md font-semibold">
-              Shop Now
-            </button>
-          </div>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl text-black font-bold mt-3 leading-tight">
+                  {banner.title}
+                </h2>
+
+                <p className="text-secondary text-xl sm:text-2xl lg:text-3xl mt-1">
+                  {banner.subtitle}
+                </p>
+
+                <button className="mt-5 underline text-black font-semibold hover:translate-x-1 transition duration-300">
+                  Shop Now
+                </button>
+              </div>
+            </div>
+          ))}
+
         </div>
-
-        {/* banner 3 */}
-        <div
-          className="relative  flex items-center text-white rounded-xl overflow-hidden"
-          style={{
-            backgroundImage:
-              "url('https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-3.jpg')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          
-
-          <div className="relative z-10 p-6">
-            <p className="text-md w-fit p-2 rounded-4xl bg-primary font-semibold uppercase tracking-widest text-secondary">
-                 FLAT 35% OFF
-            </p>
-            <h2 className="text-2xl md:text-4xl text-black font-bold mt-2">
-             Men's Stylish
-            </h2>
-            <p className="text-secondary text-2xl md:text-3xl">Half T-Shirt</p>
-
-            <button className="mt-4 px-5 py-2 underline  text-black transition rounded-md font-semibold">
-              Shop Now
-            </button>
-          </div>
-        </div>
-
       </div>
     </section>
   );

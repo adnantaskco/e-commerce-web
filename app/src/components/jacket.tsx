@@ -143,7 +143,7 @@ const ProductCard1 = () => {
      <section className="py-5 px-4">
     
           {/* X-axis Scroll Container */}
-          <div className="mx-auto flex gap-8 overflow-x-auto overflow-y-hidden pb-4 scroll-smooth">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
     
             {products.map((product) => (
               <div
@@ -152,7 +152,7 @@ const ProductCard1 = () => {
               >
     
                 {/* Image Section */}
-                <div className="relative bg-[#f5f5f5] overflow-hidden">
+                <div className="relative bg-white overflow-hidden">
     
                   {/* Discount */}
                   {product.hasOffer && (
@@ -193,16 +193,16 @@ const ProductCard1 = () => {
                   </h2>
     
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center text-yellow-400 gap-1">
-                      {[...Array(product.rating)].map((_, i) => (
-                        <FaStar key={i} />
-                      ))}
+                      <div className="flex items-center text-yellow-400 gap-1">
+                        {[...Array(Math.floor(product.rating))].map((_, index) => (
+                          <FaStar key={index} />
+                        ))}
+
+                        <span className="text-black ml-1">
+                         ( {product.rating})
+                        </span>
+                      </div>
                     </div>
-    
-                    <span className="text-lg text-gray-600">
-                      ({product.reviews})
-                    </span>
-                  </div>
     
                   <div className="flex items-center gap-3">
                     {product.oldPrice && (

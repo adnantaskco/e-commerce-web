@@ -165,3 +165,13 @@ input[type='number'] {
     @apply bg-background text-foreground;
   }
 }
+
+/* hide scrollbar completely */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -22,12 +22,10 @@ export function TabsDemo() {
     <section >
         <div className="text-center pt-20">
             <h1 className="text-4xl font-semibold">Trending Products</h1>
-
             <div className="flex justify-center mt-4">
                 <div className="border-t-4 border-primary w-60"></div>
             </div>
             </div>
-
         <div className="w-full flex justify-center px-4 sm:px-6 py-10">
             <Tabs defaultValue="overview" className="w-full max-w-8xl">
 

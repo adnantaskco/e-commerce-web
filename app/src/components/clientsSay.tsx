@@ -62,7 +62,7 @@ const TestimonialSection = () => {
 
           {/* Title */}
           <div>
-            <h2 className="text-4xl md:text-5xl font-semibold text-[#1d1d1d]">
+            <h2 className="text-4xl md:text-5xl font-semibold text-secondary">
               What Our Client Say:
             </h2>
 

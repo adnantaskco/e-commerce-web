@@ -9,6 +9,8 @@ import Services from "./src/components/services";
 import Navbar2 from "./src/components/navbar2";
 import TestimonialSection from "./src/components/clientsSay";
 import { TabsDemo } from "./src/components/TabProduct";
+import BrandLogo from "./src/components/BrandLogo";
+import ProductGrid from "./src/components/deal";
 
 
 
@@ -21,10 +23,11 @@ export default function Home() {
     <Services/>
     <TabsDemo/>
     <DiscountBanners/>
+    <ProductGrid/>
     <DiscountBanners2/>
     <TestimonialSection></TestimonialSection>
     <GallerySlider/>
-    
+    <BrandLogo></BrandLogo>
     <Footer></Footer>
     
     </>

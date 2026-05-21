@@ -2,6 +2,8 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { TiShoppingCart } from "react-icons/ti";
 import { FaHeart, FaBars, FaXmark } from "react-icons/fa6";
+import { CiSearch } from "react-icons/ci";
+import { FcManager } from "react-icons/fc";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -24,7 +26,7 @@ function Navbar2() {
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Adnan_Safee.png"
               alt="logo"
-              width={50}
+              width={100}
               height={50}
               className="rounded-full"
             />
@@ -32,13 +34,67 @@ function Navbar2() {
 
           {/* DESKTOP MENU (UNCHANGED) */}
           <div className="hidden md:flex items-center gap-4">
+            <a className="font-semibold" href="#">Home</a>
+
+            {/* Shop */}
+            
+        <NavigationMenu>
+  <NavigationMenuList>
+    {/* Shop Menu */}
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Shop</NavigationMenuTrigger>
+            <NavigationMenuContent className="p-4 min-w-[260px] grid gap-2">
+              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                Men’s Fashion
+              </NavigationMenuLink>
+              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                Women’s Collection
+              </NavigationMenuLink>
+              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                Kids Wear
+              </NavigationMenuLink>
+              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                Winter Collection
+              </NavigationMenuLink>
+              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                New Arrivals
+              </NavigationMenuLink>
+              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                Best Sellers
+              </NavigationMenuLink>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+
+    {/* Cloth Showroom Menu */}
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Cloth Showroom</NavigationMenuTrigger>
+              <NavigationMenuContent className="p-4 min-w-64 grid gap-2">
+                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                  Casual Shirts Showroom
+                </NavigationMenuLink>
+                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                  Luxury Panjabi Gallery
+                </NavigationMenuLink>
+                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                  Saree & Boutique Corner
+                </NavigationMenuLink>
+                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                  Denim & Jeans Zone
+                </NavigationMenuLink>
+                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                  Hoodie & Jacket Studio
+                </NavigationMenuLink>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
 
             {/* Products */}
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger>Products</NavigationMenuTrigger>
-                  <NavigationMenuContent className="p-3 min-w-[200px] flex flex-col gap-2">
+                  <NavigationMenuTrigger className="flex gap-2">Catagories <span  className="bg-primary px-2 rounded-md" > Sale</span></NavigationMenuTrigger>
+                  <NavigationMenuContent className="p-3 min-w- flex flex-col gap-2">
                     <NavigationMenuLink>Classic Cotton Shirt</NavigationMenuLink>
                     <NavigationMenuLink>Premium Denim Jeans</NavigationMenuLink>
                     <NavigationMenuLink>Silk Kurti Collection</NavigationMenuLink>
@@ -54,7 +110,7 @@ function Navbar2() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Brand</NavigationMenuTrigger>
-                  <NavigationMenuContent className="p-3 min-w-[200px] flex flex-col gap-2">
+                  <NavigationMenuContent className="p-3 min-w-50 flex flex-col gap-2">
                     <NavigationMenuLink>Zara Style</NavigationMenuLink>
                     <NavigationMenuLink>H&M Fashion</NavigationMenuLink>
                     <NavigationMenuLink>Levi’s Denim</NavigationMenuLink>
@@ -70,7 +126,7 @@ function Navbar2() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Hot List</NavigationMenuTrigger>
-                  <NavigationMenuContent className="p-3 min-w-[200px] flex flex-col gap-2">
+                  <NavigationMenuContent className="p-3 min-w-50 flex flex-col gap-2">
                     <NavigationMenuLink>🔥 Trending Hoodies</NavigationMenuLink>
                     <NavigationMenuLink>🔥 Best Selling Jeans</NavigationMenuLink>
                     <NavigationMenuLink>🔥 New Arrival Shirts</NavigationMenuLink>
@@ -85,15 +141,28 @@ function Navbar2() {
           </div>
 
           {/* RIGHT ICONS */}
-          <div className="flex items-center gap-3 text-xl">
+          <div className="flex items-center gap-5 text-xl cursor-pointer">
 
-            <span className="flex items-center gap-1">
-              <TiShoppingCart /> (0)
-            </span>
+            <span><CiSearch/></span>
 
-            <span className="flex items-center gap-1">
-              <FaHeart /> Wishlist
+           <span><FcManager/></span>
+
+           <p className="flex items-center gap-2 text-sm font-semibold">
+            
+            {/* Cart Icon */}
+            <span className="relative text-2xl">
+              <TiShoppingCart />
+
+              {/* Cart Count */}
+              <span className="absolute -top-2 -right-3 bg-primary text-[10px] w-5 h-5 rounded-full flex items-center justify-center gap-2">
+                0
+              </span>
             </span>
+              <span className="hidden md:block">  My Cart</span>
+            
+          </p>
+
+            
 
             {/* MOBILE MENU BUTTON */}
             <button

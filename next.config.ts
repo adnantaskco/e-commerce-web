@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     domains: [
       "azseller.s3.amazonaws.com",
       "upload.wikimedia.org",
+       "prestashop.codezeel.com",
     ],
   },
 };

@@ -137,12 +137,10 @@ const products: Product[] = [
 
 export default function ProductSlider() {
   const [hovered, setHovered] = useState<number | null>(null);
-
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: "left" | "right") => {
     const container = sliderRef.current;
-
     if (!container) return;
 
     const scrollAmount = 350;
@@ -155,6 +153,7 @@ export default function ProductSlider() {
 
   return (
     <section className="w-full px-4 sm:px-6 lg:px-10 py-16 bg-[#fafafa] relative overflow-hidden">
+
       {/* TITLE */}
       <div className="text-center mb-14">
         <p className="text-primary uppercase tracking-[4px] text-sm font-semibold">
@@ -170,30 +169,18 @@ export default function ProductSlider() {
         </div>
       </div>
 
-      {/* LEFT BUTTON */}
+      {/* LEFT */}
       <button
         onClick={() => scroll("left")}
-        className="
-          absolute left-2 top-1/2 -translate-y-1/2 z-20
-          w-12 h-12 rounded-full bg-white shadow-xl
-          flex items-center justify-center
-          hover:bg-primary hover:text-white
-          duration-300
-        "
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center hover:bg-primary hover:text-white duration-300"
       >
         <ChevronLeft size={24} />
       </button>
 
-      {/* RIGHT BUTTON */}
+      {/* RIGHT */}
       <button
         onClick={() => scroll("right")}
-        className="
-          absolute right-2 top-1/2 -translate-y-1/2 z-20
-          w-12 h-12 rounded-full bg-white shadow-xl
-          flex items-center justify-center
-          hover:bg-primary hover:text-white
-          duration-300
-        "
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center hover:bg-primary hover:text-white duration-300"
       >
         <ChevronRight size={24} />
       </button>
@@ -201,10 +188,7 @@ export default function ProductSlider() {
       {/* SLIDER */}
       <div
         ref={sliderRef}
-        className="
-          flex gap-6 overflow-x-auto scroll-smooth
-          no-scrollbar pb-5
-        "
+        className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-5"
       >
         {products.map((product) => {
           const isHover = hovered === product.id;
@@ -214,113 +198,89 @@ export default function ProductSlider() {
               key={product.id}
               onMouseEnter={() => setHovered(product.id)}
               onMouseLeave={() => setHovered(null)}
-              className="
-                min-w-[260px]
-                sm:min-w-[280px]
-                lg:min-w-[300px]
-                bg-white rounded-3xl overflow-hidden
-                border border-gray-100
-                hover:shadow-2xl
-                transition-all duration-500
-                hover:-translate-y-2
-                flex-shrink-0
-                group
-              "
+              className="min-w-[260px] sm:min-w-[280px] lg:min-w-[300px] bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 flex-shrink-0 group"
             >
+
               {/* IMAGE */}
-              <div className="relative bg-[#f8f8f8] overflow-hidden">
-                <div className="relative w-full h-[300px]">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="
-                      object-cover
-                      transition-transform duration-700
-                      group-hover:scale-110
-                    "
-                  />
-                </div>
+              <div className="relative bg-gray-100 h-[300px] flex items-center justify-center">
+
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  width={260}
+                  height={300}
+                  className="object-contain"
+                />
 
                 {/* DISCOUNT */}
-                <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-lg">
+                <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-md">
                   {product.discount}%
                 </div>
 
                 {/* TIMER */}
                 <div
-                  className={`
-                    absolute bottom-4 left-1/2 -translate-x-1/2
-                    transition-all duration-300
-                    ${
-                      isHover
-                        ? "opacity-0 translate-y-5"
-                        : "opacity-100 translate-y-0"
-                    }
-                  `}
+                  className={`absolute bottom-4 left-1/2 -translate-x-1/2 transition-all duration-300 ${
+                    isHover ? "opacity-0 translate-y-5" : "opacity-100 translate-y-0"
+                  }`}
                 >
-                  <div className=" backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
+                  <div className="backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
                     <Timer1 />
                   </div>
                 </div>
 
                 {/* ICONS */}
                 <div
-                  className={`
-                    absolute top-5 right-4 flex flex-col gap-3
-                    transition-all duration-500
-                    ${
-                      isHover
-                        ? "translate-x-0 opacity-100"
-                        : "translate-x-14 opacity-0"
-                    }
-                  `}
+                  className={`absolute top-5 right-4 flex flex-col gap-3 transition-all duration-500 ${
+                    isHover ? "translate-x-0 opacity-100" : "translate-x-14 opacity-0"
+                  }`}
                 >
-                  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition duration-300">
+                  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white">
                     <FaHeart />
                   </button>
 
-                  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition duration-300">
+                  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white">
                     <FaShoppingCart />
                   </button>
 
-                  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition duration-300">
+                  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white">
                     <FaEye />
                   </button>
                 </div>
               </div>
 
-              {/* CONTENT */}
-              <div className="p-5">
-                {/* STARS */}
-                <div className="flex items-center gap-1 text-yellow-400 text-sm">
-                  {[...Array(product.rating)].map((_, i) => (
-                    <FaStar key={i} />
-                  ))}
-
-                  <span className="text-gray-500 text-xs ml-2">
-                    ({product.rating}.0)
-                  </span>
-                </div>
+              {/* CONTENT (EcoShop STYLE) */}
+              <div className="p-4">
 
                 {/* NAME */}
-                <h2 className="text-[16px] font-semibold mt-3 leading-7 text-gray-800 line-clamp-2 hover:text-primary transition duration-300 cursor-pointer min-h-[56px]">
+                <p className="text-sm text-gray-500">EcoShop</p>
+
+                <h2 className="text-base font-semibold text-gray-800 mt-1">
                   {product.name}
                 </h2>
 
-                {/* PRICE */}
-                <div className="flex items-center gap-3 mt-4">
-                  <span className="text-primary text-2xl font-bold">
-                    ${product.price}
-                  </span>
-
-                  <span className="line-through text-gray-400 text-lg">
-                    ${product.oldPrice}
+                {/* STARS */}
+                <div className="flex items-center gap-1 mt-2 text-yellow-400 text-sm">
+                  {[...Array(product.rating)].map((_, i) => (
+                    <FaStar key={i} />
+                  ))}
+                  <span className="text-gray-500 text-xs ml-1">
+                    ({product.rating})
                   </span>
                 </div>
 
-               
+                {/* PRICE */}
+                <div className="flex items-center gap-3 mt-3">
+                  <span className="text-gray-400 line-through text-sm">
+                    ${product.oldPrice}
+                  </span>
+
+                  <span className="text-red-500 font-bold text-lg">
+                    ${product.price}
+                  </span>
+                </div>
+
               </div>
+
             </div>
           );
         })}

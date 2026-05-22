@@ -140,7 +140,7 @@ const Sheos = () => {
     <section className="py-5 px-4">
 
       {/* X-axis Scroll Container */}
-      <div className="mx-auto flex gap-8 overflow-x-auto overflow-y-hidden pb-4 scroll-smooth">
+      <div className="mx-auto max-w-8xl flex gap-8 overflow-x-auto overflow-y-hidden pb-4 scroll-smooth">
 
         {products.map((product) => (
           <div

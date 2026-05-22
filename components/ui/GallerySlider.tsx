@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 function GallerySlider() {
   const gallery = [
@@ -41,86 +42,94 @@ function GallerySlider() {
 
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
-  const scrollAmount = 300;
+  const scrollAmount = 320;
 
-  const next = () => {
-    sliderRef.current?.scrollBy({
-      left: scrollAmount,
-      behavior: "smooth",
-    });
-  };
+  const scroll = (direction: "left" | "right") => {
+    const container = sliderRef.current;
+    if (!container) return;
 
-  const prev = () => {
-    sliderRef.current?.scrollBy({
-      left: -scrollAmount,
+    container.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
       behavior: "smooth",
     });
   };
 
   return (
     <section className="py-10 relative">
-      <div className="container  mx-auto px-4 sm:px-6 md:px-20">
+      <div className="container mx-auto px-4 sm:px-6 md:px-20">
 
-        {/* Title */}
+        {/* TITLE */}
         <div className="text-center py-5">
-          <h1 className="text-4xl font-bold">Gallery</h1>
-          <p>You Can Explore Ourself</p>
+          <h1 className="text-4xl sm:text-5xl font-bold">Gallery</h1>
+          <p className="text-lg py-3 font-semibold">
+            You Can Explore Ourself
+          </p>
         </div>
 
-        {/* Prev Button */}
-        <button
-          onClick={prev}
-          className="
-            absolute z-10 bg-black/60 text-white px-3 py-2 rounded-full
-            left-2 sm:left-4 top-[55%] sm:top-1/2 -translate-y-1/2
-          "
-        >
-          ❮
-        </button>
+        {/* SLIDER WRAPPER */}
+        <div className="relative">
 
-        {/* Next Button */}
-        <button
-          onClick={next}
-          className="
-            absolute z-10 bg-black/60 text-white px-3 py-2 rounded-full
-            right-2 sm:right-4 top-[55%] sm:top-1/2 -translate-y-1/2
-          "
-        >
-          ❯
-        </button>
+          {/* LEFT BUTTON */}
+          <button
+            onClick={() => scroll("left")}
+            className="
+              absolute left-2 top-1/2 -translate-y-1/2 z-20
+              w-12 h-12 rounded-full bg-white shadow-xl
+              flex items-center justify-center
+              hover:bg-black hover:text-white
+              transition
+            "
+          >
+            <ChevronLeft size={24} />
+          </button>
 
-        {/* Slider */}
-        <div
-          ref={sliderRef}
-          className="
-            flex gap-4 sm:gap-6
-            overflow-x-auto scroll-smooth scrollbar-hide
-            px-1 sm:px-0
-          "
-        >
-          {gallery.map((item) => (
-            <div
-              key={item.id}
-              className="
-                min-w-3xl sm:min-w-[280px]
-                rounded-xl overflow-hidden shadow-lg flex-shrink-0
-              "
-            >
-              <img
-                src={item.image}
-                alt="blog"
-                className="h-[160px] sm:h-[180px] w-full object-cover"
-              />
+          {/* RIGHT BUTTON */}
+          <button
+            onClick={() => scroll("right")}
+            className="
+              absolute right-2 top-1/2 -translate-y-1/2 z-20
+              w-12 h-12 rounded-full bg-white shadow-xl
+              flex items-center justify-center
+              hover:bg-black hover:text-white
+              transition
+            "
+          >
+            <ChevronRight size={24} />
+          </button>
 
-              <div className="p-3 sm:p-4">
-                <p className="text-sm font-medium leading-relaxed whitespace-normal">
-                  {item.disception}
-                </p>
+          {/* SLIDER */}
+          <div
+            ref={sliderRef}
+            className="
+              flex gap-6 overflow-x-auto scroll-smooth no-scrollbar
+              px-10
+            "
+          >
+            {gallery.map((item) => (
+              <div
+                key={item.id}
+                className="
+                  min-w-70
+                  rounded-xl overflow-hidden shadow-lg flex-shrink-0
+                  bg-white
+                "
+              >
+                <img
+                  src={item.image}
+                  alt="blog"
+                  className="h-[180px] w-full object-cover"
+                />
+
+                <div className="p-4">
+                  <p className="text-sm font-medium leading-relaxed">
+                    {item.disception}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
+        </div>
       </div>
     </section>
   );

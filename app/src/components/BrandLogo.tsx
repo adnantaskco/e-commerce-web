@@ -23,7 +23,7 @@ const brands = [
 function BrandLogo() {
   return (
     <section className="py-10 overflow-hidden">
-      <div className="mx-auto overflow-x-auto scrollbar-hide">
+      <div className="mx-auto overflow-x-auto no-scrollbar">
         
         <div className="flex gap-10 w-max items-center cursor-grab px-4">
           {brands.map((brand, index) => (

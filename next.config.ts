@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       "azseller.s3.amazonaws.com",
       "upload.wikimedia.org",
        "prestashop.codezeel.com",
+       "i.ibb.co",
     ],
   },
 };

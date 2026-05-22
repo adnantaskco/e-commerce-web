@@ -30,7 +30,7 @@ function DiscountBanners() {
           {banners.map((banner) => (
             <div
               key={banner.id}
-              className="relative min-h-[260px] sm:min-h-[320px] lg:min-h-[360px] flex items-center rounded-2xl overflow-hidden group"
+              className="relative min-h-64 sm:min-h-80 lg:min-h-90 flex items-center rounded-2xl  transition-transform duration-700 overflow-hidden group"
               style={{
                 backgroundImage: `url(${banner.image})`,
                 backgroundSize: "cover",

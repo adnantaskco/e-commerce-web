@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import bg from "../components/image/img.png";
-import img from "../components/image/12173.jpg";
+import bg from "../components/image/lj.png";
+import img from "../components/image/3609477xg.png";
 import Image from "next/image";
 
 const slides = [

@@ -62,15 +62,15 @@ const TestimonialSection = () => {
 
           {/* Title */}
           <div>
-            <h2 className="text-4xl md:text-5xl font-semibold text-secondary">
+            <h2 className="text-4xl md:text-6xl font-semibold text-secondary">
               What Our Client Say:
             </h2>
 
-            <div className="w-32 h-[2px] bg-[#d78b7d] mt-5"></div>
+            <div className="w-32 h-[2px] bg-primary mt-5"></div>
           </div>
 
           {/* Quote */}
-          <FaQuoteLeft className="text-7xl text-[#d78b7d]" />
+          <FaQuoteLeft className="text-7xl text-primary" />
 
           {/* Dynamic Content */}
           <p className="text-gray-500 leading-10 text-lg">

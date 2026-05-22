@@ -269,84 +269,85 @@ const products: Product[] = [
 
 const ProductCard1 = () => {
   return (
-    <section className="py-10 px-4">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="group bg-white overflow-hidden rounded-2xl p-5 border border-gray-200 relative"
-          >
-            {/* Image Section */}
-            <div className="relative bg-[#f5f5f5] overflow-hidden rounded-xl">
-              
-              {/* Discount */}
-              {product.hasOffer && (
-                <span className="absolute top-4 left-4 z-20 bg-red-500 text-white px-3 py-1 text-sm font-semibold rounded-md">
-                  -{product.discount}%
-                </span>
-              )}
-
-              {/* Hover Icons */}
-              <div className="absolute top-14 -right-20 group-hover:right-4 transition-all duration-500 z-20 flex flex-col gap-3">
-                <button className="w-11 h-11 bg-white shadow-md flex items-center justify-center rounded-md hover:bg-black hover:text-white transition">
-                  <FaHeart />
-                </button>
-
-                <button className="w-11 h-11 bg-white shadow-md flex items-center justify-center rounded-md hover:bg-black hover:text-white transition">
-                  <FaShoppingCart />
-                </button>
-               
-              </div>
-
-              {/* Product Image */}
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={400}
-                height={500}
-                className="w-full h-[300px] object-cover group-hover:scale-105 transition duration-500"
-              />
-            </div>
-
-            {/* Content */}
-            <div className="pt-5 space-y-2">
-              <p className="text-gray-500 text-sm">{product.brand}</p>
-
-              <h2 className="text-lg font-medium text-secondary hover:text-red-500 transition cursor-pointer line-clamp-2">
-                {product.name}
-              </h2>
-
-              {/* Rating */}
-             <div className="flex items-center gap-2">
-                <div className="flex items-center text-yellow-400 gap-1">
-                  {[...Array(Math.floor(product.rating))].map((_, index) => (
-                    <FaStar key={index} />
-                  ))}
-
-                  <span className="text-black ml-1">
-                    {product.rating}
-                  </span>
+    <section className="py-10 ">
+      <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      
+              {products.map((product) => (
+                <div
+                  key={product.id}
+                  className="group bg-white rounded-xl border relative overflow-hidden"
+                >
+      
+                  {/* IMAGE */}
+                  <div className="relative aspect-[3/4] bg-white overflow-hidden">
+      
+                    {/* DISCOUNT */}
+                    {product.hasOffer && (
+                      <span className="absolute top-3 left-3 z-10 bg-red-500 text-white text-xs px-2 py-1  rounded">
+                        -{product.discount}%
+                      </span>
+                    )}
+      
+                    {/* ICONS (mobile always visible, lg hover slide) */}
+                    <div className="
+                      absolute top-3 right-3 z-20 flex flex-col gap-2
+                      lg:-right-16 lg:top-12 lg:group-hover:right-3
+                      transition-all duration-300
+                    ">
+                      <button className="sm:w-2 sm:h-2 md:w-11 md:h-11 bg-white shadow rounded flex items-center justify-center hover:bg-black hover:text-white">
+                        <FaHeart />
+                      </button>
+      
+                      <button className="sm:w-2 sm:h-2 md:w-11 md:h-11 bg-white shadow rounded flex items-center justify-center hover:bg-black hover:text-white">
+                        <FaShoppingCart />
+                      </button>
+                    </div>
+      
+                    {/* IMAGE */}
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition duration-500"
+                    />
+                  </div>
+      
+                  {/* CONTENT */}
+                  <div className="p-3 space-y-1">
+      
+                    <p className="text-gray-500 text-sm">{product.brand}</p>
+      
+                    <h2 className="text-sm font-medium line-clamp-2 hover:text-red-500 cursor-pointer">
+                      {product.name}
+                    </h2>
+      
+                    {/* RATING */}
+                    <div className="flex items-center text-yellow-400 text-sm gap-1">
+                      {[...Array(Math.floor(product.rating))].map((_, i) => (
+                        <FaStar key={i} />
+                      ))}
+                      <span className="text-black ml-1">({product.rating})</span>
+                    </div>
+      
+                    {/* PRICE */}
+                    <div className="flex items-center gap-2">
+                      {product.oldPrice && (
+                        <span className="text-gray-400 line-through text-xs">
+                          ${product.oldPrice}
+                        </span>
+                      )}
+      
+                      <span className="text-red-500 font-semibold">
+                        ${product.price}
+                      </span>
+                    </div>
+      
+                  </div>
+      
                 </div>
-              </div>
-
-              {/* Price */}
-              <div className="flex items-center gap-3">
-                {product.oldPrice && (
-                  <span className="text-gray-400 line-through text-sm">
-                    ${product.oldPrice.toFixed(2)}
-                  </span>
-                )}
-
-                <span className="text-red-500 font-semibold text-lg">
-                  ${product.price.toFixed(2)}
-                </span>
-              
-              </div>
-                
+              ))}
+      
             </div>
-          </div>
-        ))}
-      </div>
     </section>
   );
 };

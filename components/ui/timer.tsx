@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 function Timer1() {
   // set target date (example: 578 days from now)
   const targetDate = new Date();
-  targetDate.setDate(targetDate.getDate() + 578);
+  targetDate.setDate(targetDate.getDate() + 7);
   targetDate.setHours(targetDate.getHours() + 15);
   targetDate.setMinutes(targetDate.getMinutes() + 51);
   targetDate.setSeconds(targetDate.getSeconds() + 19);

@@ -11,6 +11,8 @@ import TestimonialSection from "./src/components/clientsSay";
 import { TabsDemo } from "./src/components/TabProduct";
 import BrandLogo from "./src/components/BrandLogo";
 import ProductGrid from "./src/components/deal";
+import CategorySection from "./src/components/scrollsection";
+import FeatureProduct from "./src/components/Features";
 
 
 
@@ -23,8 +25,10 @@ export default function Home() {
     <Services/>
     <TabsDemo/>
     <DiscountBanners/>
+    <CategorySection></CategorySection>
     <ProductGrid/>
     <DiscountBanners2/>
+    <FeatureProduct></FeatureProduct>
     <TestimonialSection></TestimonialSection>
     <GallerySlider/>
     <BrandLogo></BrandLogo>

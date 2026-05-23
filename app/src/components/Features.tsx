@@ -165,11 +165,11 @@ export default function FeatureProduct() {
           {/* TITLE */}
           <div className="text-center mb-14">
             <p className="text-primary uppercase tracking-[4px] text-sm font-semibold">
-              Trending Products
+              FEATURES
             </p>
     
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3">
-              Deal Of The Week
+              Feature Products
             </h1>
     
             <div className="flex justify-center mt-5">

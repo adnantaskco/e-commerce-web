@@ -33,7 +33,7 @@ export default function Home() {
     <GallerySlider/>
     <BrandLogo></BrandLogo>
     <Footer></Footer>
-    
+    nd
     </>
   );
 }

@@ -64,11 +64,11 @@ const CategorySection = () => {
       className="relative bg-fixed bg-center bg-cover py-14 sm:py-20 md:py-24 overflow-hidden"
       style={{
         backgroundImage:
-          "url('https://static.vecteezy.com/system/resources/thumbnails/027/055/861/small/asian-girls-holding-sale-shopping-bags-consumerism-lifestyle-concept-in-the-shopping-mall-lady-tourist-walk-shopping-center-with-shopping-bags-photo.jpg')",
+          "url('https://media.istockphoto.com/id/1289003879/photo/beautiful-happy-and-excited-young-girl-friends-with-paper-bags-and-smart-phone-are-walking.jpg?s=612x612&w=0&k=20&c=KbTRuCo2vQ_eh8oyIC08Nf7z2JplnxnuALqehW8pWzc=')",
       }}
     >
       {/* overlay */}
-      <div className="absolute inset-0 bg-black/60"></div>
+      <div className="absolute inset-0 bg-black/40"></div>
 
       <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
         {/* title */}

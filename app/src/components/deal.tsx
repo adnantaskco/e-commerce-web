@@ -136,6 +136,7 @@ const products: Product[] = [
 ];
 
 export default function ProductSlider() {
+  
   const [hovered, setHovered] = useState<number | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -229,33 +230,23 @@ export default function ProductSlider() {
                 </div>
 
                 {/* ICONS */}
-                {/* ICONS */}
-<div
-  className={`
-    absolute top-5 right-4 flex flex-col gap-3 z-10
-    transition-all duration-500
+                <div
+                  className={`absolute top-5 right-4 flex flex-col gap-3 transition-all duration-500 ${
+                    isHover ? "translate-x-0 opacity-100" : "translate-x-14 opacity-0"
+                  }`}
+                >
+                  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white">
+                    <FaHeart />
+                  </button>
 
-    /* MOBILE = ALWAYS SHOW */
-    opacity-100 translate-x-0
+                  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white">
+                    <FaShoppingCart />
+                  </button>
 
-    /* MD & LG = HOVER EFFECT */
-    md:opacity-0 md:translate-x-14
-    md:group-hover:opacity-100
-    md:group-hover:translate-x-0
-  `}
->
-  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
-    <FaHeart />
-  </button>
-
-  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition">
-    <FaShoppingCart />
-  </button>
-
-  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
-    <FaEye />
-  </button>
-</div>
+                  <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white">
+                    <FaEye />
+                  </button>
+                </div>
               </div>
 
               {/* CONTENT (EcoShop STYLE) */}

@@ -17,8 +17,8 @@ function Navbar2() {
   const [open, setOpen] = useState(false);
 
   return (
-    <section className="sticky top-0 z-50 bg-white shadow-md p-4">
-      <div className="container mx-auto px-4 py-3">
+    <section className="sticky top-0 z-50 bg-white shadow-md p-2">
+      <div className=" mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
 
           {/* Logo */}

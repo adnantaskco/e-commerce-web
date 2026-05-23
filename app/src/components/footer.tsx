@@ -22,7 +22,7 @@ const Footer = () => {
   return (
     <footer className="bg-secondary text-white">
       {/* TOP SECTION */}
-      <div className="container mx-auto px-4 sm:px-6 py-12 md:py-16">
+      <div className=" mx-auto px-4 sm:px-6 py-12 md:py-16">
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10">
           

@@ -56,7 +56,7 @@ function GallerySlider() {
 
   return (
     <section className="py-10 relative">
-      <div className="container mx-auto px-4 sm:px-6 md:px-20">
+      <div className=" mx-auto px-4 sm:px-6 md:px-20">
 
         {/* TITLE */}
         <div className="text-center py-5">

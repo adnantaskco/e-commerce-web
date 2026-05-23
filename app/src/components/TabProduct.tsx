@@ -29,7 +29,7 @@ export function TabsDemo() {
         <div className="w-full flex justify-center px-4 sm:px-6 py-10">
             <Tabs defaultValue="overview" className="w-full max-w-8xl">
 
-        {/* ✅ Tabs Header (Responsive scroll on mobile) */}
+        {/*  Tabs Header (Responsive scroll on mobile) */}
         <TabsList
           variant="line"
           className="flex w-full overflow-x-auto sm:overflow-visible justify-start sm:justify-center gap-3 sm:gap-6 px-2 sm:px-0"

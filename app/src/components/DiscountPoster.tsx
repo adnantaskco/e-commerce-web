@@ -22,7 +22,7 @@ function DiscountBanners() {
 
   return (
     <section className="py-8 md:py-12">
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className=" mx-auto px-4 sm:px-6">
         
         {/* Responsive Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">

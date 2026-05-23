@@ -206,7 +206,7 @@ export default function FeatureProduct() {
                   key={product.id}
                   onMouseEnter={() => setHovered(product.id)}
                   onMouseLeave={() => setHovered(null)}
-                  className="min-w-[260px] sm:min-w-[280px] lg:min-w-[300px] bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 flex-shrink-0 group"
+                  className="min-w-[260px] sm:min-w-70 lg:min-w-75 bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 flex-shrink-0 group"
                 >
     
                   {/* IMAGE */}
@@ -239,24 +239,34 @@ export default function FeatureProduct() {
                     )}
     
                     {/* ICONS */}
+                    {/* ICONS */}
                     <div
-                      className={`absolute top-5 right-4 flex flex-col gap-3 transition-all duration-500 ${
-                        isHover ? "translate-x-0 opacity-100" : "translate-x-14 opacity-0"
-                      }`}
+                      className={`
+                        absolute top-5 right-4 flex flex-col gap-3 z-10
+                        transition-all duration-500
+
+                        /* MOBILE = ALWAYS SHOW */
+                        opacity-100 translate-x-0
+
+                        /* MD & LG = HOVER EFFECT */
+                        md:opacity-0 md:translate-x-14
+                        md:group-hover:opacity-100
+                        md:group-hover:translate-x-0
+                      `}
                     >
-                      <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white">
+                      <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
                         <FaHeart />
                       </button>
-    
-                      <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white">
+
+                      <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition">
                         <FaShoppingCart />
                       </button>
-    
-                      <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white">
+
+                      <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
                         <FaEye />
                       </button>
                     </div>
-                  </div>
+                    </div>
     
                   {/* CONTENT (EcoShop STYLE) */}
                   <div className="p-4">

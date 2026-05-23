@@ -160,7 +160,7 @@ export default function FeatureProduct() {
   };
 
   return (
-    <section className="w-full px-4 sm:px-6 lg:px-10 py-16 bg-[#fafafa] relative overflow-hidden">
+    <section className="w-full px-4 sm:px-6 lg:px-10 py-16 bg-white relative overflow-hidden">
     
           {/* TITLE */}
           <div className="text-center mb-14">

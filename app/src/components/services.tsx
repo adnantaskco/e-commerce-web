@@ -70,11 +70,11 @@ function Services() {
         </div>
 
         {/* Mobile & Tablet Slider */}
-        <div className="lg:hidden overflow-x-auto scrollbar-hide cursor-grab">
+        <div className="lg:hidden overflow-x-auto  scrollbar-hide cursor-grab">
           <div className="flex gap-4 min-w-max py-4 border-b-4 border-black">
 
             {/* Item */}
-            <div className="flex items-center gap-4 min-w-[280px] bg-[#252525] p-4 rounded-xl">
+            <div className="flex items-center gap-4 min-w-[280px] bg-secondary p-4 rounded-xl">
               <span className="text-5xl text-white hover:text-primary transition duration-300">
                 <MdOutlineLocalShipping />
               </span>
@@ -88,7 +88,7 @@ function Services() {
             </div>
 
             {/* Item */}
-            <div className="flex items-center gap-4 min-w-[280px] bg-[#252525] p-4 rounded-xl">
+            <div className="flex items-center gap-4 min-w-[280px] bg-secondary p-4 rounded-xl">
               <span className="text-5xl text-white hover:text-primary transition duration-300">
                 <TbTruckReturn />
               </span>
@@ -102,7 +102,7 @@ function Services() {
             </div>
 
             {/* Item */}
-            <div className="flex items-center gap-4 min-w-[280px] bg-[#252525] p-4 rounded-xl">
+            <div className="flex items-center gap-4 min-w-[280px] bg-secondary p-4 rounded-xl">
               <span className="text-5xl text-white hover:text-primary transition duration-300">
                 <GiWallet />
               </span>
@@ -116,7 +116,7 @@ function Services() {
             </div>
 
             {/* Item */}
-            <div className="flex items-center gap-4 min-w-[280px] bg-[#252525] p-4 rounded-xl">
+            <div className="flex items-center gap-4 min-w-[280px] bg-secondary p-4 rounded-xl">
               <span className="text-5xl text-white hover:text-primary transition duration-300">
                 <FaHeadphonesSimple />
               </span>

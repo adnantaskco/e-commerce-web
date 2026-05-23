@@ -259,15 +259,15 @@ export default function ProductSlider() {
                   {product.name}
                 </h2>
 
-                {/* STARS */}
-                <div className="flex items-center gap-1 mt-2 text-yellow-400 text-sm">
-                  {[...Array(product.rating)].map((_, i) => (
-                    <FaStar key={i} />
-                  ))}
-                  <span className="text-gray-500 text-xs ml-1">
+               {/* STARS */}
+              <div className="flex items-center gap-1 mt-2 text-yellow-400 text-sm">
+                     {[...Array(product.rating)].map((_, i) => (
+                     <FaStar key={i} />
+                      ))}
+                      <span className="text-gray-500 text-xs ml-1">
                     ({product.rating})
-                  </span>
-                </div>
+                 </span>
+              </div>
 
                 {/* PRICE */}
                 <div className="flex items-center gap-3 mt-3">

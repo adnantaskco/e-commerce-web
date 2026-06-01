@@ -66,14 +66,14 @@ function GallerySlider() {
           </p>
         </div>
 
-        {/* SLIDER WRAPPER */}
-        <div className="relative">
+       
+        
 
           {/* LEFT BUTTON */}
           <button
             onClick={() => scroll("left")}
-            className="
-              absolute left-2 top-1/2 -translate-y-1/2 z-20
+           className="
+              absolute left-3 top-1/2 -translate-y-12  z-20
               w-12 h-12 rounded-full bg-white shadow-xl
               flex items-center justify-center
               hover:bg-black hover:text-white
@@ -87,7 +87,7 @@ function GallerySlider() {
           <button
             onClick={() => scroll("right")}
             className="
-              absolute right-2 top-1/2 -translate-y-1/2 z-20
+              absolute right-2 top-1/2 -translate-y-12 z-20
               w-12 h-12 rounded-full bg-white shadow-xl
               flex items-center justify-center
               hover:bg-black hover:text-white
@@ -130,7 +130,7 @@ function GallerySlider() {
           </div>
 
         </div>
-      </div>
+      
     </section>
   );
 }

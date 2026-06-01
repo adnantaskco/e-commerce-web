@@ -4,6 +4,10 @@ import "./globals.css";
 import "flag-icons/css/flag-icons.min.css"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { CartProvider } from "./src/components/context/CartContext";
+import Navbar1 from "./src/components/navbar1";
+import Navbar2 from "./src/components/navbar2";
+import Footer from "./src/components/footer";
 
 
 const geistSans = Geist({
@@ -35,7 +39,15 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        {children}</body>
+       
+        <CartProvider>
+           <Navbar1></Navbar1>
+           <Navbar2></Navbar2>
+ 
+        {children}
+        </CartProvider>
+        <Footer></Footer>
+        </body>
     </html>
   );
 }

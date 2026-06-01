@@ -10,8 +10,9 @@ import {
   FaEye,
 } from "react-icons/fa";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCart } from "./context/CartContext";
 
-type Product = {
+type item = {
   id: number;
   name: string;
   brand: string;
@@ -21,9 +22,10 @@ type Product = {
   rating: number;
   discount: number;
   hasOffer: boolean;
+  
 };
 
-const products: Product[] = [
+const products: item[] = [
   {
     id: 1,
     name: "Floral Pointelle Smoocked Crop Top",
@@ -147,6 +149,8 @@ const products: Product[] = [
 ];
 
 export default function FeatureProduct() {
+     // ✅ CART
+      const { addToCart } = useCart();
   const [hovered, setHovered] = useState<number | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -198,13 +202,13 @@ export default function FeatureProduct() {
             ref={sliderRef}
             className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-5"
           >
-            {products.map((product) => {
-              const isHover = hovered === product.id;
+            {products.map((item) => {
+              const isHover = hovered === item.id;
     
               return (
                 <div
-                  key={product.id}
-                  onMouseEnter={() => setHovered(product.id)}
+                  key={item.id}
+                  onMouseEnter={() => setHovered(item.id)}
                   onMouseLeave={() => setHovered(null)}
                   className="min-w-[260px] sm:min-w-70 lg:min-w-75 bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 flex-shrink-0 group"
                 >
@@ -213,8 +217,8 @@ export default function FeatureProduct() {
                   <div className="relative bg-gray-100 h-[300px] flex items-center justify-center">
     
                     <Image
-                      src={product.image}
-                      alt={product.name}
+                      src={item.image}
+                      alt={item.name}
                       width={260}
                       height={300}
                       className="object-contain"
@@ -222,11 +226,11 @@ export default function FeatureProduct() {
     
                     {/* DISCOUNT */}
                     <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-md">
-                      {product.discount}%
+                      {item.discount}%
                     </div>
     
                     {/* TIMER */}
-                    {product.hasOffer && (
+                    {/* {product.hasOffer && (
                     <div
                       className={`absolute bottom-4 left-1/2 -translate-x-1/2 transition-all duration-300 ${
                         isHover ? "opacity-0 translate-y-5" : "opacity-100 translate-y-0"
@@ -236,7 +240,7 @@ export default function FeatureProduct() {
                         <Timer1 />
                       </div>
                     </div>
-                    )}
+                    )} */}
     
                     {/* ICONS */}
                     {/* ICONS */}
@@ -258,9 +262,21 @@ export default function FeatureProduct() {
                         <FaHeart />
                       </button>
 
-                      <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition">
-                        <FaShoppingCart />
-                      </button>
+
+                  <button
+  onClick={() =>
+    addToCart({
+      id: item.id,
+      image: item.image,
+      brand: item.brand,
+      name: item.name,
+      price: item.price,
+    })
+  }
+  className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition"
+>
+  <FaShoppingCart />
+                  </button>
 
                       <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
                         <FaEye />
@@ -275,27 +291,27 @@ export default function FeatureProduct() {
                     <p className="text-sm text-gray-500">EcoShop</p>
     
                     <h2 className="text-base font-semibold text-gray-800 mt-1">
-                      {product.name}
+                      {item.name}
                     </h2>
     
                     {/* STARS */}
                     <div className="flex items-center gap-1 mt-2 text-yellow-400 text-sm">
-                      {[...Array(product.rating)].map((_, i) => (
+                      {[...Array(item.rating)].map((_, i) => (
                         <FaStar key={i} />
                       ))}
                       <span className="text-gray-500 text-xs ml-1">
-                        ({product.rating})
+                        ({item.rating})
                       </span>
                     </div>
     
                     {/* PRICE */}
                     <div className="flex items-center gap-3 mt-3">
                       <span className="text-gray-400 line-through text-sm">
-                        ${product.oldPrice}
+                        ${item.oldPrice}
                       </span>
     
                       <span className="text-red-500 font-bold text-lg">
-                        ${product.price}
+                        ${item.price}
                       </span>
                     </div>
     

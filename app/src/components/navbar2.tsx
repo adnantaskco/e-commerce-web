@@ -1,9 +1,12 @@
+"use client"
 import Image from "next/image";
 import React, { useState } from "react";
 import { TiShoppingCart } from "react-icons/ti";
 import { FaHeart, FaBars, FaXmark } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
 import { FcManager } from "react-icons/fc";
+import { MdAccountCircle } from "react-icons/md";
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,9 +15,14 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import MegaDropdown from "./shop";
+import MegaDropdown1 from "./shop";
+import { useCart } from "./context/CartContext";
 
 function Navbar2() {
   const [open, setOpen] = useState(false);
+  const { cartCount } = useCart();
+
 
   return (
     <section className="sticky top-0 z-50 bg-white shadow-md p-2">
@@ -22,7 +30,7 @@ function Navbar2() {
         <div className="flex justify-between items-center">
 
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <link  href="/home" /><div className="flex items-center gap-2">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Adnan_Safee.png"
               alt="logo"
@@ -34,7 +42,9 @@ function Navbar2() {
 
           {/* DESKTOP MENU (UNCHANGED) */}
           <div className="hidden md:flex items-center gap-4">
-            <a className="font-semibold" href="#">Home</a>
+            <a className="font-semibold text-sm" href="/home">Home</a>
+
+           
 
             {/* Shop */}
             
@@ -43,7 +53,7 @@ function Navbar2() {
     {/* Shop Menu */}
           <NavigationMenuItem>
             <NavigationMenuTrigger>Shop</NavigationMenuTrigger>
-            <NavigationMenuContent className="p-4 min-w-[260px] grid gap-2">
+            <NavigationMenuContent className="px-4 min-w-[260px] grid ">
               <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
                 Men’s Fashion
               </NavigationMenuLink>
@@ -68,7 +78,7 @@ function Navbar2() {
     {/* Cloth Showroom Menu */}
             <NavigationMenuItem>
               <NavigationMenuTrigger>Cloth Showroom</NavigationMenuTrigger>
-              <NavigationMenuContent className="p-4 min-w-64 grid gap-2">
+              <NavigationMenuContent className="px-4 min-w-[260px] grid ">
                 <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
                   Casual Shirts Showroom
                 </NavigationMenuLink>
@@ -93,8 +103,8 @@ function Navbar2() {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="flex gap-2">Catagories <span  className="bg-primary px-2 rounded-md" > Sale</span></NavigationMenuTrigger>
-                  <NavigationMenuContent className="p-3 min-w- flex flex-col gap-2">
+                  <NavigationMenuTrigger className="flex gap-2">Catagories </NavigationMenuTrigger>
+                  <NavigationMenuContent className="px-4 min-w-[260px] flex flex-col">
                     <NavigationMenuLink>Classic Cotton Shirt</NavigationMenuLink>
                     <NavigationMenuLink>Premium Denim Jeans</NavigationMenuLink>
                     <NavigationMenuLink>Silk Kurti Collection</NavigationMenuLink>
@@ -110,7 +120,7 @@ function Navbar2() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Brand</NavigationMenuTrigger>
-                  <NavigationMenuContent className="p-3 min-w-50 flex flex-col gap-2">
+                  <NavigationMenuContent className=" px-4 min-w-[260px] flex flex-col ">
                     <NavigationMenuLink>Zara Style</NavigationMenuLink>
                     <NavigationMenuLink>H&M Fashion</NavigationMenuLink>
                     <NavigationMenuLink>Levi’s Denim</NavigationMenuLink>
@@ -126,12 +136,12 @@ function Navbar2() {
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger>Hot List</NavigationMenuTrigger>
-                  <NavigationMenuContent className="p-3 min-w-50 flex flex-col gap-2">
-                    <NavigationMenuLink>🔥 Trending Hoodies</NavigationMenuLink>
-                    <NavigationMenuLink>🔥 Best Selling Jeans</NavigationMenuLink>
-                    <NavigationMenuLink>🔥 New Arrival Shirts</NavigationMenuLink>
-                    <NavigationMenuLink>🔥 Summer Collection</NavigationMenuLink>
-                    <NavigationMenuLink>🔥 Discount Deals</NavigationMenuLink>
+                  <NavigationMenuContent className="px-4 min-w-[260px] flex flex-col ">
+                    <NavigationMenuLink> Trending Hoodies</NavigationMenuLink>
+                    <NavigationMenuLink> Best Selling Jeans</NavigationMenuLink>
+                    <NavigationMenuLink> New Arrival Shirts</NavigationMenuLink>
+                    <NavigationMenuLink> Summer Collection</NavigationMenuLink>
+                    <NavigationMenuLink> Discount Deals</NavigationMenuLink>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               </NavigationMenuList>
@@ -141,27 +151,28 @@ function Navbar2() {
           </div>
 
           {/* RIGHT ICONS */}
-          <div className="flex items-center gap-5 text-xl cursor-pointer">
+          <div className="flex items-center gap-5 text-xl">
 
-            <span><CiSearch/></span>
+          <a href="">
+         <CiSearch />
+                </a>
 
-           <span><FcManager/></span>
+              <a href="/loginpage">
+           <MdAccountCircle/>
+            </a>
 
-           <p className="flex items-center gap-2 text-sm font-semibold">
-            
-            {/* Cart Icon */}
-            <span className="relative text-2xl">
-              <TiShoppingCart />
+             <a
+             href="/cart"
+              className="relative flex items-center gap-2 text-sm font-semibold"
+  >
+              <TiShoppingCart className="text-2xl" />
 
-              {/* Cart Count */}
-              <span className="absolute -top-2 -right-3 bg-primary text-[10px] w-5 h-5 rounded-full flex items-center justify-center gap-2">
-                0
-              </span>
-            </span>
-              <span className="hidden md:block">  My Cart</span>
-            
-          </p>
+            <span className="absolute -top-2 -right-3 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
+                {cartCount}
+          </span>
+  </a>
 
+          
             
 
             {/* MOBILE MENU BUTTON */}

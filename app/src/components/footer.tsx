@@ -220,12 +220,7 @@ const Footer = () => {
       </div>
 
       {/* SCROLL TOP BUTTON */}
-    <Link
-  href="#top"
-  className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary text-white text-2xl shadow-lg hover:scale-105 transition duration-300 flex items-center justify-center"
->
-  ↑
-</Link>
+    
     </footer>
   );
 };

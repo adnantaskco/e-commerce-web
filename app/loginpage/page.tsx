@@ -16,7 +16,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col md:flex-row">
 
       {/* LEFT SIDE - IMAGE / ANIMATION */}
-      <div className="md:w-1/2 w-full bg-black flex items-center justify-center p-10">
+      <div className="md:w-1/2 w-full  flex items-center justify-center p-10">
         <div className="text-center text-white">
           
           <img

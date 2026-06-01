@@ -25,7 +25,7 @@ type Product = {
 
 const products: Product[] = [
   {
-    id: 1,
+    id: 51,
     name: "Casual Hudi",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/4/34-home_default.jpg",
@@ -36,7 +36,7 @@ const products: Product[] = [
     timer: "7d : 10h : 09m : 40s",
   },
   {
-    id: 2,
+    id: 52,
     name: "Casual Summer T-Shirt",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/140-large_default/textured-top-with-cuffed-sleeves.jpg",
@@ -47,7 +47,7 @@ const products: Product[] = [
     timer: "7d : 05h : 12m : 10s",
   },
   {
-    id: 3,
+    id: 53,
     name: "Slim Fit Jacket",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/9/39-home_default.jpg",
@@ -58,7 +58,7 @@ const products: Product[] = [
     timer: "300d : 02h : 44m : 55s",
   },
   {
-    id: 4,
+    id: 54,
     name: "Classic T-shirt",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/1/41-home_default.jpg",
@@ -69,7 +69,7 @@ const products: Product[] = [
     timer: "7d : 14h : 20m : 11s",
   },
   {
-    id: 5,
+    id: 55,
     name: "Summer Shirt",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/3/43-home_default.jpg",
@@ -80,7 +80,7 @@ const products: Product[] = [
     timer: "7d : 08h : 19m : 50s",
   },
   {
-    id: 6,
+    id: 56,
     name: "Fashion Shirt",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/5/45-home_default.jpg",
@@ -91,7 +91,7 @@ const products: Product[] = [
     timer: "7d : 11h : 33m : 22s",
   },
   {
-    id: 7,
+    id: 57,
     name: "Summer Shirt",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/7/47-home_default.jpg",
@@ -102,7 +102,7 @@ const products: Product[] = [
     timer: "7d : 03h : 12m : 01s",
   },
   {
-    id: 8,
+    id: 58,
     name: "Woman's Jacket",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/9/49-home_default.jpg",
@@ -113,7 +113,7 @@ const products: Product[] = [
     timer: "600d : 20h : 45m : 59s",
   },
   {
-    id: 9,
+    id: 59,
     name: "Woman's Jacket",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/5/1/51-home_default.jpg",
@@ -124,7 +124,7 @@ const products: Product[] = [
     timer: "7d : 09h : 10m : 30s",
   },
   {
-    id: 10,
+    id: 60,
     name: "Women's Dress",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/5/3/53-home_default.jpg",

@@ -13,6 +13,7 @@ import CategorySection from "../src/components/scrollsection";
 import Services from "../src/components/services";
 import { TabsDemo } from "../src/components/TabProduct";
 import BrandLogo from "../src/components/BrandLogo";
+import CategorySidebar from "../src/components/Sidebar";
 
 
 
@@ -21,7 +22,20 @@ function Home() {
     <>
     <HeroCarousel/>
     <Services></Services>
-    <TabsDemo/>
+    <div className="flex flex-col md:flex-row gap-4">
+  
+  {/* Sidebar */}
+  <div className="md:w-64 w-full">
+    <CategorySidebar />
+  </div>
+
+  {/* Main Content */}
+  <div className="flex-1">
+    <TabsDemo />
+  </div>
+
+</div>
+    
    <DiscountBanners/>
     <CategorySection/>
    <ProductSlider/>

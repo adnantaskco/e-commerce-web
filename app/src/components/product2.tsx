@@ -24,7 +24,7 @@ type item = {
 };
 const products: item[] = [
   {
-    id: 1,
+    id: 21,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/1/31-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Running Sports Shoes",
@@ -36,7 +36,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 2,
+    id: 22,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/2/32-home_default.jpg",
     brand: "EcoShop",
     name: "Casual White Sneakers",
@@ -46,7 +46,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 3,
+    id: 23,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/3/33-home_default.jpg",
     brand: "EcoShop",
     name: "Luxury Leather Formal Shoes",
@@ -58,7 +58,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 4,
+    id: 24,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/4/34-home_default.jpg",
     brand: "EcoShop",
     name: "Men's Black Loafers",
@@ -68,7 +68,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 5,
+    id: 25,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/5/35-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Hiking Outdoor Shoes",
@@ -80,7 +80,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 6,
+    id: 26,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/6/36-home_default.jpg",
     brand: "EcoShop",
     name: "Comfortable Slip-On Shoes",
@@ -90,7 +90,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 7,
+    id: 27,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/7/37-home_default.jpg",
     brand: "EcoShop",
     name: "Stylish High Heel Sandals",
@@ -102,7 +102,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 8,
+    id: 28,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/8/38-home_default.jpg",
     brand: "EcoShop",
     name: "Sports Training Sneakers",
@@ -112,7 +112,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 9,
+    id: 29,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/9/39-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Leather Boots",
@@ -124,7 +124,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 10,
+    id: 30,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/4/0/40-home_default.jpg",
     brand: "EcoShop",
     name: "Casual Flip Flops Summer Wear",
@@ -145,7 +145,7 @@ const Sheos = () => {
     
          
     
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
     
             {products.map((item) => (
               <div

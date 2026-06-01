@@ -24,7 +24,7 @@ export default function SignUpPage() {
     <div className="min-h-screen flex flex-col md:flex-row">
 
       {/* LEFT SIDE */}
-      <div className="md:w-1/2 w-full bg-black flex items-center justify-center p-10 text-white">
+      <div className="md:w-1/2 w-full flex items-center justify-center p-10 ">
         <div className="text-center">
 
           <Image
@@ -39,7 +39,7 @@ export default function SignUpPage() {
             Join Our Store 🛒
           </h2>
 
-          <p className="text-gray-300 mt-2">
+          <p className="text-gray-700 mt-2">
             Create an account and start shopping
           </p>
         </div>

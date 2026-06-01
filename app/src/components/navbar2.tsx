@@ -1,10 +1,10 @@
 "use client"
-import Image from "next/image";
+
 import React, { useState } from "react";
 import { TiShoppingCart } from "react-icons/ti";
-import { FaHeart, FaBars, FaXmark } from "react-icons/fa6";
+import {  FaBars, FaXmark } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
-import { FcManager } from "react-icons/fc";
+
 import { MdAccountCircle } from "react-icons/md";
 
 import {
@@ -18,10 +18,11 @@ import {
 import MegaDropdown from "./shop";
 import MegaDropdown1 from "./shop";
 import { useCart } from "./context/CartContext";
+import Link from "next/link";
 
 function Navbar2() {
   const [open, setOpen] = useState(false);
-  const { cartCount } = useCart();
+  const { totalItems } = useCart();
 
 
   return (
@@ -161,16 +162,17 @@ function Navbar2() {
            <MdAccountCircle/>
             </a>
 
-             <a
-             href="/cart"
-              className="relative flex items-center gap-2 text-sm font-semibold"
-  >
-              <TiShoppingCart className="text-2xl" />
+            <Link
+  href="/cart"
+  className="relative flex items-center gap-2 text-sm font-semibold"
+>
+  <TiShoppingCart className="text-2xl" />
 
-            <span className="absolute -top-2 -right-3 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
-                {cartCount}
-          </span>
-  </a>
+  <span className="absolute -top-2 -right-3 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
+    {totalItems}
+  </span>
+</Link>
+
 
           
             

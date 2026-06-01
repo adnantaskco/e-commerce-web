@@ -20,7 +20,7 @@ type item = {
 
 const products: item[] = [
   {
-    id: 1,
+    id: 31,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/1/21-home_default.jpg",
     brand: "EcoShop",
@@ -33,7 +33,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 2,
+    id: 32,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/2/22-home_default.jpg",
     brand: "EcoShop",
@@ -46,7 +46,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 3,
+    id: 33,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/3/23-home_default.jpg",
     brand: "EcoShop",
@@ -59,7 +59,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 4,
+    id: 34,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/4/24-home_default.jpg",
     brand: "EcoShop",
@@ -70,7 +70,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 5,
+    id: 35,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/5/25-home_default.jpg",
     brand: "EcoShop",
@@ -83,7 +83,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 6,
+    id: 36,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/6/26-home_default.jpg",
     brand: "EcoShop",
@@ -94,7 +94,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 7,
+    id: 37,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/7/27-home_default.jpg",
     brand: "EcoShop",
@@ -107,7 +107,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 8,
+    id: 38,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/8/28-home_default.jpg",
     brand: "EcoShop",
@@ -118,7 +118,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 9,
+    id: 39,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/9/29-home_default.jpg",
     brand: "EcoShop",
@@ -131,7 +131,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 10,
+    id: 40,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/0/30-home_default.jpg",
     brand: "EcoShop",

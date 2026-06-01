@@ -27,7 +27,7 @@ type item = {
 
 const products: item[] = [
   {
-    id: 1,
+    id: 41,
     name: "Floral Pointelle Smoocked Crop Top",
     brand: "StyleHub",
     image:
@@ -39,7 +39,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 2,
+    id: 42,
     name: "textured Top With Cuffed Sleeves",
     brand: "FashionEra",
     image:
@@ -51,7 +51,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 3,
+    id: 43,
     name: "Peach Coloured Ruched Tie-Front Crop",
     brand: "UrbanWear",
     image:
@@ -63,7 +63,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 4,
+    id: 44,
     name: "Women Pink Cotton Long Sleeve Crop Top",
     brand: "TrendLine",
     image:
@@ -75,7 +75,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 5,
+    id: 45,
     name: "DressBary Women's Printed Ploy Crop Top",
     brand: "ModernFit",
     image:
@@ -87,7 +87,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 6,
+    id: 46,
     name: "long Sleeve Neck Top",
     brand: "EliteStyle",
     image:
@@ -99,7 +99,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 7,
+    id: 47,
     name: "Summer Shirt",
     brand: "CoolWear",
     image:
@@ -111,7 +111,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 8,
+    id: 48,
     name: "Woman's Jacket",
     brand: "StyleNova",
     image:
@@ -123,7 +123,7 @@ const products: item[] = [
     hasOffer: false,
   },
   {
-    id: 9,
+    id: 49,
     name: "Woman's Jacket",
     brand: "WinterEdge",
     image:
@@ -135,7 +135,7 @@ const products: item[] = [
     hasOffer: true,
   },
   {
-    id: 10,
+    id: 50,
     name: "Women's Dress",
     brand: "ChicStyle",
     image:

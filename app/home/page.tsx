@@ -17,7 +17,7 @@ import CategorySidebar from "../src/components/Sidebar";
 
 
 
-function Home() {
+function Home1() {
   return (
     <>
     <HeroCarousel/>
@@ -51,4 +51,4 @@ function Home() {
   )
 }
 
-export default Home;
+export default Home1;

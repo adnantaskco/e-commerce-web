@@ -16,6 +16,7 @@ type Product = {
   id: number;
   name: string;
   image: string;
+  brand: string;
   price: number;
   oldPrice: number;
   rating: number;
@@ -31,6 +32,7 @@ const products: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/4/34-home_default.jpg",
     price: 27,
     oldPrice: 30,
+    brand: "EcoShop",
     rating: 4,
     discount: -10,
     timer: "7d : 10h : 09m : 40s",
@@ -41,6 +43,7 @@ const products: Product[] = [
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/140-large_default/textured-top-with-cuffed-sleeves.jpg",
     price: 18,
+    brand: "EcoShop",
     oldPrice: 22,
     rating: 5,
     discount: -15,
@@ -53,6 +56,7 @@ const products: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/9/39-home_default.jpg",
     price: 35,
     oldPrice: 40,
+    brand: "EcoShop",
     rating: 4,
     discount: -12,
     timer: "300d : 02h : 44m : 55s",
@@ -64,6 +68,7 @@ const products: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/1/41-home_default.jpg",
     price: 45,
     oldPrice: 55,
+    brand: "EcoShop",
     rating: 5,
     discount: -20,
     timer: "7d : 14h : 20m : 11s",
@@ -75,6 +80,7 @@ const products: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/3/43-home_default.jpg",
     price: 60,
     oldPrice: 75,
+    brand: "EcoShop",
     rating: 4,
     discount: -18,
     timer: "7d : 08h : 19m : 50s",
@@ -86,6 +92,7 @@ const products: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/5/45-home_default.jpg",
     price: 50,
     oldPrice: 65,
+    brand: "EcoShop",
     rating: 5,
     discount: -25,
     timer: "7d : 11h : 33m : 22s",
@@ -97,6 +104,7 @@ const products: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/7/47-home_default.jpg",
     price: 80,
     oldPrice: 95,
+    brand: "EcoShop",
     rating: 4,
     discount: -15,
     timer: "7d : 03h : 12m : 01s",
@@ -108,6 +116,7 @@ const products: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/4/9/49-home_default.jpg",
     price: 120,
     oldPrice: 150,
+    brand: "EcoShop",
     rating: 5,
     discount: -30,
     timer: "600d : 20h : 45m : 59s",
@@ -119,6 +128,7 @@ const products: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/5/1/51-home_default.jpg",
     price: 90,
     oldPrice: 110,
+    brand: "EcoShop",
     rating: 4,
     discount: -22,
     timer: "7d : 09h : 10m : 30s",
@@ -130,6 +140,7 @@ const products: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/5/3/53-home_default.jpg",
     price: 70,
     oldPrice: 85,
+    brand: "EcoShop",
     rating: 5,
     discount: -17,
     timer: "7d : 12h : 55m : 10s",

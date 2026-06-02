@@ -167,6 +167,7 @@ const Sheos = () => {
                   <Image
                     src={item.image}
                     alt={item.name}
+                    fill
                     width={260}
                     height={300}
                     className="object-contain"
@@ -202,7 +203,7 @@ const Sheos = () => {
                           brand: item.brand,
                           name: item.name,
                           price: item.price,
-                          quantity: 1,
+                      
                         })
                       }
                       className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition"

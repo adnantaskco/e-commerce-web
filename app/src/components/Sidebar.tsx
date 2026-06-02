@@ -41,11 +41,11 @@ export default function CategorySidebar() {
           ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        <div className="p-4 border-b font-bold text-lg pt-20 ">
+        <div className="p-4 border-b-4 border-primary font-bold text-lg pt-20 ">
          <h1 className="text-4xl font-semibold"> Categories</h1>
         </div>
 
-        <ul className="p-3 space-y-2">
+        <ul className="p-3 pt-10 space-y-2">
           {categories.map((cat, idx) => {
             const Icon = cat.icon;
 

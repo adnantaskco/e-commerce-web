@@ -265,24 +265,30 @@ const products: item[] = [
 
 const ProductCard1 = () => {
   const [hovered, setHovered] = useState<number | null>(null);
-
-  // ✅ CART
   const { addToCart } = useCart();
 
   return (
     <section className="w-full px-4 sm:px-6 lg:px-10 py-6 bg-white">
-
-     
-
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-
+      <div
+        className="
+          grid
+          grid-cols-1
+          sm:grid-cols-2
+          md:grid-cols-3
+          lg:grid-cols-4
+          xl:grid-cols-5
+          gap-5 sm:gap-6 lg:gap-8
+        "
+      >
         {products.map((item) => (
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}
             onMouseLeave={() => setHovered(null)}
             className="
-              bg-white rounded-xl overflow-hidden
+              bg-white
+              rounded-xl
+              overflow-hidden
               border border-gray-100
               hover:shadow-xl
               transition-all duration-500
@@ -290,15 +296,14 @@ const ProductCard1 = () => {
               group
             "
           >
-
-            <div className="relative bg-gray-100 h-[300px] flex items-center justify-center">
-
+            {/* IMAGE */}
+            <div className="relative bg-gray-100 h-[220px] sm:h-[260px] md:h-[280px] lg:h-[300px] flex items-center justify-center">
               <Image
                 src={item.image}
                 alt={item.name}
-                width={260}
-                height={300}
-                className="object-contain"
+                width={250}
+                height={250}
+                className="object-contain w-auto h-[80%] sm:h-[85%]"
               />
 
               {item.discount && (
@@ -307,23 +312,22 @@ const ProductCard1 = () => {
                 </div>
               )}
 
+              {/* ACTION BUTTONS */}
               <div
                 className="
                   absolute top-5 right-4 flex flex-col gap-3 z-10
-                  transition-all duration-500
-
                   opacity-100 translate-x-0
-
                   md:opacity-0 md:translate-x-14
                   md:group-hover:opacity-100
                   md:group-hover:translate-x-0
+                  transition-all duration-500
                 "
               >
-                <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
+                <button className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
                   <FaHeart />
                 </button>
 
-                 <button
+                <button
                   onClick={() =>
                     addToCart({
                       id: item.id,
@@ -331,27 +335,24 @@ const ProductCard1 = () => {
                       brand: item.brand,
                       name: item.name,
                       price: item.price,
-                      quantity: 1,
                     })
                   }
-                  className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition"
+                  className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition"
                 >
                   <FaShoppingCart />
                 </button>
 
-                <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
+                <button className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
                   <FaEye />
                 </button>
               </div>
             </div>
 
-            <div className="p-4">
+            {/* CONTENT */}
+            <div className="p-3 sm:p-4">
+              <p className="text-sm text-gray-500">{item.brand}</p>
 
-              <p className="text-sm text-gray-500">
-                {item.brand}
-              </p>
-
-              <h2 className="text-base font-semibold text-gray-800 mt-1">
+              <h2 className="text-sm sm:text-base font-semibold text-gray-800 mt-1">
                 {item.name}
               </h2>
 
@@ -359,26 +360,22 @@ const ProductCard1 = () => {
                 {[...Array(item.rating)].map((_, i) => (
                   <FaStar key={i} />
                 ))}
-
                 <span className="text-gray-500 text-xs ml-1">
                   ({item.reviews})
                 </span>
               </div>
 
               <div className="flex items-center gap-3 mt-3">
-
                 {item.oldPrice && (
                   <span className="text-gray-400 line-through text-sm">
                     ${item.oldPrice}
                   </span>
-
                 )}
 
-                <span className="text-red-500 font-bold text-lg">
+                <span className="text-red-500 font-bold text-base sm:text-lg">
                   ${item.price}
                 </span>
               </div>
-
             </div>
           </div>
         ))}

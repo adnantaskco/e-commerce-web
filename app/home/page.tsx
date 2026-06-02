@@ -20,7 +20,8 @@ import CategorySidebar from "../src/components/Sidebar";
 function Home1() {
   return (
     <>
-    <HeroCarousel/>
+    <div className="container mx-auto px-4 md:px-10 lg:px-20">
+      <HeroCarousel/>
     <Services></Services>
     <div className="flex flex-col md:flex-row gap-4">
   
@@ -46,6 +47,7 @@ function Home1() {
     <TestimonialSection/>
     <GallerySlider/>
     <BrandLogo/>
+    </div>
    
     </>
   )

@@ -1,8 +1,33 @@
+"use client";
+
 import React from "react";
 import { MdOutlineLocalShipping } from "react-icons/md";
 import { FaHeadphonesSimple } from "react-icons/fa6";
 import { GiWallet } from "react-icons/gi";
 import { TbTruckReturn } from "react-icons/tb";
+
+const services = [
+  {
+    icon: <MdOutlineLocalShipping />,
+    title: "Free Shipping",
+    description: "For all orders over $100",
+  },
+  {
+    icon: <TbTruckReturn />,
+    title: "30 Days Returns",
+    description: "For an Exchange Product",
+  },
+  {
+    icon: <GiWallet />,
+    title: "Secure Payment",
+    description: "Payment Cards Accepted",
+  },
+  {
+    icon: <FaHeadphonesSimple />,
+    title: "24/7 Support",
+    description: "Contact us anytime",
+  },
+];
 
 function Services() {
   return (
@@ -10,125 +35,54 @@ function Services() {
       <div className="mx-auto px-6 md:px-20">
 
         {/* Desktop */}
-        <div className="hidden lg:grid lg:grid-cols-4 gap-6 py-4 border-b-4 border-black">
+        <div className="hidden lg:grid lg:grid-cols-4 py-4 border-b-4 border-black">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className={`flex items-center gap-4 px-6 ${
+                index !== services.length - 1
+                  ? "border-r border-gray-600"
+                  : ""
+              }`}
+            >
+              <span className="text-5xl hover:text-primary transition duration-300">
+                {service.icon}
+              </span>
 
-          {/* Item */}
-          <div className="flex items-center gap-4 border-r border-gray-600 pr-6">
-            <span className="text-5xl text-white hover:text-primary transition duration-300">
-              <MdOutlineLocalShipping />
-            </span>
-
-            <div>
-              <h6 className="text-lg font-semibold">Free Shipping</h6>
-              <p className="text-sm text-gray-300">
-                For all orders over $100
-              </p>
+              <div>
+                <h6 className="text-lg font-semibold">
+                  {service.title}
+                </h6>
+                <p className="text-sm text-gray-300">
+                  {service.description}
+                </p>
+              </div>
             </div>
-          </div>
-
-          {/* Item */}
-          <div className="flex items-center gap-4 border-r border-gray-600 pr-6">
-            <span className="text-5xl text-white hover:text-primary transition duration-300">
-              <TbTruckReturn />
-            </span>
-
-            <div>
-              <h6 className="text-lg font-semibold">30 Days Returns</h6>
-              <p className="text-sm text-gray-300">
-                For an Exchange Product
-              </p>
-            </div>
-          </div>
-
-          {/* Item */}
-          <div className="flex items-center gap-4 border-r border-gray-600 pr-6">
-            <span className="text-5xl text-white hover:text-primary transition duration-300">
-              <GiWallet />
-            </span>
-
-            <div>
-              <h6 className="text-lg font-semibold">Secure Payment</h6>
-              <p className="text-sm text-gray-300">
-                Payment Cards Accepted
-              </p>
-            </div>
-          </div>
-
-          {/* Item */}
-          <div className="flex items-center gap-4">
-            <span className="text-5xl text-white hover:text-primary transition duration-300">
-              <FaHeadphonesSimple />
-            </span>
-
-            <div>
-              <h6 className="text-lg font-semibold">24/7 Support</h6>
-              <p className="text-sm text-gray-300">
-                Contact us anytime
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* Mobile & Tablet Slider */}
-        <div className="lg:hidden overflow-x-auto  scrollbar-hide cursor-grab">
+        {/* Mobile & Tablet */}
+        <div className="lg:hidden overflow-x-auto no-scrollbar">
           <div className="flex gap-4 min-w-max py-4 border-b-4 border-black">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-4 min-w-[280px] bg-secondary p-4 rounded-xl"
+              >
+                <span className="text-5xl hover:text-primary transition duration-300">
+                  {service.icon}
+                </span>
 
-            {/* Item */}
-            <div className="flex items-center gap-4 min-w-[280px] bg-secondary p-4 rounded-xl">
-              <span className="text-5xl text-white hover:text-primary transition duration-300">
-                <MdOutlineLocalShipping />
-              </span>
-
-              <div>
-                <h6 className="text-lg font-semibold">Free Shipping</h6>
-                <p className="text-sm text-gray-300">
-                  For all orders over $100
-                </p>
+                <div>
+                  <h6 className="text-lg font-semibold">
+                    {service.title}
+                  </h6>
+                  <p className="text-sm text-gray-300">
+                    {service.description}
+                  </p>
+                </div>
               </div>
-            </div>
-
-            {/* Item */}
-            <div className="flex items-center gap-4 min-w-[280px] bg-secondary p-4 rounded-xl">
-              <span className="text-5xl text-white hover:text-primary transition duration-300">
-                <TbTruckReturn />
-              </span>
-
-              <div>
-                <h6 className="text-lg font-semibold">30 Days Returns</h6>
-                <p className="text-sm text-gray-300">
-                  For an Exchange Product
-                </p>
-              </div>
-            </div>
-
-            {/* Item */}
-            <div className="flex items-center gap-4 min-w-[280px] bg-secondary p-4 rounded-xl">
-              <span className="text-5xl text-white hover:text-primary transition duration-300">
-                <GiWallet />
-              </span>
-
-              <div>
-                <h6 className="text-lg font-semibold">Secure Payment</h6>
-                <p className="text-sm text-gray-300">
-                  Payment Cards Accepted
-                </p>
-              </div>
-            </div>
-
-            {/* Item */}
-            <div className="flex items-center gap-4 min-w-[280px] bg-secondary p-4 rounded-xl">
-              <span className="text-5xl text-white hover:text-primary transition duration-300">
-                <FaHeadphonesSimple />
-              </span>
-
-              <div>
-                <h6 className="text-lg font-semibold">24/7 Support</h6>
-                <p className="text-sm text-gray-300">
-                  Contact us anytime
-                </p>
-              </div>
-            </div>
-
+            ))}
           </div>
         </div>
 

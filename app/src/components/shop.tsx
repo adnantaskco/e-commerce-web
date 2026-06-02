@@ -134,7 +134,7 @@ export default function MegaDropdown1() {
                 <img
                   src="https://images.unsplash.com/photo-1542291026-7eec264c27ff"
                   alt="Shoes"
-                  fill
+                  
                   className="object-cover group-hover:scale-105 transition duration-500"
                 />
 
@@ -160,7 +160,7 @@ export default function MegaDropdown1() {
                 <img
                   src="https://images.unsplash.com/photo-1494790108377-be9c29b29330"
                   alt="Girl"
-                  fill
+                  
                   className="object-cover group-hover:scale-105 transition duration-500"
                 />
 

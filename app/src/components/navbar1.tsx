@@ -5,7 +5,7 @@ import "flag-icons/css/flag-icons.min.css";
 function Navbar1() {
   return (
     <section className="bg-secondary text-white py-4 w-full overflow-hidden ">
-      <div className="container mx-auto px-4 md:px-6">
+      <div className="container mx-auto px-4 md:px-10 lg:px-20">
 
         <div className="flex flex-col lg:flex-row justify-between items-center gap-3 text-sm">
 

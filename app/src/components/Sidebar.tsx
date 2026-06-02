@@ -24,7 +24,7 @@ export default function CategorySidebar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <>
+    <section className="hidden md:block">
       {/* Mobile Toggle Button */}
       <button
         className="md:hidden p-2 text-2xl"
@@ -36,16 +36,16 @@ export default function CategorySidebar() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed md:static top-0 left-0 pb-10 h-full w-64 bg-white 
+          fixed md:static top-0 left-0 md:pb-10 h-full w-64 bg-white 
           transform transition-transform duration-300 z-50
           ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        <div className="p-4 border-b-4 border-primary font-bold text-lg pt-20 ">
+        <div className="p-4 border-b font-bold text-lg md:pt-20 ">
          <h1 className="text-4xl font-semibold"> Categories</h1>
         </div>
 
-        <ul className="p-3 pt-10 space-y-2">
+        <ul className="p-3 space-y-2">
           {categories.map((cat, idx) => {
             const Icon = cat.icon;
 
@@ -72,6 +72,6 @@ export default function CategorySidebar() {
           onClick={() => setOpen(false)}
         />
       )}
-    </>
+    </section>
   );
 }

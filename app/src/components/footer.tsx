@@ -20,7 +20,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-secondary text-white">
+    <footer className="bg-secondary text-white md:py-20">
       {/* TOP SECTION */}
       <div className="container mx-auto px-4 md:px-10 lg:px-20">
         
@@ -186,11 +186,11 @@ const Footer = () => {
       </div>
 
       {/* BOTTOM SECTION */}
-      <div className="border-t border-gray-700">
+      <div className="border-t border-gray-700 ">
         <div className="container mx-auto pcontainer px-4 md:px-10 lg:px-20 flex flex-col lg:flex-row items-center justify-between gap-6">
           
           {/* SOCIAL ICONS */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 py-5">
             {socialIcons.map((Icon, index) => (
               <div
                 key={index}

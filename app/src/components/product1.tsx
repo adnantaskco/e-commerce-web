@@ -270,31 +270,17 @@ const ProductCard1 = () => {
   return (
     <section className="w-full px-4 sm:px-6 lg:px-10 py-6 bg-white">
       <div
-        className="
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          md:grid-cols-3
-          lg:grid-cols-4
-          xl:grid-cols-5
-          gap-5 sm:gap-6 lg:gap-8
-        "
+        className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8"
       >
         {products.map((item) => (
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}
             onMouseLeave={() => setHovered(null)}
-            className="
-              bg-white
-              rounded-xl
-              overflow-hidden
-              border border-gray-100
-              hover:shadow-xl
-              transition-all duration-500
-              hover:-translate-y-2
-              group
-            "
+            onClick={() =>
+              setHovered(hovered === item.id ? null : item.id)
+            }
+            className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group"
           >
             {/* IMAGE */}
             <div className="relative bg-gray-100 h-[220px] sm:h-[260px] md:h-[280px] lg:h-[300px] flex items-center justify-center">
@@ -303,7 +289,7 @@ const ProductCard1 = () => {
                 alt={item.name}
                 width={250}
                 height={250}
-                className="object-contain w-auto h-[80%] sm:h-[85%]"
+                className="object-contain w-auto h-[80%]"
               />
 
               {item.discount && (
@@ -312,18 +298,19 @@ const ProductCard1 = () => {
                 </div>
               )}
 
-              {/* ACTION BUTTONS */}
+              {/* ICONS */}
               <div
-                className="
-                  absolute top-5 right-4 flex flex-col gap-3 z-10
-                  opacity-100 translate-x-0
-                  md:opacity-0 md:translate-x-14
-                  md:group-hover:opacity-100
-                  md:group-hover:translate-x-0
-                  transition-all duration-500
-                "
+                className={`
+                  absolute top-5 right-4 flex flex-col gap-3 z-10 transition-all duration-300
+                  ${
+                    hovered === item.id
+                      ? "opacity-100 translate-x-0"
+                      : "sm:opacity-0 sm:translate-x-5"
+                  }
+                  sm:group-hover:opacity-100 sm:group-hover:translate-x-0
+                `}
               >
-                <button className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
+                <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-white transition">
                   <FaHeart />
                 </button>
 
@@ -337,42 +324,33 @@ const ProductCard1 = () => {
                       price: item.price,
                     })
                   }
-                  className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition"
+                  className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
                 >
                   <FaShoppingCart />
                 </button>
 
-                <button className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
+                <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
                   <FaEye />
                 </button>
               </div>
             </div>
 
             {/* CONTENT */}
-            <div className="p-3 sm:p-4">
+            <div className="p-4">
               <p className="text-sm text-gray-500">{item.brand}</p>
+              <h2 className="font-semibold">{item.name}</h2>
 
-              <h2 className="text-sm sm:text-base font-semibold text-gray-800 mt-1">
-                {item.name}
-              </h2>
-
-              <div className="flex items-center gap-1 mt-2 text-yellow-400 text-sm">
+              <div className="flex gap-1 text-yellow-400 text-sm">
                 {[...Array(item.rating)].map((_, i) => (
                   <FaStar key={i} />
                 ))}
-                <span className="text-gray-500 text-xs ml-1">
-                  ({item.reviews})
-                </span>
               </div>
 
-              <div className="flex items-center gap-3 mt-3">
-                {item.oldPrice && (
-                  <span className="text-gray-400 line-through text-sm">
-                    ${item.oldPrice}
-                  </span>
-                )}
-
-                <span className="text-red-500 font-bold text-base sm:text-lg">
+              <div className="flex gap-2 mt-2">
+                <span className="line-through text-gray-400">
+                  ${item.oldPrice}
+                </span>
+                <span className="text-red-500 font-bold">
                   ${item.price}
                 </span>
               </div>

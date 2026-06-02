@@ -48,10 +48,12 @@ const CategorySection = () => {
 
   const scroll = (direction: "left" | "right") => {
     const container = sliderRef.current;
-
     if (!container) return;
 
-    const scrollAmount = window.innerWidth < 640 ? 250 : 350;
+    const card = container.querySelector("div");
+    const scrollAmount = card
+      ? (card as HTMLElement).offsetWidth + 16
+      : 260;
 
     container.scrollBy({
       left: direction === "left" ? -scrollAmount : scrollAmount,
@@ -64,14 +66,15 @@ const CategorySection = () => {
       className="relative bg-fixed bg-center bg-cover py-14 sm:py-20 md:py-24 overflow-hidden"
       style={{
         backgroundImage:
-          "url('https://media.istockphoto.com/id/1289003879/photo/beautiful-happy-and-excited-young-girl-friends-with-paper-bags-and-smart-phone-are-walking.jpg?s=612x612&w=0&k=20&c=KbTRuCo2vQ_eh8oyIC08Nf7z2JplnxnuALqehW8pWzc=')",
+          "url('https://media.istockphoto.com/id/1289003879/photo/beautiful-happy-and-excited-young-girl-friends-with-paper-bags-and-smart-phone-are-walking.jpg')",
       }}
     >
       {/* overlay */}
-      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0 bg-black/50"></div>
 
       <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
-        {/* title */}
+
+        {/* TITLE */}
         <div className="text-center mb-10 sm:mb-14">
           <h2 className="text-white text-2xl sm:text-4xl md:text-5xl font-bold">
             Shop By Category
@@ -80,58 +83,69 @@ const CategorySection = () => {
           <div className="w-20 sm:w-28 h-[3px] bg-primary mx-auto mt-4 sm:mt-5"></div>
         </div>
 
-        {/* left button */}
+        {/* LEFT BUTTON */}
         <button
           onClick={() => scroll("left")}
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 
-          w-10 h-10 sm:w-12 sm:h-12 rounded-full 
-          bg-white/20 backdrop-blur-md text-white 
-          flex items-center justify-center 
-          hover:bg-primery duration-300"
+          className="
+            absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20
+            w-10 h-10 sm:w-12 sm:h-12
+            rounded-full bg-black/40 text-white
+            flex items-center justify-center
+            hover:bg-black/70 transition
+          "
         >
           <ChevronLeft size={24} />
         </button>
 
-        {/* right button */}
+        {/* RIGHT BUTTON */}
         <button
           onClick={() => scroll("right")}
-          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 
-          w-10 h-10 sm:w-12 sm:h-12 rounded-full 
-          bg-[#f4a896] text-white 
-          flex items-center justify-center 
-          hover:bg-white/20 duration-300"
+          className="
+            absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20
+            w-10 h-10 sm:w-12 sm:h-12
+            rounded-full bg-black/40 text-white
+            flex items-center justify-center
+            hover:bg-black/70 transition
+          "
         >
           <ChevronRight size={24} />
         </button>
 
-        {/* slider */}
+        {/* SLIDER */}
         <div
           ref={sliderRef}
-          className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth no-scrollbar"
+          className="
+            flex gap-4 sm:gap-6
+            overflow-x-auto scroll-smooth no-scrollbar
+            scroll-snap-x
+            px-2 sm:px-4
+          "
         >
           {categories.map((item) => (
             <div
               key={item.id}
               className="
-              min-w-[220px]
-              sm:min-w-[260px]
-              md:min-w-[280px]
-              flex-shrink-0 text-center"
+                flex-shrink-0
+                w-full sm:w-full md:w-1/2 lg:w-1/4
+                scroll-snap-align-start
+                text-center
+                group
+              "
             >
-              {/* card */}
-              <div className="bg-white p-5 sm:p-8 md:p-10">
-                <div className="relative w-full h-[180px] sm:h-[220px]">
+              {/* CARD */}
+              <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-md">
+                <div className="relative w-full h-[160px] sm:h-[200px] md:h-[220px] overflow-hidden">
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
-                    className="object-contain hover:scale-105 duration-300"
+                    className="object-contain transition-transform duration-300 group-hover:scale-105"
                   />
                 </div>
               </div>
 
-              {/* text */}
-              <h3 className="text-white text-lg sm:text-xl md:text-2xl font-semibold mt-4 sm:mt-5">
+              {/* TEXT */}
+              <h3 className="text-white text-base sm:text-lg md:text-2xl font-semibold mt-3 sm:mt-5">
                 {item.name}
               </h3>
             </div>

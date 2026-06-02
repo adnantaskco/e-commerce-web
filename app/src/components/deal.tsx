@@ -1,14 +1,8 @@
 "use client";
 
-import Timer1 from "@/components/ui/timer";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
-import {
-  FaHeart,
-  FaShoppingCart,
-  FaStar,
-  FaEye,
-} from "react-icons/fa";
+import React, { useEffect, useRef, useState } from "react";
+import { FaHeart, FaShoppingCart, FaStar, FaEye } from "react-icons/fa";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "./context/CartContext";
 
@@ -43,8 +37,8 @@ const products: Product[] = [
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/140-large_default/textured-top-with-cuffed-sleeves.jpg",
     price: 18,
-    brand: "EcoShop",
     oldPrice: 22,
+    brand: "EcoShop",
     rating: 5,
     discount: -15,
     timer: "7d : 05h : 12m : 10s",
@@ -148,181 +142,183 @@ const products: Product[] = [
 ];
 
 export default function ProductSlider() {
-      // ✅ CART
-       const { addToCart } = useCart(); 
-  
+  const { addToCart } = useCart();
   const [hovered, setHovered] = useState<number | null>(null);
+
   const sliderRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const getScrollAmount = () => {
+    const container = sliderRef.current;
+    if (!container) return 300;
+
+    const card = container.querySelector("div");
+    return card ? (card as HTMLElement).offsetWidth + 24 : 300;
+  };
 
   const scroll = (direction: "left" | "right") => {
     const container = sliderRef.current;
     if (!container) return;
 
-    const scrollAmount = 350;
-
     container.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
+      left: direction === "left" ? -getScrollAmount() : getScrollAmount(),
       behavior: "smooth",
     });
   };
 
+  const startAutoSlide = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    intervalRef.current = setInterval(() => {
+      const container = sliderRef.current;
+      if (!container) return;
+
+      const maxScroll = container.scrollWidth - container.clientWidth;
+
+      if (container.scrollLeft >= maxScroll - 10) {
+        container.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        container.scrollBy({
+          left: getScrollAmount(),
+          behavior: "smooth",
+        });
+      }
+    }, 3000);
+  };
+
+  useEffect(() => {
+    startAutoSlide();
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
   return (
-    <section className="w-full px-4 sm:px-6 lg:px-10 py-16 bg-white relative overflow-hidden">
-    
-          {/* TITLE */}
-          <div className="text-center mb-14">
-            <p className="text-primary uppercase tracking-[4px] text-sm font-semibold">
-              FEATURES
-            </p>
-    
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mt-3">
-              Feature Deal Products
-            </h1>
-    
-            <div className="flex justify-center mt-5">
-              <div className="w-28 h-[3px] bg-primary rounded-full"></div>
-            </div>
-          </div>
-    
-          {/* LEFT */}
-          <button
-            onClick={() => scroll("left")}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center hover:bg-primary hover:text-white duration-300"
-          >
-            <ChevronLeft size={24} />
-          </button>
-    
-          {/* RIGHT */}
-          <button
-            onClick={() => scroll("right")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center hover:bg-primary hover:text-white duration-300"
-          >
-            <ChevronRight size={24} />
-          </button>
-    
-          {/* SLIDER */}
+    <section className="w-full px-4 sm:px-6 lg:px-10 py-16 bg-white relative">
+
+      {/* TITLE */}
+      <div className="text-center mb-10">
+        <h1 className="text-3xl sm:text-4xl font-bold">
+         Weekend Feature Deal Products
+        </h1>
+      </div>
+
+      {/* LEFT */}
+      <button
+        onClick={() => scroll("left")}
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white shadow rounded-full flex items-center justify-center"
+      >
+        <ChevronLeft />
+      </button>
+
+      {/* RIGHT */}
+      <button
+        onClick={() => scroll("right")}
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white shadow rounded-full flex items-center justify-center"
+      >
+        <ChevronRight />
+      </button>
+
+      {/* SLIDER */}
+      <div
+        ref={sliderRef}
+        onMouseEnter={() => intervalRef.current && clearInterval(intervalRef.current)}
+        onMouseLeave={startAutoSlide}
+        className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar"
+      >
+        {products.map((item) => (
           <div
-            ref={sliderRef}
-            className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-5"
+            key={item.id}
+            onMouseEnter={() => setHovered(item.id)}
+            onMouseLeave={() => setHovered(null)}
+            className="
+              flex-shrink-0
+              w-full sm:w-full md:w-1/4
+              bg-white border rounded-xl
+              hover:shadow-xl transition
+               hover:-translate-y-2
+              overflow-hidden
+              group
+            "
           >
-            {products.map((item) => {
-              const isHover = hovered === item.id;
-    
-              return (
-                <div
-                  key={item.id}
-                  onMouseEnter={() => setHovered(item.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  className="min-w-[260px] sm:min-w-70 lg:min-w-75 bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 flex-shrink-0 group"
-                >
-    
-                  {/* IMAGE */}
-                  <div className="relative bg-gray-100 h-[300px] flex items-center justify-center">
-    
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      width={260}
-                      height={300}
-                      className="object-contain"
-                    />
-    
-                    {/* DISCOUNT */}
-                    <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-md">
-                      {item.discount}%
-                    </div>
-    
-                    {/* TIMER */}
-                    {/* {product.hasOffer && (
-                    <div
-                      className={`absolute bottom-4 left-1/2 -translate-x-1/2 transition-all duration-300 ${
-                        isHover ? "opacity-0 translate-y-5" : "opacity-100 translate-y-0"
-                      }`}
-                    >
-                      <div className="backdrop-blur-md px-4 py-2 rounded-full shadow-lg">
-                        <Timer1 />
-                      </div>
-                    </div>
-                    )} */}
-    
-                    {/* ICONS */}
-                    {/* ICONS */}
-                    <div
-                      className={`
-                        absolute top-5 right-4 flex flex-col gap-3 z-10
-                        transition-all duration-500
+            {/* IMAGE */}
+            <div className="relative h-[280px] flex items-center justify-center bg-gray-100">
 
-                        /* MOBILE = ALWAYS SHOW */
-                        opacity-100 translate-x-0
+              <Image
+                src={item.image}
+                alt={item.name}
+                width={260}
+                height={300}
+                className="object-contain"
+              />
 
-                        /* MD & LG = HOVER EFFECT */
-                        md:opacity-0 md:translate-x-14
-                        md:group-hover:opacity-100
-                        md:group-hover:translate-x-0
-                      `}
-                    >
-                      <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
-                        <FaHeart />
-                      </button>
+              <div className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                {item.discount}%
+              </div>
 
-                  <button
-                      onClick={() =>
-                        addToCart({
-                          id: item.id,
-                          image: item.image,
-                          brand: item.brand,
-                          name: item.name,
-                          price: item.price,
-                        })
-                      }
-  className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition"
->
-  <FaShoppingCart />
+              {/* ICONS (FIXED) */}
+              <div
+                className="
+                  absolute top-4 right-3 flex flex-col gap-2 z-10
+
+                  opacity-0 translate-x-5
+                  transition-all duration-300
+
+                  group-hover:opacity-100
+                  group-hover:translate-x-0
+                "
+              >
+                <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-pink-500 hover:text-white transition">
+                  <FaHeart />
                 </button>
 
-                      <button className="w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-primary hover:text-white transition">
-                        <FaEye />
-                      </button>
-                    </div>
-                    </div>
-    
-                  {/* CONTENT (EcoShop STYLE) */}
-                  <div className="p-4">
-    
-                    {/* NAME */}
-                    <p className="text-sm text-gray-500">EcoShop</p>
-    
-                    <h2 className="text-base font-semibold text-gray-800 mt-1">
-                      {item.name}
-                    </h2>
-    
-                    {/* STARS */}
-                    <div className="flex items-center gap-1 mt-2 text-yellow-400 text-sm">
-                      {[...Array(item.rating)].map((_, i) => (
-                        <FaStar key={i} />
-                      ))}
-                      <span className="text-gray-500 text-xs ml-1">
-                        ({item.rating})
-                      </span>
-                    </div>
-    
-                    {/* PRICE */}
-                    <div className="flex items-center gap-3 mt-3">
-                      <span className="text-gray-400 line-through text-sm">
-                        ${item.oldPrice}
-                      </span>
-    
-                      <span className="text-red-500 font-bold text-lg">
-                        ${item.price}
-                      </span>
-                    </div>
-    
-                  </div>
-    
-                </div>
-              );
-            })}
+                <button
+                  onClick={() =>
+                    addToCart({
+                      id: item.id,
+                      image: item.image,
+                      brand: item.brand,
+                      name: item.name,
+                      price: item.price,
+                    })
+                  }
+                  className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+                >
+                  <FaShoppingCart />
+                </button>
+
+                <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
+                  <FaEye />
+                </button>
+              </div>
+
+            </div>
+
+            {/* CONTENT */}
+            <div className="p-4">
+              <p className="text-sm text-gray-500">{item.brand}</p>
+
+              <h2 className="font-semibold">{item.name}</h2>
+
+              <div className="flex gap-1 text-yellow-400 text-sm">
+                {[...Array(item.rating)].map((_, i) => (
+                  <FaStar key={i} />
+                ))}
+              </div>
+
+              <div className="flex gap-2 mt-2">
+                <span className="line-through text-gray-400">
+                  ${item.oldPrice}
+                </span>
+                <span className="text-red-500 font-bold">
+                  ${item.price}
+                </span>
+              </div>
+            </div>
+
           </div>
-        </section>
+        ))}
+      </div>
+    </section>
   );
 }

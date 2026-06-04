@@ -26,7 +26,7 @@ function Home1() {
     <div className="flex flex-col md:flex-row gap-4">
   
   {/* Sidebar */}
-  <div className="md:w-64 w-full">
+  <div className=" hidden md:block lg:block md:w-64 w-full">
     <CategorySidebar />
   </div>
 

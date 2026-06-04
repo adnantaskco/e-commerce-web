@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
        "prestashop.codezeel.com",
        "i.ibb.co",
        "shared-user-bucket.blr1.digitaloceanspaces.com",
-       "shared-user-bucket.blr1.digitaloceanspaces.com"
+       "shared-user-bucket.blr1.digitaloceanspaces.com",
+       "img.magnific.com"
     ],
   },
 };

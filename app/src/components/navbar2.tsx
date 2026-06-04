@@ -31,7 +31,7 @@ function Navbar2() {
         <div className="flex justify-between items-center">
 
           {/* Logo */}
-          <link  href="/home" /><div className="flex items-center gap-2">
+          <link  href="/home"></link> <div className="flex items-center gap-2 cursor-pointer">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Adnan_Safee.png"
               alt="logo"
@@ -39,7 +39,7 @@ function Navbar2() {
               height={50}
               className="rounded-full"
             />
-          </div>
+          </div> <link/>
 
           {/* DESKTOP MENU (UNCHANGED) */}
           <div className="hidden md:flex items-center gap-4">
@@ -148,30 +148,30 @@ function Navbar2() {
               </NavigationMenuList>
             </NavigationMenu>
 
-            <a href="#" className="font-semibold">About</a>
+            <a href="/about" className="font-semibold text-sm">About</a>
           </div>
 
           {/* RIGHT ICONS */}
-          <div className="flex items-center gap-5 text-xl">
+          <div className="flex items-center gap-5 ">
 
           <a href="">
-         <CiSearch />
+         <CiSearch  className="text-2xl"/>
                 </a>
 
               <a href="/loginpage">
-           <MdAccountCircle/>
+           <MdAccountCircle className="text-2xl"/>
             </a>
 
             <Link
-  href="/cart"
-  className="relative flex items-center gap-2 text-sm font-semibold"
->
-  <TiShoppingCart className="text-2xl" />
+                href="/cart"
+                className="relative flex items-center gap-2 text-sm font-semibold"
+              >
+                <TiShoppingCart className="text-2xl" />
 
-  <span className="absolute -top-2 -right-3 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
-    {totalItems}
-  </span>
-</Link>
+                <span className="absolute -top-2 -right-3 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
+                  {totalItems}
+                </span>
+              </Link>
 
 
           

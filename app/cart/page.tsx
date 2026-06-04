@@ -105,7 +105,7 @@ export default function CartPage() {
                   />
 
                   {/* IMAGE */}
-                  <div className="w-16 h-16 relative bg-gray-100 rounded overflow-hidden flex-shrink-0">
+                  <div className="w-16 h-16  relative bg-gray-100 rounded overflow-hidden flex-shrink-0">
                     <Image
                       src={item.image}
                       alt={item.name}
@@ -116,13 +116,13 @@ export default function CartPage() {
 
                   {/* INFO */}
                   <div className="flex-1">
-                    <h2 className="text-sm font-medium">
+                    <h2 className="text-lg font-medium">
                       {item.name}
                     </h2>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-sm text-gray-500">
                       ${item.price}
                     </p>
-                    <p className="text-xs font-semibold text-green-600">
+                    <p className="text-sm font-semibold text-green-600">
                       Total: $
                       {(item.price * item.quantity).toFixed(2)}
                     </p>

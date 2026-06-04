@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const categories = [
@@ -45,21 +45,59 @@ const categories = [
 
 const CategorySection = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const getScrollAmount = () => {
+    const container = sliderRef.current;
+    if (!container) return 260;
+
+    const card = container.querySelector("div") as HTMLElement;
+    return card ? card.offsetWidth + 16 : 260;
+  };
 
   const scroll = (direction: "left" | "right") => {
     const container = sliderRef.current;
     if (!container) return;
 
-    const card = container.querySelector("div");
-    const scrollAmount = card
-      ? (card as HTMLElement).offsetWidth + 16
-      : 260;
-
     container.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
+      left: direction === "left" ? -getScrollAmount() : getScrollAmount(),
       behavior: "smooth",
     });
   };
+
+  // 🔥 AUTO SLIDER
+  const startAutoSlide = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    intervalRef.current = setInterval(() => {
+      const container = sliderRef.current;
+      if (!container) return;
+
+      const maxScroll =
+        container.scrollWidth - container.clientWidth;
+
+      if (container.scrollLeft >= maxScroll - 10) {
+        container.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        container.scrollBy({
+          left: getScrollAmount(),
+          behavior: "smooth",
+        });
+      }
+    }, 3000);
+  };
+
+  const stopAutoSlide = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    startAutoSlide();
+    return stopAutoSlide;
+  }, []);
 
   return (
     <section
@@ -79,62 +117,49 @@ const CategorySection = () => {
           <h2 className="text-white text-2xl sm:text-4xl md:text-5xl font-bold">
             Shop By Category
           </h2>
-
-          <div className="w-20 sm:w-28 h-[3px] bg-primary mx-auto mt-4 sm:mt-5"></div>
+          <div className="w-20 sm:w-28 h-[3px] bg-primary mx-auto mt-4"></div>
         </div>
 
         {/* LEFT BUTTON */}
         <button
           onClick={() => scroll("left")}
-          className="
-            absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20
-            w-10 h-10 sm:w-12 sm:h-12
-            rounded-full bg-black/40 text-white
-            flex items-center justify-center
-            hover:bg-black/70 transition
-          "
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20
+          w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 text-white
+          flex items-center justify-center hover:bg-black/80 transition"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft />
         </button>
 
         {/* RIGHT BUTTON */}
         <button
           onClick={() => scroll("right")}
-          className="
-            absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20
-            w-10 h-10 sm:w-12 sm:h-12
-            rounded-full bg-black/40 text-white
-            flex items-center justify-center
-            hover:bg-black/70 transition
-          "
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20
+          w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 text-white
+          flex items-center justify-center hover:bg-black/80 transition"
         >
-          <ChevronRight size={24} />
+          <ChevronRight />
         </button>
 
         {/* SLIDER */}
         <div
           ref={sliderRef}
+          onMouseEnter={stopAutoSlide}
+          onMouseLeave={startAutoSlide}
           className="
-            flex gap-4 sm:gap-6
-            overflow-x-auto scroll-smooth no-scrollbar
-            scroll-snap-x
-            px-2 sm:px-4
+            flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth no-scrollbar px-2 sm:px-4
+            snap-x snap-mandatory
           "
         >
           {categories.map((item) => (
             <div
               key={item.id}
               className="
-                flex-shrink-0
-                w-full sm:w-full md:w-1/2 lg:w-1/4
-                scroll-snap-align-start
-                text-center
-                group
+                flex-shrink-0 w-full sm:w-full md:w-1/2 lg:w-1/4
+                snap-start text-center group
               "
             >
-              {/* CARD */}
               <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-md">
-                <div className="relative w-full h-[160px] sm:h-[200px] md:h-[220px] overflow-hidden">
+                <div className="relative w-full h-[160px] sm:h-[200px] md:h-[220px]">
                   <Image
                     src={item.image}
                     alt={item.name}
@@ -144,13 +169,13 @@ const CategorySection = () => {
                 </div>
               </div>
 
-              {/* TEXT */}
               <h3 className="text-white text-base sm:text-lg md:text-2xl font-semibold mt-3 sm:mt-5">
                 {item.name}
               </h3>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

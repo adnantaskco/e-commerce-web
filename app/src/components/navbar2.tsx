@@ -31,15 +31,17 @@ function Navbar2() {
         <div className="flex justify-between items-center">
 
           {/* Logo */}
-          <link  href="/home"></link> <div className="flex items-center gap-2 cursor-pointer">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Adnan_Safee.png"
-              alt="logo"
-              width={100}
-              height={50}
-              className="rounded-full"
-            />
-          </div> <link/>
+         <Link href="/home">
+            <div className="flex items-center gap-2 cursor-pointer">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Adnan_Safee.png"
+                alt="logo"
+                width={100}
+                height={50}
+                className="rounded-full"
+              />
+            </div>
+          </Link>
 
           {/* DESKTOP MENU (UNCHANGED) */}
           <div className="hidden md:flex items-center gap-4">
@@ -50,7 +52,7 @@ function Navbar2() {
             {/* Shop */}
             
         <NavigationMenu>
-  <NavigationMenuList>
+          <NavigationMenuList>
     {/* Shop Menu */}
           <NavigationMenuItem>
             <NavigationMenuTrigger>Shop</NavigationMenuTrigger>
@@ -154,7 +156,7 @@ function Navbar2() {
           {/* RIGHT ICONS */}
           <div className="flex items-center gap-5 ">
 
-          <a href="">
+          <a href="#">
          <CiSearch  className="text-2xl"/>
                 </a>
 

@@ -3,6 +3,8 @@
 import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
 
+import Image from "next/image";
+
 import img1 from "../components/image/3609477xg.png";
 import img2 from "../components/image/lj.png";
 
@@ -16,6 +18,7 @@ import {
 } from "@/components/ui/carousel";
 
 export function HeroSection() {
+ 
   const plugin = React.useMemo(
     () => Autoplay({ delay: 2000, stopOnInteraction: true }),
     []
@@ -29,18 +32,20 @@ export function HeroSection() {
   return (
     <Carousel
       plugins={[plugin]}
-      className="w-full  mx-auto"
-      onMouseEnter={plugin.stop}
-      onMouseLeave={plugin.reset}
+      className="w-full mx-auto"
+      // onMouseEnter={() => plugin.stop()}
+      // onMouseLeave={() => plugin.reset()}
     >
       <CarouselContent>
         {slides.map((slide, index) => (
           <CarouselItem key={index}>
             <Card className="overflow-hidden">
               <CardContent className="p-0">
-                <img
-                  src={slide.image.src}
+                <Image
+                  src={slide.image}
                   alt={`slide-${index}`}
+                  width={1200}
+                  height={800}
                   className="w-full h-full object-cover"
                 />
               </CardContent>

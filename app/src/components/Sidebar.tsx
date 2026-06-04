@@ -52,7 +52,7 @@ export default function CategorySidebar() {
         `}
       >
         {/* Header */}
-        <div className="border-b-2 border-black p-2 text-center md:pt-44 lg:pt-44 ">
+        <div className="border-b-2 border-black p-1.5 text-center md:pt-44 lg:pt-44 ">
           <h1 className="text-lg font-bold">Categories</h1>
         </div>
 

@@ -14,6 +14,7 @@ import Services from "../src/components/services";
 import { TabsDemo } from "../src/components/TabProduct";
 import BrandLogo from "../src/components/BrandLogo";
 import CategorySidebar from "../src/components/Sidebar";
+import ProductFeatures from "@/components/animata/hero/product-features";
 
 
 
@@ -45,6 +46,7 @@ function Home1() {
     <DiscountBanners2/>
     <FeatureProduct/>
     <TestimonialSection/>
+    <ProductFeatures/>
     <GallerySlider/>
     <BrandLogo/>
     </div>

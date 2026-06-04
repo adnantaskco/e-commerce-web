@@ -201,7 +201,7 @@ export default function FeatureProduct() {
      }, []);
    
   return (
-   <section className="w-full px-4 sm:px-6 lg:px-10 py-16 bg-white relative">
+   <section className="container mx-auto px-6 md:px-10 lg:px-20 py-16 bg-white relative">
    
          {/* TITLE */}
          <div className="text-center mb-10">
@@ -213,7 +213,7 @@ export default function FeatureProduct() {
          {/* LEFT */}
          <button
            onClick={() => scroll("left")}
-           className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white shadow rounded-full flex items-center justify-center"
+           className="absolute left-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white shadow rounded-full flex items-center justify-center"
          >
            <ChevronLeft />
          </button>
@@ -221,7 +221,7 @@ export default function FeatureProduct() {
          {/* RIGHT */}
          <button
            onClick={() => scroll("right")}
-           className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white shadow rounded-full flex items-center justify-center"
+           className="absolute right-10 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-white shadow rounded-full flex items-center justify-center"
          >
            <ChevronRight />
          </button>
@@ -264,40 +264,41 @@ export default function FeatureProduct() {
                  </div>
    
                  {/* ICONS (FIXED) */}
-                 <div
-                   className="
-                     absolute top-4 right-3 flex flex-col gap-2 z-10
-   
-                     opacity-0 translate-x-5
-                     transition-all duration-300
-   
-                     group-hover:opacity-100
-                     group-hover:translate-x-0
-                   "
-                 >
-                   <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-pink-500 hover:text-white transition">
-                     <FaHeart />
-                   </button>
-   
-                   <button
-                     onClick={() =>
-                       addToCart({
-                         id: item.id,
-                         image: item.image,
-                         brand: item.brand,
-                         name: item.name,
-                         price: item.price,
-                       })
-                     }
-                     className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
-                   >
-                     <FaShoppingCart />
-                   </button>
-   
-                   <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
-                     <FaEye />
-                   </button>
-                 </div>
+ {/* ICONS */}
+              <div
+                className={`
+                  absolute top-5 right-4 flex flex-col gap-3 z-10 transition-all duration-300
+                  ${
+                    hovered === item.id
+                      ? "opacity-100 translate-x-0"
+                      : "sm:opacity-0 sm:translate-x-5"
+                  }
+                  sm:group-hover:opacity-100 sm:group-hover:translate-x-0
+                `}
+              >
+                <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-white transition">
+                  <FaHeart />
+                </button>
+
+                <button
+                  onClick={() =>
+                    addToCart({
+                      id: item.id,
+                      image: item.image,
+                      brand: item.brand,
+                      name: item.name,
+                      price: item.price,
+                    })
+                  }
+                  className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+                >
+                  <FaShoppingCart />
+                </button>
+
+                <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
+                  <FaEye />
+                </button>
+              </div>
    
                </div>
    

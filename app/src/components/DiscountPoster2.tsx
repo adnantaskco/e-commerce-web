@@ -5,7 +5,7 @@ function DiscountBanners2() {
     {
       id: 1,
       image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-1.jpg",
+        "https://img.magnific.com/free-photo/stylish-happy-girl-shopping-portrait-modern-woman-with-shop-bag-laughing-smiling-satisfied_1258-119361.jpg?semt=ais_hybrid&w=740&q=80",
       discount: "FLAT 25% OFF",
       title: "Model Fashion",
       subtitle: "Influencer",
@@ -13,7 +13,7 @@ function DiscountBanners2() {
     {
       id: 2,
       image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-2.jpg",
+        "https://thumbs.dreamstime.com/b/woman-choosing-clothes-large-wardrobe-closet-woman-choosing-clothes-large-wardrobe-closet-140209311.jpg",
       discount: "FLAT 25% OFF",
       title: "Feminine Pink",
       subtitle: "Clothes",
@@ -30,7 +30,7 @@ function DiscountBanners2() {
 
   return (
     <section className="py-8 md:py-12">
-      <div className=" mx-auto ">
+      <div className=" container mx-auto px-6 md:px-10 lg:px-20 ">
         
         {/* Responsive Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

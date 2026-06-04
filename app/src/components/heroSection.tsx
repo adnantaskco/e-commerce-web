@@ -2,13 +2,11 @@
 
 import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
-
 import Image from "next/image";
 
 import img1 from "../components/image/3609477xg.png";
-import img2 from "../components/image/lj.png";
+import img2 from "../components/image/9130.jpg";
 
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -18,44 +16,46 @@ import {
 } from "@/components/ui/carousel";
 
 export function HeroSection() {
- 
   const plugin = React.useMemo(
-    () => Autoplay({ delay: 2000, stopOnInteraction: true }),
+    () => Autoplay({ delay: 3000, stopOnInteraction: true }),
     []
   );
 
-  const slides = [
-    { image: img1 },
-    { image: img2 },
-  ];
+  const slides = [{ image: img1 }, { image: img2 }];
 
   return (
-    <Carousel
-      plugins={[plugin]}
-      className="w-full mx-auto"
-      // onMouseEnter={() => plugin.stop()}
-      // onMouseLeave={() => plugin.reset()}
-    >
-      <CarouselContent>
-        {slides.map((slide, index) => (
-          <CarouselItem key={index}>
-            <Card className="overflow-hidden">
-              <CardContent className="p-0">
+    <section className="w-full relative">
+
+      <Carousel plugins={[plugin]} className="w-full">
+
+        <CarouselContent>
+          {slides.map((slide, index) => (
+            <CarouselItem key={index}>
+              <div className="relative w-full h-[55vh] sm:h-[65vh] md:h-[80vh] lg:h-[90vh] overflow-hidden">
+
+                {/* IMAGE */}
                 <Image
                   src={slide.image}
                   alt={`slide-${index}`}
-                  width={1200}
-                  height={800}
-                  className="w-full h-full object-cover"
+                  fill
+                  priority={index === 0}
+                  className="object-cover scale-105 sm:scale-100"
                 />
-              </CardContent>
-            </Card>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
 
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+               
+
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+
+        {/* NAV BUTTONS (hidden on mobile for clean UI) */}
+        <div className="hidden sm:block">
+          <CarouselPrevious />
+          <CarouselNext />
+        </div>
+
+      </Carousel>
+    </section>
   );
 }

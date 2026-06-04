@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -13,85 +12,76 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div
+      className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center relative"
+      style={{
+        backgroundImage:
+          "url('https://m.media-amazon.com/images/I/91J46wFxGrL.jpg')",
+      }}
+    >
+      {/* DARK OVERLAY */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
 
-      {/* LEFT SIDE - IMAGE / ANIMATION */}
-      <div className="md:w-1/2 w-full  flex items-center justify-center p-10">
-        <div className="text-center text-white">
-          
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX3Z_uuNbS2o_wmq3JVAoyxT18auBT2wZ9cg&s" 
-            width={400}
-            height={400}
-            className="mx-auto"
-          />
+      {/* GLASS CARD */}
+      <div
+        className="relative w-full max-w-md p-8 rounded-2xl
+        bg-white/10 backdrop-blur-sm border border-white/20
+        shadow-2xl text-white"
+      >
+        <h1 className="text-3xl font-bold text-center mb-2">
+          Welcome Back
+        </h1>
 
-          <h2 className="text-2xl font-bold mt-6">
-            Welcome Back 👋
-          </h2>
+        <p className="text-center text-white/70 mb-6">
+          Login to continue
+        </p>
 
-          <p className="text-gray-300 mt-2">
-            Login to continue your shopping experience
-          </p>
-        </div>
-      </div>
-
-      {/* RIGHT SIDE - LOGIN FORM */}
-      <div className="md:w-1/2 w-full flex items-center justify-center bg-white p-8">
-        
-        <form
-          onSubmit={handleLogin}
-          className="w-full max-w-md space-y-5"
-        >
-
-          <h1 className="text-3xl font-bold text-center mb-6">
-            Sign In
-          </h1>
-
+        <form onSubmit={handleLogin} className="space-y-5">
           {/* EMAIL */}
           <div>
-            <label className="text-sm font-medium">
-              Email
-            </label>
+            <label className="text-sm text-white/80">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border p-3 rounded mt-1 outline-none focus:ring-2 focus:ring-black"
               placeholder="Enter your email"
+              className="w-full mt-1 p-3 rounded-lg
+              bg-white/10 border border-white/20
+              outline-none focus:ring-2 focus:ring-white/40
+              placeholder-white/50 text-white"
             />
           </div>
 
           {/* PASSWORD */}
           <div>
-            <label className="text-sm font-medium">
-              Password
-            </label>
+            <label className="text-sm text-white/80">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border p-3 rounded mt-1 outline-none focus:ring-2 focus:ring-black"
               placeholder="Enter your password"
+              className="w-full mt-1 p-3 rounded-lg
+              bg-white/10 border border-white/20
+              outline-none focus:ring-2 focus:ring-white/40
+              placeholder-white/50 text-white"
             />
           </div>
 
           {/* BUTTON */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-3 rounded hover:bg-gray-800 transition"
+            className="w-full py-3 rounded-lg font-semibold
+            bg-white text-black hover:bg-white/90 transition"
           >
             Login
           </button>
 
-          {/* EXTRA */}
-          <p className="text-sm text-center text-gray-500">
+          <p className="text-center text-sm text-white/70">
             Don’t have an account?{" "}
-            <span className="text-black font-semibold cursor-pointer">
-              <a href="/signup">Sign Up</a>
-            </span>
+            <a href="/signup" className="text-white font-semibold hover:underline">
+              Sign Up
+            </a>
           </p>
-
         </form>
       </div>
     </div>

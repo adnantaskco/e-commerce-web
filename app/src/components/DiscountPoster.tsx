@@ -5,7 +5,7 @@ function DiscountBanners() {
     {
       id: 1,
       image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/sub-banner-1.jpg",
+        "https://shotkit.com/wp-content/uploads/2023/08/tips_how_to_photograph_shoes_horizontal_3.jpg",
       discount: "Flat 25% Off",
       title: "Nike Air Force",
       subtitle: "Men's Shoes",
@@ -13,7 +13,7 @@ function DiscountBanners() {
     {
       id: 2,
       image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/sub-banner-2.jpg",
+        "https://t3.ftcdn.net/jpg/07/45/43/34/360_F_745433451_oghymUJTDezu6tT1PeCq53vGeyEENxHx.jpg",
       discount: "Flat 30% Off",
       title: "Trendy Analog",
       subtitle: "Women Watch",
@@ -22,7 +22,7 @@ function DiscountBanners() {
 
   return (
     <section className="py-8 md:py-12">
-      <div className=" mx-auto ">
+      <div className=" container mx-auto px-6 md:px-10 lg:px-20">
         
         {/* Responsive Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
@@ -44,15 +44,15 @@ function DiscountBanners() {
               {/* Content */}
               <div className="relative z-10 p-5 sm:p-7">
                 
-                <p className="text-sm sm:text-base font-semibold uppercase tracking-widest text-secondary">
+                <p className="text-sm sm:text-base font-semibold uppercase tracking-widest text-white">
                   {banner.discount}
                 </p>
 
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl text-black font-bold mt-2 leading-tight">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl text-white font-bold mt-2 leading-tight">
                   {banner.title}
                 </h2>
 
-                <p className="text-xl sm:text-2xl lg:text-3xl text-secondary mt-1">
+                <p className="text-xl sm:text-2xl lg:text-3xl text-gray-50 mt-1">
                   {banner.subtitle}
                 </p>
 

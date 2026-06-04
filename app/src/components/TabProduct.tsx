@@ -19,10 +19,10 @@ import Sheos from "./product2";
 
 export function TabsDemo() {
   return (
-    <section  id="top">
+    <section  id="top" className="container mx-auto px-6 md:px-10 lg:px-20">
         <div className="text-center pt-20">
             <h1 className="text-4xl font-semibold">Trending Products</h1>
-            <div className="flex justify-center mt-4">
+            <div className="flex  mt-4">
                 <div className="border-t-4 border-primary w-60"></div>
             </div>
             </div>

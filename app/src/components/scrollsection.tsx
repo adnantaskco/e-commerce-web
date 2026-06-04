@@ -49,10 +49,10 @@ const CategorySection = () => {
 
   const getScrollAmount = () => {
     const container = sliderRef.current;
-    if (!container) return 260;
+    if (!container) return 350;
 
-    const card = container.querySelector("div") as HTMLElement;
-    return card ? card.offsetWidth + 16 : 260;
+    const card = container.querySelector(".category-card") as HTMLElement;
+    return card ? card.offsetWidth + 24 : 350;
   };
 
   const scroll = (direction: "left" | "right") => {
@@ -65,7 +65,6 @@ const CategorySection = () => {
     });
   };
 
-  // 🔥 AUTO SLIDER
   const startAutoSlide = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -76,8 +75,11 @@ const CategorySection = () => {
       const maxScroll =
         container.scrollWidth - container.clientWidth;
 
-      if (container.scrollLeft >= maxScroll - 10) {
-        container.scrollTo({ left: 0, behavior: "smooth" });
+      if (container.scrollLeft >= maxScroll - 20) {
+        container.scrollTo({
+          left: 0,
+          behavior: "smooth",
+        });
       } else {
         container.scrollBy({
           left: getScrollAmount(),
@@ -101,77 +103,176 @@ const CategorySection = () => {
 
   return (
     <section
-      className="relative bg-fixed bg-center bg-cover py-14 sm:py-20 md:py-24 overflow-hidden"
+      className="relative overflow-hidden py-20 lg:py-28"
       style={{
         backgroundImage:
           "url('https://media.istockphoto.com/id/1289003879/photo/beautiful-happy-and-excited-young-girl-friends-with-paper-bags-and-smart-phone-are-walking.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
       }}
     >
-      {/* overlay */}
-      <div className="absolute inset-0 bg-black/50"></div>
+      {/* Premium Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/70 to-black/90" />
 
-      <div className="relative z-10 max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10">
+      <div className="relative z-10 container mx-auto px-4 lg:px-20">
 
-        {/* TITLE */}
-        <div className="text-center mb-10 sm:mb-14">
-          <h2 className="text-white text-2xl sm:text-4xl md:text-5xl font-bold">
+        {/* Heading */}
+        <div className="text-center mb-14">
+          <span className="uppercase tracking-[4px] text-primary font-semibold">
+            Trending Collections
+          </span>
+
+          <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-extrabold mt-3">
             Shop By Category
           </h2>
-          <div className="w-20 sm:w-28 h-[3px] bg-primary mx-auto mt-4"></div>
+
+          <div className="w-28 h-1 bg-primary mx-auto mt-5 rounded-full" />
         </div>
 
-        {/* LEFT BUTTON */}
+        {/* Left Button */}
         <button
           onClick={() => scroll("left")}
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20
-          w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 text-white
-          flex items-center justify-center hover:bg-black/80 transition"
+          className="
+            absolute left-4 lg:left-8 top-2/3 -translate-y-1/2 z-20
+            w-12 h-12 lg:w-14 lg:h-14
+            rounded-full
+            bg-white/10
+            backdrop-blur-md
+            border border-white/20
+            text-white
+            hover:bg-primary
+            hover:scale-110
+            transition-all duration-300
+          "
         >
-          <ChevronLeft />
+          <ChevronLeft className="mx-auto" />
         </button>
 
-        {/* RIGHT BUTTON */}
+        {/* Right Button */}
         <button
           onClick={() => scroll("right")}
-          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20
-          w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 text-white
-          flex items-center justify-center hover:bg-black/80 transition"
+          className="
+            absolute right-3 lg:right-8 top-2/3 -translate-y-1/2 z-20
+            w-12 h-12 lg:w-14 lg:h-14
+            rounded-full
+            bg-white/10
+            backdrop-blur-md
+            border border-white/20
+            text-white
+            hover:bg-primary
+            hover:scale-110
+            transition-all duration-300
+          "
         >
-          <ChevronRight />
+          <ChevronRight className="mx-auto" />
         </button>
 
-        {/* SLIDER */}
+        {/* Slider */}
         <div
           ref={sliderRef}
           onMouseEnter={stopAutoSlide}
           onMouseLeave={startAutoSlide}
           className="
-            flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth no-scrollbar px-2 sm:px-4
+            flex gap-6
+            overflow-x-auto
+            scroll-smooth
             snap-x snap-mandatory
+            no-scrollbar
+            px-2
           "
         >
           {categories.map((item) => (
             <div
               key={item.id}
               className="
-                flex-shrink-0 w-full sm:w-full md:w-1/2 lg:w-1/4
-                snap-start text-center group
+                category-card
+                flex-shrink-0
+                w-[85%]
+                sm:w-[48%]
+                md:w-[32%]
+                lg:w-[24%]
+                snap-start
+                group
               "
             >
-              <div className="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-md">
-                <div className="relative w-full h-[160px] sm:h-[200px] md:h-[220px]">
+              <div
+                className="
+                  overflow-hidden
+                  rounded-3xl
+                  bg-white/10
+                  backdrop-blur-lg
+                  border border-white/20
+                  shadow-xl
+                  transition-all duration-500
+                  hover:-translate-y-3
+                  hover:shadow-[0_15px_40px_rgba(243,59,59,0.4)]
+                "
+              >
+                {/* Image */}
+                <div className="relative h-[320px] overflow-hidden">
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
-                    className="object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="
+                      object-cover
+                      transition-all duration-700
+                      group-hover:scale-110
+                    "
                   />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                  <span
+                    className="
+                      absolute top-4 left-4
+                      bg-primary
+                      text-white
+                      text-xs
+                      px-3 py-1
+                      rounded-full
+                      font-semibold
+                    "
+                  >
+                    New Arrival
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="p-6 text-center">
+                  <h3
+                    className="
+                      text-white
+                      text-xl
+                      font-bold
+                      mb-2
+                      transition
+                      group-hover:text-primary
+                    "
+                  >
+                    {item.name}
+                  </h3>
+
+                  <p className="text-gray-300 text-sm mb-5">
+                    Explore our latest premium collection.
+                  </p>
+
+                  {/* <button
+                    className="
+                      px-5 py-2
+                      rounded-full
+                      bg-primary
+                      text-white
+                      font-medium
+                      hover:scale-105
+                      transition-all
+                    "
+                  >
+                    Shop Now
+                  </button> */}
                 </div>
               </div>
-
-              <h3 className="text-white text-base sm:text-lg md:text-2xl font-semibold mt-3 sm:mt-5">
-                {item.name}
-              </h3>
             </div>
           ))}
         </div>

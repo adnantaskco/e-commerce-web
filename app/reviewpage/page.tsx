@@ -145,7 +145,7 @@ export default function ProductViewPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100">
 
       {/* CONTAINER */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 ">
+      <section className="container mx-auto px-6 md:px-10 lg:px-20 ">
 
         {/* PRODUCT CARD */}
         <div className="grid lg:grid-cols-2 gap-8 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 shadow-xl border">
@@ -353,7 +353,7 @@ export default function ProductViewPage() {
        <section className="container mx-auto px-4 sm:px-6 lg:px-10 py-6 bg-white">
 
   {/* Title */}
-  <div className="py-6">
+  <div className="container mx-auto px-6 md:px-10 lg:px-20 py-6">
     <h1 className="text-3xl sm:text-4xl font-semibold">
       Related Products
     </h1>
@@ -361,7 +361,7 @@ export default function ProductViewPage() {
 
   {/* SCROLL CONTAINER */}
   <div
-    className="
+    className=" container mx-auto px-6 md:px-10 lg:px-20
       flex gap-6 overflow-x-auto pb-4
       scroll-smooth
       snap-x snap-mandatory

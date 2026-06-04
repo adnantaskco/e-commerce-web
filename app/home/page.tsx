@@ -21,22 +21,18 @@ import ProductFeatures from "@/components/animata/hero/product-features";
 function Home1() {
   return (
     <>
-    <div className="container mx-auto px-4 md:px-10 lg:px-20">
     <HeroSection></HeroSection>
     <Services></Services>
-    <div className="flex flex-col md:flex-row gap-4">
+    {/* <div className="flex flex-col container mx-auto px-6 md:px-10 lg:px-20 md:flex-row gap-4"> */}
   
-  {/* Sidebar */}
-  <div className=" hidden md:block lg:block md:w-64 w-full">
-    <CategorySidebar />
-  </div>
+ 
+ 
 
-  {/* Main Content */}
-  <div className="flex-1">
+
     <TabsDemo />
-  </div>
 
-</div>
+
+{/* </div> */}
     
    <DiscountBanners/>
     <CategorySection/>
@@ -46,10 +42,9 @@ function Home1() {
     <DiscountBanners2/>
     <FeatureProduct/>
     <TestimonialSection/>
-    <ProductFeatures/>
+    
     <GallerySlider/>
     <BrandLogo/>
-    </div>
    
     </>
   )

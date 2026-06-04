@@ -31,35 +31,67 @@ const services = [
 
 function Services() {
   return (
-    <div className=" mx-auto overflow-x-auto no-scrollbar bg-secondary">
-  <div className="flex md:gap-20  md:py-4 border-b-4 md:px-20 border-black">
+    <section className="bg-secondary py-2 border-b border-white/10">
+      <div className="container mx-auto px-4 lg:px-20">
+        
+        <div className="flex gap-6 overflow-x-auto lg:overflow-visible no-scrollbar">
 
-    {services.map((service, index) => (
-      <div
-        key={index}
-        className="
-          flex items-center gap-3
-          min-w-[260px] sm:min-w-20
-          bg-secondary p-3 sm:p-2
-          rounded-xl
-        "
-      >
-        <span className="text-4xl sm:text-2xl text-white shrink-0">
-          {service.icon}
-        </span>
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className="
+                group
+                flex items-center gap-4
+                min-w-[260px] sm:min-w-0 sm:flex-1
+                px-5 py-4
+                rounded-2xl
 
-        <div className="leading-tight">
-          <h6 className="text-base sm:text-md text-white font-semibold">
-            {service.title}
-          </h6>
-          <p className="text-xs sm:text-sm text-gray-300">
-            {service.description}
-          </p>
+                bg-white/5
+                backdrop-blur-xl
+                border border-white/10
+
+                shadow-lg
+                hover:shadow-primary/20
+                hover:-translate-y-1
+
+                transition-all duration-300
+              "
+            >
+              {/* Icon bubble */}
+              <div
+                className="
+                  flex items-center justify-center
+                  w-12 h-12
+                  rounded-full
+                  bg-primary/15
+                  text-primary
+                  text-2xl
+                  group-hover:scale-110
+                  transition
+                "
+              >
+                {service.icon}
+              </div>
+
+              {/* Text */}
+              <div className="leading-tight">
+                <h6 className="text-white font-semibold text-base group-hover:text-primary transition">
+                  {service.title}
+                </h6>
+
+                <p className="text-sm text-gray-300">
+                  {service.description}
+                </p>
+              </div>
+
+              {/* glow line effect */}
+              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition pointer-events-none bg-gradient-to-r from-primary/10 to-transparent" />
+            </div>
+          ))}
         </div>
+
       </div>
-    ))}
-  </div>
-</div>
+    </section>
   );
 }
 

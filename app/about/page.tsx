@@ -13,10 +13,10 @@ export default function AboutPage() {
           
           {/* TEXT */}
           <div>
-            <h1 className="text-4xl font-bold mb-4">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-4">
               About Our Store
             </h1>
-
+            
             <p className="text-gray-600 leading-relaxed mb-4">
               We are a modern fashion e-commerce platform dedicated to bringing you
               the latest trends in clothing, shoes, and accessories. Our mission is

@@ -3,158 +3,150 @@
 import React, { useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-function GallerySlider() {
-  const gallery = [
-    {
-      id: 1,
-      image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-01.jpg",
-      description:
-        "How to Write a Blog Post Your Readers Will Love in 5 Steps",
-    },
-    {
-      id: 2,
-      image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-06.jpg",
-      description:
-        "9 Content Marketing Trends and Ideas to Increase Traffic",
-    },
-    {
-      id: 3,
-      image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-05.jpg",
-      description:
-        "The Ultimate Guide to Marketing Strategies to Improve Sales",
-    },
-    {
-      id: 4,
-      image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-04.jpg",
-      description:
-        "50 Best Sales Questions to Determine Your Customer's Need",
-    },
-    {
-      id: 5,
-      image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-02.jpg",
-      description:
-        "6 Simple Ways to Boost Your Ecommerce Conversion Rate",
-    },
-  ];
+type GalleryItem = {
+  id: number;
+  image: string;
+  category: string;
+  date: string;
+  title: string;
+};
 
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+const gallery: GalleryItem[] = [
+  {
+    id: 1,
+    image:
+      "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-01.jpg",
+    category: "Fashion",
+    date: "May 20, 2026",
+    title: "How to Write a Blog Post Your Readers Will Love in 5 Steps",
+  },
+  {
+    id: 2,
+    image:
+      "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-06.jpg",
+    category: "Marketing",
+    date: "May 24, 2026",
+    title: "9 Content Marketing Trends and Ideas to Increase Traffic",
+  },
+  {
+    id: 3,
+    image:
+      "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-05.jpg",
+    category: "Business",
+    date: "May 27, 2026",
+    title: "The Ultimate Guide to Marketing Strategies to Improve Sales",
+  },
+  {
+    id: 4,
+    image:
+      "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-04.jpg",
+    category: "Sales",
+    date: "May 30, 2026",
+    title: "50 Best Sales Questions to Determine Your Customer Need",
+  },
+  {
+    id: 5,
+    image:
+      "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/blog-02.jpg",
+    category: "Ecommerce",
+    date: "June 01, 2026",
+    title: "6 Simple Ways to Boost Your Ecommerce Conversion Rate",
+  },
+];
 
-  const getScrollAmount = () => {
+export default function GallerySlider() {
+  const sliderRef = useRef<HTMLDivElement | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // ✅ stable step = 1 card width (responsive safe)
+  const getStep = () => {
     const container = sliderRef.current;
+    if (!container) return 300;
 
-    if (!container) return 0;
-
-    const firstCard = container.children[0] as HTMLElement;
-
-    if (!firstCard) return 0;
-
-    return firstCard.offsetWidth + 24; // gap-6 = 24px
+    return container.clientWidth / 3;
   };
 
   const scroll = (direction: "left" | "right") => {
     const container = sliderRef.current;
-
     if (!container) return;
 
     container.scrollBy({
-      left:
-        direction === "left"
-          ? -getScrollAmount()
-          : getScrollAmount(),
+      left: direction === "left" ? -getStep() : getStep(),
       behavior: "smooth",
     });
   };
 
   const startAutoSlide = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
+    if (intervalRef.current) clearInterval(intervalRef.current);
 
     intervalRef.current = setInterval(() => {
       const container = sliderRef.current;
-
       if (!container) return;
 
-      const scrollAmount = getScrollAmount();
+      const maxScroll = container.scrollWidth - container.clientWidth;
 
-      const maxScrollLeft =
-        container.scrollWidth - container.clientWidth;
-
-      if (container.scrollLeft >= maxScrollLeft - 10) {
+      if (container.scrollLeft >= maxScroll - 5) {
         container.scrollTo({
           left: 0,
           behavior: "smooth",
         });
       } else {
         container.scrollBy({
-          left: scrollAmount,
+          left: getStep(),
           behavior: "smooth",
         });
       }
-    }, 3000);
+    }, 2500);
   };
 
   useEffect(() => {
     startAutoSlide();
-
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, []);
 
   return (
-    <section className="py-12">
-      <div className="relative  mx-auto px-4">
+    <section className="relative overflow-hidden py-10 lg:py-28 bg-black/5">
+      <div className="container mx-auto px-4 lg:px-20 relative z-10">
+
         {/* Heading */}
-        <div className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold">
-            Gallery
-          </h1>
-          <p className="mt-3 text-gray-600 font-medium">
-            You Can Explore Ourself
+        <div className="text-center mb-16">
+          <span className="uppercase tracking-[5px] text-primary font-semibold">
+            Latest Articles
+          </span>
+
+          <h2 className="text-4xl md:text-5xl font-bold mt-4">
+            Fashion Journal
+          </h2>
+
+          <p className="text-gray-900 mt-6 max-w-2xl mx-auto">
+            Discover the latest fashion trends, ecommerce insights, and marketing strategies.
           </p>
         </div>
 
         {/* Left Button */}
         <button
           onClick={() => scroll("left")}
-          className="absolute left-0 top-[60%] -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition"
+          className="absolute left-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-gray-400 text-white hover:bg-primary transition"
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft className="mx-auto" />
         </button>
 
         {/* Right Button */}
         <button
           onClick={() => scroll("right")}
-          className="absolute right-0 top-[60%] -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-black hover:text-white transition"
+          className="absolute right-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-gray-400 text-white hover:bg-primary transition"
         >
-          <ChevronRight size={24} />
+          <ChevronRight className="mx-auto" />
         </button>
 
         {/* Slider */}
         <div
           ref={sliderRef}
-          onMouseEnter={() => {
-            if (intervalRef.current) {
-              clearInterval(intervalRef.current);
-            }
-          }}
+          onMouseEnter={() => intervalRef.current && clearInterval(intervalRef.current)}
           onMouseLeave={startAutoSlide}
-          className="
-            flex gap-6
-            overflow-x-auto
-            scroll-smooth
-            snap-x snap-mandatory
-            no-scrollbar
-          "
+          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar"
         >
           {gallery.map((item) => (
             <div
@@ -162,33 +154,47 @@ function GallerySlider() {
               className="
                 flex-shrink-0
                 w-full
-                md:w-[calc((100%-48px)/3)]
+                sm:w-1/2
+                lg:w-1/3
                 snap-start
-                bg-white
-                rounded-xl
-                overflow-hidden
-                shadow-md
-                hover:shadow-xl
-                transition-all duration-300
               "
             >
-              <img
-                src={item.image}
-                alt={item.description}
-                className="w-full h-[240px] object-cover"
-              />
+              <div className="rounded-2xl overflow-hidden bg-white/5 border border-white/10 shadow-xl hover:-translate-y-2 transition">
 
-              <div className="p-5">
-                <p className="text-md font-medium leading-6">
-                  {item.description}
-                </p>
+                {/* Image */}
+                <div className="relative overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-[320px] object-cover transition duration-700 hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                  <span className="absolute top-4 left-4 bg-primary text-xs px-3 py-1 rounded-full text-white">
+                    {item.category}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="p-5">
+                  <p className="text-sm text-primary">{item.date}</p>
+
+                  <h3 className="font-bold text-lg mt-2">
+                    {item.title}
+                  </h3>
+
+                  <button className="mt-4 text-primary font-semibold">
+                    Read More →
+                  </button>
+                </div>
+
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
 }
-
-export default GallerySlider;

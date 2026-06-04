@@ -72,7 +72,7 @@ export default function ProductFeatures() {
   const yOffset = 30;
 
   return (
-    <section className="storybook-fix flex w-full flex-col items-center gap-4 bg-orange-50 py-10">
+    <section className="container mx-auto storybook-fix flex w-full flex-col items-center gap-4 bg-gray-50 py-10">
       <motion.header
         initial={{
           y: 100,
@@ -87,8 +87,9 @@ export default function ProductFeatures() {
         }}
         className="flex max-w-md flex-col items-center gap-2 text-center"
       >
-        <h1 className="text-3xl font-black text-primary">About Our Store</h1>
-        <div className="block text-balance text-lg text-black">
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold ">About Our Store</h1>
+        <div className="w-20 sm:w-80 h-[3px] bg-primary mx-auto mt-4"></div>
+        <div className=" text-balance text-lg text-gray-500">
         <p>Our mission is to make fashion accessible for everyone in Bangladesh. We aim to deliver premium quality products with the best customer experience, fast delivery, and trusted service.</p>
         </div>
       </motion.header>

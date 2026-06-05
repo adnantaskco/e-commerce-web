@@ -45,7 +45,7 @@ function Navbar2() {
 
           {/* DESKTOP MENU (UNCHANGED) */}
           <div className="hidden md:flex items-center gap-4">
-            <a className="font-semibold text-sm" href="/home">Home</a>
+            <a className="font-semibold text-sm" href="/allproduct">Products</a>
 
            
 

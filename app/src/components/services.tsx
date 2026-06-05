@@ -43,7 +43,7 @@ function Services() {
                 group
                 flex items-center gap-4
                 min-w-[260px] sm:min-w-0 sm:flex-1
-                px-5 py-4
+                md:px-5 md:py-4
                 rounded-2xl
 
                 bg-white/5
@@ -79,7 +79,7 @@ function Services() {
                   {service.title}
                 </h6>
 
-                <p className="text-sm text-gray-300">
+                <p className="hidden  sm:block text-sm text-gray-300">
                   {service.description}
                 </p>
               </div>

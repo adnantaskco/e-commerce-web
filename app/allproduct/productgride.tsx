@@ -4,13 +4,13 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { FaHeart, FaShoppingCart, FaStar, FaEye } from "react-icons/fa";
 import { useCart } from "@/app/src/components/context/CartContext";
-import { products1 } from "@/lib/product1";
+import { AllProducts } from "@/lib/allproduct";
 
 
 
 
 
-const ProductCard1 = () => {
+const ALLCard = () => {
   const [hovered, setHovered] = useState<number | null>(null);
   const { addToCart } = useCart();
 
@@ -19,7 +19,7 @@ const ProductCard1 = () => {
       <div
         className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8"
       >
-        {products1.map((item) => (
+        {AllProducts.map((item) => (
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}
@@ -31,7 +31,7 @@ const ProductCard1 = () => {
           >
             {/* IMAGE */}
             <div className="relative  bg-gray-100 h-[170px] sm:h-[240px] md:h-[280px] lg:h-[300px]  flex items-center justify-center">
-              <Image
+              <img
                 src={item.image}
                 alt={item.name}
                 
@@ -110,4 +110,4 @@ const ProductCard1 = () => {
   );
 };
 
-export default ProductCard1;
+export default ALLCard;

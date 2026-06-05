@@ -198,7 +198,10 @@ export default function ProductSlider() {
 
       {/* TITLE */}
       <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl font-bold">
+         <span className="uppercase tracking-[5px] text-primary font-semibold">
+            weakend Deal
+          </span>
+        <h1 className="text-4xl md:text-5xl font-bold mt-4">
          Weekend Feature Deal Products
         </h1>
       </div>

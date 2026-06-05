@@ -5,7 +5,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 
 import img1 from "../components/image/3609477xg.png";
-import img2 from "../components/image/9130.jpg";
+import img2 from "../components/image/img2.png";
 
 import {
   Carousel,
@@ -17,44 +17,42 @@ import {
 
 export function HeroSection() {
   const plugin = React.useMemo(
-    () => Autoplay({ delay: 3000, stopOnInteraction: true }),
+    () =>
+      Autoplay({
+        delay: 3500,
+        stopOnInteraction: true,
+      }),
     []
   );
 
-  const slides = [{ image: img1 }, { image: img2 }];
+  const slides = [
+    { image: img1 },
+    { image: img2 },
+  ];
 
   return (
-    <section className="w-full relative">
-
+    <section className="w-full">
       <Carousel plugins={[plugin]} className="w-full">
-
         <CarouselContent>
           {slides.map((slide, index) => (
             <CarouselItem key={index}>
-              <div className="relative w-full h-[55vh] sm:h-[65vh] md:h-[80vh] lg:h-[90vh] overflow-hidden">
-
-                {/* IMAGE */}
+              <div className="w-full">
                 <Image
                   src={slide.image}
                   alt={`slide-${index}`}
-                  fill
                   priority={index === 0}
-                  className="object-cover scale-105 sm:scale-100"
+                  className="w-full h-auto object-contain"
                 />
-
-               
-
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
 
-        {/* NAV BUTTONS (hidden on mobile for clean UI) */}
+        {/* Navigation Buttons */}
         <div className="hidden sm:block">
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="left-4" />
+          <CarouselNext className="right-4" />
         </div>
-
       </Carousel>
     </section>
   );

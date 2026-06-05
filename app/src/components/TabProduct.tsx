@@ -19,11 +19,14 @@ import Sheos from "./product2";
 
 export function TabsDemo() {
   return (
-    <section  id="top" className="container mx-auto px-6 md:px-10 lg:px-20">
+    <section  id="top" className="container mx-auto">
         <div className="text-center pt-20">
-            <h1 className="text-4xl font-semibold">Trending Products</h1>
-            <div className="flex  mt-4">
-                <div className="border-t-4 border-primary w-60"></div>
+           <span className="uppercase tracking-[5px] text-primary font-semibold">
+            Treanding
+          </span>
+            <h1 className="text-4xl md:text-5xl font-bold mt-4">Trending Products</h1>
+            <div className="flex justify-center mt-6">
+                <div className="border-t-4  border-primary w-60"></div>
             </div>
             </div>
         <div className="w-full flex justify-center px-4 sm:px-6 py-10">

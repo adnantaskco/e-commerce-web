@@ -201,14 +201,21 @@ export default function FeatureProduct() {
      }, []);
    
   return (
-   <section className="container mx-auto px-6 md:px-10 lg:px-20 py-16 bg-white relative">
+   <section className="container mx-auto px-6 md:px-20 lg:px-20 py-16 bg-white relative">
    
          {/* TITLE */}
          <div className="text-center mb-10">
-           <h1 className="text-3xl sm:text-4xl font-bold">
+          <span className="uppercase tracking-[5px] text-primary font-semibold">
+            Feature Deal
+          </span>
+           <h1 className="text-4xl md:text-5xl font-bold mt-4">
              Feature Deal Products
            </h1>
+           <div className="flex justify-center pt-4">
+            <div className="border-t-4  border-primary w-60"></div>
+           </div>
          </div>
+         
    
          {/* LEFT */}
          <button
@@ -249,7 +256,7 @@ export default function FeatureProduct() {
                "
              >
                {/* IMAGE */}
-               <div className="relative h-[280px] flex items-center justify-center bg-gray-100">
+               <div className="relative h-[170px] sm:h-[240px] md:h-[280px] lg:h-[300px] flex items-center justify-center bg-gray-100">
    
                  <Image
                    src={item.image}
@@ -264,7 +271,7 @@ export default function FeatureProduct() {
                  </div>
    
                  {/* ICONS (FIXED) */}
- {/* ICONS */}
+             {/* ICONS */}
               <div
                 className={`
                   absolute top-5 right-4 flex flex-col gap-3 z-10 transition-all duration-300

@@ -128,7 +128,7 @@ export default function GallerySlider() {
         {/* Left Button */}
         <button
           onClick={() => scroll("left")}
-          className="absolute left-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-gray-400 text-white hover:bg-primary transition"
+          className="absolute left-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white  hover:bg-primary transition"
         >
           <ChevronLeft className="mx-auto" />
         </button>
@@ -136,7 +136,7 @@ export default function GallerySlider() {
         {/* Right Button */}
         <button
           onClick={() => scroll("right")}
-          className="absolute right-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-gray-400 text-white hover:bg-primary transition"
+          className="absolute right-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white  hover:bg-primary transition"
         >
           <ChevronRight className="mx-auto" />
         </button>

@@ -151,7 +151,7 @@ export default function ProductViewPage() {
         <div className="grid lg:grid-cols-2 gap-8 bg-white rounded-3xl p-5 sm:p-6 lg:p-8 shadow-xl border">
 
           {/* IMAGE SECTION */}
-          <div className="relative">
+          <div className="sticky top-24 self-start ">
             <div className="overflow-hidden rounded-2xl bg-gray-100 p-3 sm:p-4">
               <Image
                 src={product.image}

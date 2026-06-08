@@ -264,160 +264,208 @@ export default function ProductSlider() {
   }, []);
 
   return (
-    <section className="container mx-auto px-6 md:px-10 lg:px-20 py-16 bg-white relative">
-      {/* TITLE */}
-      <div className="text-center mb-10">
-        <span className="uppercase tracking-[5px] text-primary font-semibold">
-          Weekend Deal
-        </span>
+<section className="container mx-auto px-6 md:px-10 lg:px-20 py-16 bg-white">
+  {/* TITLE */}
+  <div className="text-center mb-10">
+    <span className="uppercase tracking-[5px] text-primary font-semibold">
+      Weekend Deal
+    </span>
 
-        <h1 className="text-4xl md:text-5xl font-bold mt-4">
-          Weekend Feature Deal Products
-        </h1>
+    <h1 className="text-4xl md:text-5xl font-bold mt-4">
+      Weekend Feature Deal Products
+    </h1>
 
-        <div className="flex justify-center pt-4">
-          <div className="border-t-4 border-primary w-60"></div>
-        </div>
-      </div>
+    <div className="flex justify-center pt-4">
+      <div className="border-t-4 border-primary w-60"></div>
+    </div>
+  </div>
 
-      {/* LEFT BUTTON */}
-      <button
-        onClick={() => scroll("left")}
-        className="absolute left-2 lg:left-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center"
-      >
-        <ChevronLeft />
-      </button>
+  {/* SLIDER WRAPPER */}
+  <div className="relative">
+    {/* LEFT BUTTON */}
+    <button
+      onClick={() => scroll("left")}
+      className="
+        absolute
+        left-0
+        md:-left-5
+        lg:-left-6
+        top-1/2
+        -translate-y-1/2
+        z-30
+        w-12
+        h-12
+        rounded-full
+        bg-white
+        shadow-lg
+        border
+        flex
+        items-center
+        justify-center
+        hover:bg-primary
+        hover:text-white
+        transition
+      "
+    >
+      <ChevronLeft size={22} />
+    </button>
 
-      {/* RIGHT BUTTON */}
-      <button
-        onClick={() => scroll("right")}
-        className="absolute right-2 lg:right-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center"
-      >
-        <ChevronRight />
-      </button>
+    {/* RIGHT BUTTON */}
+    <button
+      onClick={() => scroll("right")}
+      className="
+        absolute
+        right-0
+        md:-right-4
+        lg:-right-3
+        top-1/2
+        -translate-y-1/2
+        z-30
+        w-12
+        h-12
+        rounded-full
+        bg-white
+        shadow-lg
+        border
+        flex
+        items-center
+        justify-center
+        hover:bg-primary
+        hover:text-white
+        transition
+      "
+    >
+      <ChevronRight size={22} />
+    </button>
 
-      {/* SLIDER */}
-      <div
-        ref={sliderRef}
-        onMouseEnter={() =>
-          intervalRef.current &&
-          clearInterval(intervalRef.current)
-        }
-        onMouseLeave={stopDragging}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={stopDragging}
-        className="
-          flex gap-6 overflow-x-auto
-          scroll-smooth no-scrollbar
-          cursor-grab select-none
-          touch-pan-x
-        "
-      >
-        {products.map((item) => (
-          <div
-            key={item.id}
-            onMouseEnter={() => setHovered(item.id)}
-            onMouseLeave={() => setHovered(null)}
-            className="
-              flex-shrink-0
-              w-[280px]
-              md:w-[300px]
-              bg-white
-              border
-              rounded-xl
-              overflow-hidden
-              transition-all
-              duration-300
-              hover:-translate-y-2
-              hover:shadow-xl
-              group
-            "
-          >
-            {/* IMAGE */}
-            <div className="relative h-[280px] bg-gray-100 flex items-center justify-center">
-              <Image
-                src={item.image}
-                alt={item.name}
-                width={260}
-                height={300}
-                draggable={false}
-                className="object-contain pointer-events-none"
-              />
+    {/* SLIDER */}
+    <div
+      ref={sliderRef}
+      onMouseEnter={() =>
+        intervalRef.current &&
+        clearInterval(intervalRef.current)
+      }
+      onMouseLeave={stopDragging}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={stopDragging}
+      className="
+        flex
+        gap-6
+        overflow-x-auto
+        scroll-smooth
+        no-scrollbar
+        cursor-grab
+        select-none
+        touch-pan-x
+      "
+    >
+      {products.map((item) => (
+        <div
+          key={item.id}
+          onMouseEnter={() => setHovered(item.id)}
+          onMouseLeave={() => setHovered(null)}
+          className="
+            flex-shrink-0
+            w-[50%]
+            md:w-[33.33%]
+            lg:w-[23.33%]
+            bg-white
+            border
+            rounded-xl
+            overflow-hidden
+            transition-all
+            duration-300
+            hover:-translate-y-2
+            hover:shadow-xl
+            group
+          "
+        >
+          {/* IMAGE */}
+          <div className="relative h-[280px] bg-gray-100 flex items-center justify-center">
+            <Image
+              src={item.image}
+              alt={item.name}
+              width={260}
+              height={300}
+              draggable={false}
+              className="object-contain pointer-events-none"
+            />
 
-              <div className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                {item.discount}%
-              </div>
-
-              {/* ACTION BUTTONS */}
-              <div
-                className={`
-                  absolute top-5 right-4
-                  flex flex-col gap-3
-                  transition-all duration-300
-                  ${
-                    hovered === item.id
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 translate-x-5"
-                  }
-                  group-hover:opacity-100
-                  group-hover:translate-x-0
-                `}
-              >
-                <button className="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-primary hover:text-white transition">
-                  <FaHeart />
-                </button>
-
-                <button
-                  onClick={() =>
-                    addToCart({
-                      id: item.id,
-                      image: item.image,
-                      brand: item.brand,
-                      name: item.name,
-                      price: item.price,
-                    })
-                  }
-                  className="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-black hover:text-white transition"
-                >
-                  <FaShoppingCart />
-                </button>
-
-                <button className="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-blue-500 hover:text-white transition">
-                  <FaEye />
-                </button>
-              </div>
+            <div className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
+              {item.discount}%
             </div>
 
-            {/* CONTENT */}
-            <div className="p-4">
-              <p className="text-sm text-gray-500">
-                {item.brand}
-              </p>
+            {/* ACTION BUTTONS */}
+            <div
+              className={`
+                absolute top-5 right-4
+                flex flex-col gap-3
+                transition-all duration-300
+                ${
+                  hovered === item.id
+                    ? "opacity-100 translate-x-0"
+                    : "opacity-0 translate-x-5"
+                }
+                group-hover:opacity-100
+                group-hover:translate-x-0
+              `}
+            >
+              <button className="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-primary hover:text-white transition">
+                <FaHeart />
+              </button>
 
-              <h2 className="font-semibold mt-1">
-                {item.name}
-              </h2>
+              <button
+                onClick={() =>
+                  addToCart({
+                    id: item.id,
+                    image: item.image,
+                    brand: item.brand,
+                    name: item.name,
+                    price: item.price,
+                  })
+                }
+                className="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-black hover:text-white transition"
+              >
+                <FaShoppingCart />
+              </button>
 
-              <div className="flex gap-1 text-yellow-400 mt-2">
-                {[...Array(item.rating)].map((_, i) => (
-                  <FaStar key={i} />
-                ))}
-              </div>
-
-              <div className="flex gap-2 mt-3 items-center">
-                <span className="line-through text-gray-400">
-                  ${item.oldPrice}
-                </span>
-
-                <span className="text-red-500 font-bold">
-                  ${item.price}
-                </span>
-              </div>
+              <button className="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-blue-500 hover:text-white transition">
+                <FaEye />
+              </button>
             </div>
           </div>
-        ))}
-      </div>
-    </section>
+
+          {/* CONTENT */}
+          <div className="p-4">
+            <p className="text-sm text-gray-500">
+              {item.brand}
+            </p>
+
+            <h2 className="font-semibold mt-1">
+              {item.name}
+            </h2>
+
+            <div className="flex gap-1 text-yellow-400 mt-2">
+              {[...Array(item.rating)].map((_, i) => (
+                <FaStar key={i} />
+              ))}
+            </div>
+
+            <div className="flex gap-2 mt-3 items-center">
+              <span className="line-through text-gray-400">
+                ${item.oldPrice}
+              </span>
+
+              <span className="text-red-500 font-bold">
+                ${item.price}
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
   );
 }

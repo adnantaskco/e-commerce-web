@@ -32,48 +32,45 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  // ✅ NO useEffect loading issue — safe lazy init
-  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    if (typeof window === "undefined") return [];
+  
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-    try {
-      const saved = localStorage.getItem("cart");
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+useEffect(() => {
+  const savedCart = localStorage.getItem("cart");
 
-  // ✅ Save to localStorage
+  if (savedCart) {
+    setCartItems(JSON.parse(savedCart));
+  }
+}, []);
+
+  //  Save to localStorage
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // ✅ Add to cart
-  const addToCart = (product: Omit<CartItem, "quantity">) => {
-    setCartItems((prev) => {
-      const exist = prev.find((item) => item.id === product.id);
+  //  Add to cart
+ const addToCart = (product: Omit<CartItem, "quantity">) => {
+  setCartItems((prev) => {
+    const exist = prev.find((item) => item.id === product.id);
 
-      if (exist) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
+    // Product already exists
+    if (exist) {
+      return prev;
+    }
 
-      return [...prev, { ...product, quantity: 1 }];
-    });
-  };
+    // New product
+    return [...prev, { ...product, quantity: 1 }];
+  });
+};
 
-  // ✅ Remove
+  //  Remove
   const removeFromCart = (id: number) => {
     setCartItems((prev) =>
       prev.filter((item) => item.id !== id)
     );
   };
 
-  // ✅ Increase
+  //  Increase
   const increaseQuantity = (id: number) => {
     setCartItems((prev) =>
       prev.map((item) =>
@@ -84,7 +81,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  // ✅ Decrease
+  //  Decrease
   const decreaseQuantity = (id: number) => {
     setCartItems((prev) =>
       prev.map((item) =>
@@ -95,18 +92,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  // ✅ Clear cart
+  //  Clear cart
   const clearCart = () => {
     setCartItems([]);
   };
 
-  // ✅ Total items
-  const totalItems = cartItems.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+  //  Total items
+  const totalItems = cartItems.length;
 
-  // ✅ Total price
+  //  Total price
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0

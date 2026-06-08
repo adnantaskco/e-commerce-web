@@ -30,15 +30,16 @@ const ProductCard1 = () => {
             className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group"
           >
             {/* IMAGE */}
-            <div className="relative  bg-gray-100 h-[170px] sm:h-[240px] md:h-[280px] lg:h-[300px]  flex items-center justify-center">
-              <Image
-                src={item.image}
-                alt={item.name}
-                
-                width={260}
-                height={300}
-                className="object-contain  w-auto h-[70%] sm:h-[60%] md:h-[100%] "
-              />
+            <div className="relative  bg-gray-100 h-[170px] sm:h-[240px] md:h-[280px] lg:h-[280px]  flex items-center justify-center">
+               <Image
+                              src={item.image}
+                              alt={item.name}
+                              width={260}
+                              height={300}
+                              draggable={false}
+                              className="object-contain pointer-events-none"
+                            />
+              
 
               {item.discount && (
                 <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-md">

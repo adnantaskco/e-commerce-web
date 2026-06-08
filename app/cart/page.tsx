@@ -29,13 +29,13 @@ export default function CartPage() {
   };
 
   // Select all
-  const selectAll = () => {
-    setSelectedItems(
-      selectedItems.length === cartItems.length
-        ? []
-        : cartItems.map((i) => i.id)
-    );
-  };
+  // const selectAll = () => {
+  //   setSelectedItems(
+  //     selectedItems.length === cartItems.length
+  //       ? []
+  //       : cartItems.map((i) => i.id)
+  //   );
+  // };
 
   // SELECTED ITEMS ONLY
   const selectedCartItems = cartItems.filter((item) =>
@@ -60,7 +60,7 @@ export default function CartPage() {
 
   return (
     <section className="w-full min-h-screen flex justify-center bg-gray-50 py-10">
-      <div className="container mx-auto px-4 sm:px-10 lg:px-20">
+      <div className="container mx-auto px-4 sm:px-10 lg:px-24">
 
         {/* TITLE */}
         <h1 className="text-2xl flex justify-center py-10 font-semibold mb-6">
@@ -78,7 +78,7 @@ export default function CartPage() {
             {/* LEFT SIDE */}
             <div className="lg:col-span-2 space-y-4">
 
-              {/* SELECT ALL */}
+              {/* SELECT ALL
               <div className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
@@ -89,7 +89,7 @@ export default function CartPage() {
                   onChange={selectAll}
                 />
                 <span>Select All</span>
-              </div>
+              </div> */}
 
               {/* CART ITEMS */}
               {cartItems.map((item) => (

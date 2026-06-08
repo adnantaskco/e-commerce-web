@@ -123,7 +123,7 @@ const CategorySection = () => {
             Trending Collections
           </span>
 
-          <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-extrabold mt-3">
+          <h2 className="text-white text-4xl md:text-5xl font-bold mt-4 lg:text-6xl ">
             Shop By Category
           </h2>
 

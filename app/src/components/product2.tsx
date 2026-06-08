@@ -22,7 +22,7 @@ type item = {
   discount?: number;
   hasOffer: boolean;
 };
-const products: item[] = [
+const products2: item[] = [
   {
     id: 21,
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/p/3/1/31-home_default.jpg",
@@ -141,11 +141,11 @@ const Sheos = () => {
    // ✅ CART
   const { addToCart } = useCart();
   return (
-  <section className="w-full px-4 sm:px-6 lg:px-10 py-6 bg-white">
+    <section className="w-full px-4 sm:px-6 lg:px-10 py-6 bg-white">
       <div
-        className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8"
+        className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8"
       >
-        {products.map((item) => (
+        {products2.map((item) => (
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}
@@ -156,14 +156,16 @@ const Sheos = () => {
             className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group"
           >
             {/* IMAGE */}
-            <div className="relative bg-gray-100 h-[220px] sm:h-[260px] md:h-[280px] lg:h-[300px] flex items-center justify-center">
-              <Image
-                src={item.image}
-                alt={item.name}
-                width={250}
-                height={250}
-                className="object-contain w-auto h-[80%]"
-              />
+            <div className="relative  bg-gray-100 h-[170px] sm:h-[240px] md:h-[280px] lg:h-[280px]  flex items-center justify-center">
+               <Image
+                   src={item.image}
+                   alt={item.name}
+                   width={260}
+                   height={300}
+                  draggable={false}
+                 className="object-contain pointer-events-none"
+                            />
+              
 
               {item.discount && (
                 <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-md">
@@ -183,7 +185,7 @@ const Sheos = () => {
                   sm:group-hover:opacity-100 sm:group-hover:translate-x-0
                 `}
               >
-                <button className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-black  transition">
+                <button className="w-5 h-5 sm:w-5 sm:h-5 md:h-10 md:w-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-white transition">
                   <FaHeart />
                 </button>
 
@@ -197,12 +199,12 @@ const Sheos = () => {
                       price: item.price,
                     })
                   }
-                  className="w-10 h-10 bg-white text-black rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+                  className="w-5 h-5 sm:w-5 sm:h-5 md:h-10 md:w-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
                 >
                   <FaShoppingCart />
                 </button>
 
-                <button className="w-10 h-10 text-black bg-white rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
+                <button className="w-5 h-5 sm:w-5 sm:h-5 md:h-10 md:w-10 bg-white rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
                   <FaEye />
                 </button>
               </div>

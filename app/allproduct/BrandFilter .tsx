@@ -25,7 +25,7 @@ function BrandFilter() {
               border
               cursor-pointer
               transition-all
-              hover:border-black
+              hover:border-primary
               hover:bg-gray-50
             "
           >
@@ -33,17 +33,15 @@ function BrandFilter() {
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
-                className="accent-black w-4 h-4"
+                className="accent-primary w-4 h-4"
               />
               <span className="text-sm text-gray-700">
                 {brand}
               </span>
             </div>
 
-            {/* RIGHT BADGE (optional style) */}
-            <span className="text-xs text-gray-400">
-              +
-            </span>
+           
+           
           </label>
         ))}
       </div>

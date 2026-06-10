@@ -41,7 +41,7 @@ export function HeroSection() {
                   src={slide.image}
                   alt={`slide-${index}`}
                   priority={index === 0}
-                  className="w-full h-auto object-contain"
+                  className="w-full h-full  object-contain"
                 />
               </div>
             </CarouselItem>

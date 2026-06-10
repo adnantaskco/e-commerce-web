@@ -3,7 +3,7 @@ function PriceFilter() {
     <div>
       <h3 className="font-semibold mb-2">Price</h3>
 
-      <input type="range" className="w-full" min={0} max={500} />
+      <input type="range" className="w-full text-primary" min={0} max={500} />
 
       <div className="flex justify-between text-xs text-gray-500">
         <span>$0</span>

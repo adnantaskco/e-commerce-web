@@ -15,6 +15,7 @@ import { TabsDemo } from "../src/components/TabProduct";
 import BrandLogo from "../src/components/BrandLogo";
 import CategorySidebar from "../src/components/Sidebar";
 import ProductFeatures from "@/components/animata/hero/product-features";
+import TrendingProductsTabs from "../src/components/tabproduct2";
 
 
 
@@ -22,23 +23,13 @@ function Home1() {
   return (
     <>
     <HeroSection></HeroSection>
-    <Services></Services>
-    {/* <div className="flex flex-col container mx-auto px-6 md:px-10 lg:px-20 md:flex-row gap-4"> */}
-  
+    {/* <Services></Services> */}
+    <TrendingProductsTabs></TrendingProductsTabs>
  
- 
-
-
-    <TabsDemo />
-
-
-{/* </div> */}
-    
+    {/* <TabsDemo /> */}
    <DiscountBanners/>
     <CategorySection/>
    <ProductSlider/>
-    
-
     <DiscountBanners2/>
     <FeatureProduct/>
     <TestimonialSection/>

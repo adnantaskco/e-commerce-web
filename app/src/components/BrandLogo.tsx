@@ -19,7 +19,7 @@ const brands = [
 
 export default function BrandLogo() {
   return (
-    <section className="py-20 bg-black/5 overflow-hidden">
+    <section className="md:py-20 py-8 bg-black/5 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-20">
 
         {/* Heading */}
@@ -28,11 +28,11 @@ export default function BrandLogo() {
             Trusted Partners
           </span>
 
-          <h2 className="text-4xl md:text-5xl font-bold mt-4">
+          <h2 className="text-3xl md:text-5xl font-bold sm:font-semibold mt-4">
             Our Brand Partners
           </h2>
 
-          <div className="w-24 h-1 bg-primary mx-auto rounded-full mt-5" />
+          <div className="w-28 h-1 bg-primary mx-auto rounded-full mt-5" />
         </div>
 
         <Carousel
@@ -53,6 +53,7 @@ export default function BrandLogo() {
               <CarouselItem
                 key={index}
                 className="
+                  pl-2
                   basis-1/2
                   sm:basis-1/3
                   md:basis-1/4
@@ -73,6 +74,7 @@ export default function BrandLogo() {
                     duration-300
                     hover:shadow-xl
                     hover:scale-105
+                    gap-5
                   "
                 >
                   <img

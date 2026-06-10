@@ -76,7 +76,11 @@ export default function CartPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             {/* LEFT SIDE */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="lg:col-span-2 space-y-4   p-4">
+              <div className="flex justify-between md:px-10 md:pl-20 border-2">
+                <h1 className="text-xl font-semibold ">Product Detials</h1>
+                <h1  className="text-xl font-semibold">Quantities</h1>
+              </div>
 
               {/* SELECT ALL
               <div className="flex items-center gap-2 text-sm">

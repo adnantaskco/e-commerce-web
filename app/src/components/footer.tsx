@@ -121,7 +121,7 @@ const Footer = () => {
             {socialIcons.map((Icon, i) => (
               <div
                 key={i}
-                className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:bg-pink-500 hover:scale-110 transition"
+                className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:primery hover:scale-110 transition"
               >
                 <Icon />
               </div>

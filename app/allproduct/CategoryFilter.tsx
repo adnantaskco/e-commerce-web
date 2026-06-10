@@ -15,7 +15,7 @@ function CategoryFilter() {
   const [active, setActive] = useState<string>("");
 
   return (
-    <div className="p-4 bg-white rounded-xl border shadow-sm">
+    <div className="p-2 bg-white rounded-xl border shadow-sm">
       
       {/* TITLE */}
       <h3 className="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wide">
@@ -33,8 +33,8 @@ function CategoryFilter() {
               transition-all border
               ${
                 active === cat
-                  ? "bg-black text-white border-black"
-                  : "text-gray-600 hover:bg-gray-50 hover:border-gray-300"
+                  ? "bg-primary text-white border-primary"
+                  : "text-black hover:bg-gray-50 hover:border-gray-300"
               }
             `}
           >

@@ -24,13 +24,13 @@ export function TabsDemo() {
            <span className="uppercase tracking-[5px] text-primary font-semibold">
             Treanding
           </span>
-            <h1 className="text-4xl md:text-5xl font-bold mt-4">Trending Products</h1>
+            <h1 className="text-3xl md:text-5xl font-bold sm:font-semibold mt-4">Trending Products</h1>
             <div className="flex justify-center mt-6">
                 <div className="border-t-4  border-primary w-60"></div>
             </div>
             </div>
         <div className="w-full flex justify-center px-4 sm:px-6 py-10">
-            <Tabs defaultValue="overview" className="w-full max-w-8xl">
+            <Tabs defaultValue="overview" className="w-full ">
 
         {/*  Tabs Header (Responsive scroll on mobile) */}
         <TabsList
@@ -62,7 +62,7 @@ export function TabsDemo() {
               </CardDescription>
             </CardHeader>
 
-            <CardContent className="px-2 sm:px-6">
+            <CardContent className="px-2 sm:px-2">
               <ProductCard1 />
             </CardContent>
           </Card>

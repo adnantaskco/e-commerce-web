@@ -156,7 +156,7 @@ const Sheos = () => {
             className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group"
           >
             {/* IMAGE */}
-            <div className="relative  bg-gray-100 h-[170px] sm:h-[240px] md:h-[280px] lg:h-[280px]  flex items-center justify-center">
+            <div className="relative  bg-gray-100 h-[170px] sm:h-[280px] md:h-[280px] lg:h-[280px]  flex items-center justify-center">
                <Image
                    src={item.image}
                    alt={item.name}
@@ -213,7 +213,7 @@ const Sheos = () => {
             {/* CONTENT */}
             <div className="p-4">
               <p className="text-sm text-gray-500">{item.brand}</p>
-              <h2 className="font-semibold">{item.name}</h2>
+              <h2 className="whitespace-nowrap overflow-hidden text-ellipsis font-semibold">{item.name}</h2>
 
               <div className="flex gap-1 text-yellow-400 text-sm">
                 {[...Array(item.rating)].map((_, i) => (

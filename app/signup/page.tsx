@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 export default function SignUpPage() {
@@ -16,114 +17,107 @@ export default function SignUpPage() {
       return;
     }
 
-    console.log({ name, email, password });
+    console.log({
+      name,
+      email,
+      password,
+    });
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4 
-      bg-cover bg-center relative"
-      style={{
-        backgroundImage:
-          "url('https://m.media-amazon.com/images/I/91J46wFxGrL.jpg')",
-      }}
-    >
-      {/* DARK OVERLAY */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-
-      {/* GLASS CARD */}
-      <div
-        className="relative w-full max-w-lg p-8 rounded-2xl
-        bg-white/10 backdrop-blur-xl border border-white/20
-        shadow-2xl text-white"
-      >
-        <h1 className="text-3xl font-bold text-center mb-2">
-          Create Account
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+        <h1 className="text-3xl font-bold text-center text-primary mb-2">
+          Sign Up
         </h1>
 
-        <p className="text-center text-white/70 mb-6">
-          Join our store and start shopping 🛒
+        <p className="text-center text-gray-500 mb-6">
+          Create your account
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
-          {/* NAME */}
+          {/* Name */}
           <div>
-            <label className="text-sm text-white/80">Full Name</label>
+            <label className="block mb-2 text-sm font-medium">
+              Full Name
+            </label>
+
             <input
               type="text"
+              placeholder="Enter your full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
-              className="w-full mt-1 p-3 rounded-lg
-              bg-white/10 border border-white/20
-              outline-none focus:ring-2 focus:ring-white/40
-              placeholder-white/50 text-white"
+              required
+              className="w-full border border-primary rounded-md p-3 outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
-          {/* EMAIL */}
+          {/* Email */}
           <div>
-            <label className="text-sm text-white/80">Email</label>
+            <label className="block mb-2 text-sm font-medium">
+              Email Address
+            </label>
+
             <input
               type="email"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="w-full mt-1 p-3 rounded-lg
-              bg-white/10 border border-white/20
-              outline-none focus:ring-2 focus:ring-white/40
-              placeholder-white/50 text-white"
+              required
+              className="w-full border border-primary rounded-md p-3 outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
-          {/* PASSWORD */}
+          {/* Password */}
           <div>
-            <label className="text-sm text-white/80">Password</label>
+            <label className="block mb-2 text-sm font-medium">
+              Password
+            </label>
+
             <input
               type="password"
+              placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password"
-              className="w-full mt-1 p-3 rounded-lg
-              bg-white/10 border border-white/20
-              outline-none focus:ring-2 focus:ring-white/40
-              placeholder-white/50 text-white"
+              required
+              className="w-full border border-primary rounded-md p-3 outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
-          {/* CONFIRM PASSWORD */}
+          {/* Confirm Password */}
           <div>
-            <label className="text-sm text-white/80">Confirm Password</label>
+            <label className="block mb-2 text-sm font-medium">
+              Confirm Password
+            </label>
+
             <input
               type="password"
+              placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm password"
-              className="w-full mt-1 p-3 rounded-lg
-              bg-white/10 border border-white/20
-              outline-none focus:ring-2 focus:ring-white/40
-              placeholder-white/50 text-white"
+              required
+              className="w-full border border-primary rounded-md p-3 outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
-          {/* BUTTON */}
+          {/* Button */}
           <button
             type="submit"
-            className="w-full py-3 rounded-lg font-semibold
-            bg-white text-black hover:bg-white/90 transition"
+            className="w-full bg-primary text-white py-3 rounded-md font-medium hover:opacity-90 transition"
           >
-            Sign Up
+            Create Account
           </button>
 
-          {/* LOGIN LINK */}
-          <p className="text-center text-sm text-white/70">
+          {/* Login Link */}
+          <p className="text-center text-sm text-gray-500">
             Already have an account?{" "}
-            <a href="/loginpage" className="text-white font-semibold hover:underline">
+            <Link
+              href="/loginpage"
+              className="text-primary font-semibold hover:underline"
+            >
               Login
-            </a>
+            </Link>
           </p>
-
         </form>
       </div>
     </div>

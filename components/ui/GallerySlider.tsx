@@ -107,38 +107,78 @@ export default function GallerySlider() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden py-10 lg:py-28 bg-black/5">
+    <section className="relative overflow-hidden py-8 lg:py-12 bg-black/5">
       <div className="container mx-auto px-4 lg:px-20 relative z-10">
 
         {/* Heading */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-4 md:mb-16 pb-4">
           <span className="uppercase tracking-[5px] text-primary font-semibold">
             Latest Articles
           </span>
 
-          <h2 className="text-4xl md:text-5xl font-bold mt-4">
+          <h2 className="text-3xl md:text-5xl font-bold sm:font-semibold mt-4">
             Fashion Journal
           </h2>
-
-          <p className="text-gray-900 mt-6 max-w-2xl mx-auto">
-            Discover the latest fashion trends, ecommerce insights, and marketing strategies.
-          </p>
+          
+          <div className="w-28 h-1 bg-primary mx-auto rounded-full mt-5" />
+          
         </div>
 
         {/* Left Button */}
+       {/* Left Button */}
         <button
           onClick={() => scroll("left")}
-          className="absolute left-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white  hover:bg-primary transition"
+          className="
+            hidden md:flex
+            absolute
+            left-6 lg:left-12
+            top-1/2
+            -translate-y-1/2
+            z-20
+            w-12
+            h-12
+            items-center
+            justify-center
+            rounded-full
+            bg-white
+            border
+            shadow-md
+            hover:bg-primary
+            hover:text-white
+            hover:shadow-xl
+            transition-all
+            duration-300
+          "
         >
-          <ChevronLeft className="mx-auto" />
+          <ChevronLeft size={22} />
         </button>
 
         {/* Right Button */}
         <button
           onClick={() => scroll("right")}
-          className="absolute right-10 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white  hover:bg-primary transition"
+          className="
+            hidden md:flex
+            absolute
+            right-6 lg:right-12
+            top-1/2
+            -translate-y-1/2
+            z-20
+            w-12
+            h-12
+            items-center
+            justify-center
+            rounded-full
+            bg-white
+            border
+            shadow-md
+            hover:bg-primary
+            hover:text-white
+            hover:shadow-xl
+            transition-all
+            duration-300
+          "
         >
-          <ChevronRight className="mx-auto" />
+          <ChevronRight size={22} />
         </button>
 
         {/* Slider */}

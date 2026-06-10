@@ -271,15 +271,15 @@ export default function ProductSlider() {
   }, []);
 
   return (
-<section className="container mx-auto px-6 md:px-10 lg:px-20 py-16 bg-white">
+<section className="container mx-auto px-6 md:px-10 lg:px-20 md:py-16 py-8 bg-white">
   {/* TITLE */}
   <div className="text-center mb-10">
     <span className="uppercase tracking-[5px] text-primary font-semibold">
-      Weekend Deal
+      Feature Products
     </span>
 
-    <h1 className="text-4xl md:text-5xl font-bold mt-4">
-      Weekend Feature Deal Products
+    <h1 className="text-3xl md:text-5xl font-bold sm:font-semibold mt-4">
+      New Feature Products
     </h1>
 
     <div className="flex justify-center pt-4">
@@ -288,11 +288,12 @@ export default function ProductSlider() {
   </div>
 
   {/* SLIDER WRAPPER */}
-  <div className="relative ">
+ <div className="relative">
     {/* LEFT BUTTON */}
     <button
       onClick={() => scroll("left")}
       className="
+        hidden md:flex
         absolute
         left-0
         md:-left-5
@@ -306,7 +307,6 @@ export default function ProductSlider() {
         bg-white
         shadow-lg
         border
-        flex
         items-center
         justify-center
         hover:bg-primary
@@ -320,7 +320,8 @@ export default function ProductSlider() {
     {/* RIGHT BUTTON */}
     <button
       onClick={() => scroll("right")}
-      className=" 
+      className="
+        hidden md:flex
         absolute
         right-0
         md:-right-3
@@ -334,7 +335,6 @@ export default function ProductSlider() {
         bg-white
         shadow-lg
         border
-        flex
         items-center
         justify-center
         hover:bg-primary
@@ -358,13 +358,15 @@ export default function ProductSlider() {
       onMouseUp={stopDragging}
       className="
         flex
-        gap-6
+        gap-3
+        md:gap-6
         overflow-x-auto
         scroll-smooth
         no-scrollbar
         cursor-grab
         select-none
         touch-pan-x
+        pb-2
       "
     >
       {products.map((item) => (
@@ -374,9 +376,9 @@ export default function ProductSlider() {
           onMouseLeave={() => setHovered(null)}
           className="
             flex-shrink-0
-            w-[50%]
-            md:w-[33.33%]
-            lg:w-[23.33%]
+            w-[48%]
+            md:w-[31.5%]
+            lg:w-[23.5%]
             bg-white
             border
             rounded-xl
@@ -389,18 +391,19 @@ export default function ProductSlider() {
           "
         >
           {/* IMAGE */}
-          <div className="relative h-[280px] bg-gray-100 flex items-center justify-center">
+          <div className="relative h-[180px] sm:h-[180px] md:h-[260px] lg:h-[280px] bg-gray-100 flex items-center justify-center">
             <Image
               src={item.image}
               alt={item.name}
-              width={260}
-              height={300}
+              width={240}
+              height={280}
               draggable={false}
-              className="object-contain pointer-events-none"
+              className="object-contain max-h-full pointer-events-none"
             />
 
-            <div className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded">
-              {item.discount}%
+            {/* DISCOUNT */}
+            <div className="absolute top-3 left-3 bg-primary text-white text-xs px-2 py-1 rounded">
+              {item.discount}% 
             </div>
 
             {/* ACTION BUTTONS */}
@@ -444,27 +447,27 @@ export default function ProductSlider() {
           </div>
 
           {/* CONTENT */}
-          <div className="p-4">
-            <p className="text-sm text-gray-500">
+          <div className="p-3 md:p-4">
+            <p className="text-xs md:text-sm text-gray-500">
               {item.brand}
             </p>
 
-            <h2 className="font-semibold mt-1">
+            <h2 className="whitespace-nowrap overflow-hidden text-ellipsis font-semibold mt-1 text-sm md:text-base min-h-[28px] line-clamp-2">
               {item.name}
             </h2>
 
-            <div className="flex gap-1 text-yellow-400 mt-2">
+            <div className="flex gap-1 text-yellow-400 mt- text-sm">
               {[...Array(item.rating)].map((_, i) => (
                 <FaStar key={i} />
               ))}
             </div>
 
-            <div className="flex gap-2 mt-3 items-center">
-              <span className="line-through text-gray-400">
+            <div className="flex flex-wrap gap-2 mt-3 items-center">
+              <span className="line-through text-gray-400 text-sm">
                 ${item.oldPrice}
               </span>
 
-              <span className="text-red-500 font-bold">
+              <span className="text-red-500 font-bold text-base">
                 ${item.price}
               </span>
             </div>

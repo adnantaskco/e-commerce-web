@@ -143,7 +143,7 @@ const products3: item[] = [
   },
 ];
 
-export default function ProductCard1() {
+export default function Jackets() {
    const [hovered, setHovered] = useState<number | null>(null);
    // ✅ CART
     const { addToCart } = useCart();
@@ -163,19 +163,18 @@ export default function ProductCard1() {
             className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group"
           >
             {/* IMAGE */}
-            <div className="relative  bg-gray-100 h-[170px] sm:h-[240px] md:h-[280px] lg:h-[300px]  flex items-center justify-center">
-             <Image
-                src={item.image}
-                alt={item.name}
-                width={260}
-                height={300}
-                draggable={false}
-                className="object-contain pointer-events-none"
-              />
-
+           <div className="relative h-[180px] sm:h-[180px] md:h-[260px] lg:h-[280px] bg-gray-100 flex items-center justify-center">
+                       <Image
+                         src={item.image}
+                         alt={item.name}
+                         width={260}
+                         height={300}
+                         draggable={false}
+                         className="object-contain max-h-full pointer-events-none"
+                       />
 
               {item.discount && (
-                <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-md">
+                <div className="absolute top-3 left-3 bg-primay text-white text-xs font-bold px-3 py-1 rounded-md">
                   {item.discount}%
                 </div>
               )}
@@ -218,25 +217,31 @@ export default function ProductCard1() {
             </div>
 
             {/* CONTENT */}
-            <div className="p-4">
-              <p className="text-sm text-gray-500">{item.brand}</p>
-              <h2 className="font-semibold">{item.name}</h2>
-
-              <div className="flex gap-1 text-yellow-400 text-sm">
-                {[...Array(item.rating)].map((_, i) => (
-                  <FaStar key={i} />
-                ))}
-              </div>
-
-              <div className="flex gap-2 mt-2">
-                <span className="line-through text-gray-400">
-                  ${item.oldPrice}
-                </span>
-                <span className="text-red-500 font-bold">
-                  ${item.price}
-                </span>
-              </div>
-            </div>
+            <div className="p-3 md:p-4">
+                        <p className="text-xs md:text-sm text-gray-500">
+                          {item.brand}
+                        </p>
+            
+                        <h2 className="whitespace-nowrap overflow-hidden text-ellipsis font-semibold mt-1 text-sm md:text-base min-h-[28px] line-clamp-2">
+                          {item.name}
+                        </h2>
+            
+                        <div className="flex gap-1 text-yellow-400 mt- text-sm">
+                          {[...Array(item.rating)].map((_, i) => (
+                            <FaStar key={i} />
+                          ))}
+                        </div>
+            
+                        <div className="flex flex-wrap gap-2 mt-3 items-center">
+                          <span className="line-through text-gray-400 text-sm">
+                            ${item.oldPrice}
+                          </span>
+            
+                          <span className="text-red-500 font-bold text-base">
+                            ${item.price}
+                          </span>
+                        </div>
+                      </div>
           </div>
         ))}
       </div>

@@ -45,7 +45,7 @@ const TestimonialSection = () => {
   }, []);
 
   return (
-    <section className="relative overflow-hidden py-20 lg:py-28">
+    <section className="relative overflow-hidden md:py-20 py-8  lg:py-28">
 
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-primary/10-900 to-primery/15" />
@@ -63,22 +63,25 @@ const TestimonialSection = () => {
 
             <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-3xl" />
 
-            <div className="relative overflow-hidden rounded-[30px] shadow-2xl">
-              <Image
-                src="https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/testimonial-img.jpg"
-                alt="testimonial"
-                width={800}
-                height={700}
-                className="
-                  w-full
-                  h-[500px]
-                  object-cover
-                  transition-all
-                  duration-700
-                  group-hover:scale-110
-                "
-              />
-            </div>
+           <div className="relative overflow-hidden rounded-[20px] md:rounded-[30px] shadow-2xl">
+  <Image
+    src="https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/testimonial-img.jpg"
+    alt="testimonial"
+    width={800}
+    height={700}
+    className="
+      w-full
+      h-[250px]
+      sm:h-[320px]
+      md:h-[400px]
+      lg:h-[500px]
+      object-cover
+      transition-all
+      duration-700
+      group-hover:scale-110
+    "
+  />
+</div>
 
           </div>
 
@@ -89,7 +92,7 @@ const TestimonialSection = () => {
               Testimonials
             </span>
 
-            <h2 className=" text-4xl md:text-5xl lg:text-6xl font-bold mt-4 leading-tight">
+            <h2 className=" text-3xl md:text-5xl lg:text-6xl font-bold sm:font-semibold mt-4 leading-tight">
               What Our Clients
               <span className="text-primary"> Say About Us</span>
             </h2>

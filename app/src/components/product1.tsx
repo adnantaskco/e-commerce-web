@@ -21,7 +21,7 @@ const ProductCard1 = () => {
         className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8"
       >
         {products1.map((item) => (
-          <Link key={item.id} href={`/product/${item.id}`}>
+          
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}
@@ -119,7 +119,7 @@ const ProductCard1 = () => {
                         </div>
                       </div>
           </div>
-          </Link>
+          
         ))}
       </div>
     </section>

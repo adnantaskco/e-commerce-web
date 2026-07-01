@@ -5,9 +5,9 @@ import "flag-icons/css/flag-icons.min.css"
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { CartProvider } from "./src/components/context/CartContext";
-import Navbar1 from "./src/components/navbar1";
-import Navbar2 from "./src/components/navbar2";
-import Footer from "./src/components/footer";
+import Navbar1 from "../components/navbar1";
+import Navbar2 from "../components/navbar2";
+import Footer from "../components/footer";
 
 
 const geistSans = Geist({

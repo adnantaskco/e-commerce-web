@@ -1,19 +1,5 @@
-export type Product = {
-   id: number;
-  image: string;
-  brand: string;
-  name: string;
-  rating: number;
-  reviews: number;
-  price: number;
-  oldPrice?: number;
-  discount?: number;
-  hasOffer: boolean;
-};
 
-
-
-export const AllProducts: Product[] = [
+export const AllProducts = [
   {
     id: 1,
     image:

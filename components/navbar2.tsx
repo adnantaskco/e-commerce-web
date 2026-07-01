@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { TiShoppingCart } from "react-icons/ti";
-import {  FaBars, FaXmark } from "react-icons/fa6";
+import {  FaBars, FaBoxOpen, FaClipboardList, FaFire, FaHeart, FaTags, FaXmark } from "react-icons/fa6";
 import { CiSearch } from "react-icons/ci";
+
 
 import { MdAccountCircle } from "react-icons/md";
 
@@ -17,8 +18,9 @@ import {
 } from "@/components/ui/navigation-menu";
 import MegaDropdown from "./shop";
 import MegaDropdown1 from "./shop";
-import { useCart } from "./context/CartContext";
+import { useCart } from "../app/src/components/context/CartContext";
 import Link from "next/link";
+import { FaHome, FaInfoCircle, FaPhoneAlt, FaShoppingCart, FaThLarge } from "react-icons/fa";
 
 function Navbar2() {
   const [open, setOpen] = useState(false);
@@ -45,7 +47,7 @@ function Navbar2() {
 
           {/* DESKTOP MENU (UNCHANGED) */}
           <div className="hidden md:flex items-center gap-4">
-            <a className="font-semibold text-sm" href="/allproduct">Products</a>
+            <Link className="font-semibold text-sm" href="/products">Products</Link>
 
            
 
@@ -191,36 +193,128 @@ function Navbar2() {
         </div>
       </div>
 
-      {/* OVERLAY */}
-      {open && (
-        <div
-          className="fixed inset-0 bg-black/40 z-40"
-          onClick={() => setOpen(false)}
-        />
-      )}
+{/* Overlay */}
+{open && (
+  <div
+    className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-40"
+    onClick={() => setOpen(false)}
+  />
+)}
 
-      {/* RIGHT SIDEBAR (MOBILE) */}
-      <div
-        className={`
-          fixed top-0 right-0 h-full w-48 bg-white z-50 shadow-lg
-          transform transition-transform duration-300
-          ${open ? "translate-x-0" : "translate-x-full"}
-        `}
-      >
-        <div className="flex justify-end p-4">
-          <button onClick={() => setOpen(false)} className="text-2xl">
-            <FaXmark />
-          </button>
-        </div>
-
-        {/* SIMPLE MOBILE LINKS (dropdown unchanged on desktop only) */}
-        <div className="flex flex-col gap-4 px-6 font-medium">
-          <a href="#">Products</a>
-          <a href="#">Brand</a>
-          <a href="#">Hot List</a>
-          <a href="#">About</a>
-        </div>
+{/* Mobile Sidebar */}
+<div
+  className={`fixed top-0 right-0 h-screen w-72 bg-white z-50 shadow-2xl
+  transition-transform duration-300 ease-in-out
+  ${open ? "translate-x-0" : "translate-x-full"}`}
+>
+  {/* Header */}
+  <div className="bg-primary text-white p-5">
+    <div className="flex justify-between items-center">
+      <div>
+        <h2 className="text-lg font-bold">Welcome </h2>
+        <p className="text-sm text-orange-100">
+          Sign in to access your account
+        </p>
       </div>
+
+      <button
+        onClick={() => setOpen(false)}
+        className="text-2xl hover:rotate-90 transition"
+      >
+        <FaXmark />
+      </button>
+    </div>
+    <Link href="/signup">
+    <button className="mt-4 w-full bg-white text-orange-500 py-2 rounded-lg font-semibold hover:bg-orange-100 transition">
+      Sign In / Register
+    </button></Link>
+  </div>
+
+  {/* Menu */}
+  <div className="py-4">
+
+    <Link href="/">
+    <p
+     
+      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+    >
+      <FaHome className="text-orange-500" />
+      Home
+    </p></Link>
+    <Link href="/products">
+    <p
+     
+      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+    >
+      <FaBoxOpen className="text-orange-500" />
+      Products
+    </p></Link>
+    <Link href="/products"></Link>
+    <p
+      
+      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+    >
+      <FaThLarge className="text-orange-500" />
+      Categories
+    </p>
+      <Link href="/products"></Link>
+    <p
+      
+      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+    >
+      <FaTags className="text-orange-500" />
+      Brands
+    </p>
+<Link href="/"></Link>
+    <p
+     
+      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+    >
+      <FaFire className="text-red-500" />
+      Flash Sale
+    </p>
+
+    <a
+      href="/wishlist"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+    >
+      <FaHeart className="text-pink-500" />
+      Wishlist
+    </a>
+
+    <a
+      href="/cart"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+    >
+      <FaShoppingCart className="text-green-500" />
+      Cart
+    </a>
+
+   
+
+    <a
+      href="/about"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+    >
+      <FaInfoCircle className="text-indigo-500" />
+      About
+    </a>
+
+    <a
+      href="/about"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+    >
+      <FaPhoneAlt className="text-teal-500" />
+      Contact
+    </a>
+  </div>
+
+  {/* Footer */}
+  <div className="absolute bottom-0 w-full border-t p-4 text-center text-sm text-gray-500">
+    <p>ShopSmart v1.0.0</p>
+    <p className="mt-1">© 2026 All Rights Reserved.</p>
+  </div>
+</div>
     </section>
   );
 }

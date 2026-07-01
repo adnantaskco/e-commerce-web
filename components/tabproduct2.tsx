@@ -2,14 +2,14 @@
 
 import * as React from "react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import ProductCard1 from "./product1"
-import Sheos from "./product2"
-import Jackets from "./jacket"
+import ProductCard1 from "./Productcard/Dresscard"
+import Sheos from "./Productcard/Babydresscard"
+import Jackets from "./Productcard/jacketcard"
 
 export default function TrendingProductsTabs() {
   return (
     <section className="w-full mx-auto py-10 ">
-        <div className=" mx-auto px- md:px-20">
+        <div className="container mx-auto px- md:px-20">
              {/* TITLE */}
          <div className="text-center md:py-10 py-4">
            <span className="uppercase tracking-[5px] text-primary font-semibold">
@@ -47,10 +47,10 @@ export default function TrendingProductsTabs() {
             </TabsTrigger>
 
             <TabsTrigger
-              value="shoes"
+              value="babydresss"
               className="text-sm sm:text-base data-[state=active]:text-primary "
             >
-              Shoes & Accessories
+              Baby Dress
             </TabsTrigger>
           </TabsList>
         </div>
@@ -64,7 +64,7 @@ export default function TrendingProductsTabs() {
           <Jackets />
         </TabsContent>
 
-        <TabsContent value="shoes" className="mt-6">
+        <TabsContent value="babydress" className="mt-6">
           <Sheos />
         </TabsContent>
 

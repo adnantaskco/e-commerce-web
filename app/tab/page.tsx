@@ -1,9 +1,9 @@
 "use client"
 
 import React from "react"
-import ProductCard1 from "../src/components/product1"
-import Sheos from "../src/components/product2"
-import Jackets from "../src/components/jacket"
+import ProductCard1 from "../../components/Productcard/Dresscard"
+import Sheos from "../../components/Productcard/Babydresscard"
+import Jackets from "../../components/Productcard/jacketcard"
 
 export default function SmartCategorySection() {
   const [activeCategory, setActiveCategory] = React.useState<string | null>(null)

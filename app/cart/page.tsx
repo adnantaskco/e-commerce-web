@@ -6,6 +6,7 @@ import { useCart } from "@/app/src/components/context/CartContext";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { PaymentButton } from "@/components/ui/payment";
 import { CheckboxBasic } from "@/components/ui/checkbox2";
+import Link from "next/link";
 
 export default function CartPage() {
   const {
@@ -16,42 +17,16 @@ export default function CartPage() {
     clearCart,
   } = useCart();
 
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [delivery, setDelivery] = useState(2);
 
-  // Toggle single select
-  const toggleSelect = (id: number) => {
-    setSelectedItems((prev) =>
-      prev.includes(id)
-        ? prev.filter((x) => x !== id)
-        : [...prev, id]
-    );
-  };
-
-  // Select all
-  // const selectAll = () => {
-  //   setSelectedItems(
-  //     selectedItems.length === cartItems.length
-  //       ? []
-  //       : cartItems.map((i) => i.id)
-  //   );
-  // };
-
-  // SELECTED ITEMS ONLY
-  const selectedCartItems = cartItems.filter((item) =>
-    selectedItems.includes(item.id)
-  );
-
-
-
-  // TOTAL SELECTED QUANTITY
-  const selectedItemsCount = selectedCartItems.reduce(
+  // TOTAL QUANTITY OF ALL ITEMS IN CART
+  const totalItemsCount = cartItems.reduce(
     (sum, item) => sum + item.quantity,
     0
   );
 
-  // SELECTED SUBTOTAL PRICE
-  const subtotal = selectedCartItems.reduce(
+  // SUBTOTAL PRICE OF ALL ITEMS IN CART
+  const subtotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
@@ -70,116 +45,87 @@ export default function CartPage() {
         {cartItems.length === 0 ? (
           <div className="bg-white p-10 text-center rounded-lg border">
             <p className="text-gray-500 text-xl">Cart is empty</p>
-            <a href="/home" className="text-blue-500 font-semibold"> Please Click me for Happy Shopping</a>
+            <Link href="/home" className="text-blue-500 font-semibold mt-2 inline-block">
+              Please Click me for Happy Shopping
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             {/* LEFT SIDE */}
-            <div className="lg:col-span-2 space-y-4   p-4">
-              <div className="flex justify-between md:px-10 md:pl-20 border-2">
-                <h1 className="text-xl font-semibold ">Product Detials</h1>
-                <h1  className="text-xl font-semibold">Quantities</h1>
-              </div>
-
-              {/* SELECT ALL
-              <div className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={
-                    selectedItems.length === cartItems.length &&
-                    cartItems.length > 0
-                  }
-                  onChange={selectAll}
-                />
-                <span>Select All</span>
-              </div> */}
-
+            <div className="lg:col-span-2 space-y-4 p-4">
               {/* CART ITEMS */}
               {cartItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-4 bg-white p-4 rounded-lg border"
+                  className="grid grid-cols-12 items-center px-5 py-5 border-b hover:bg-ring-20 transition"
                 >
-                  {/* CHECKBOX */}
-                  <input
-                    type="checkbox"
-                    checked={selectedItems.includes(item.id)}
-                    onChange={() => toggleSelect(item.id)}
-                  />
-
-                  {/* IMAGE */}
-                  <div className="w-16 h-16  relative bg-gray-100 rounded overflow-hidden flex-shrink-0">
-                    <Image
+                  {/* PRODUCT */}
+                  <div className="col-span-12 md:col-span-6 flex gap-4 items-center">
+                    <img
                       src={item.image}
                       alt={item.name}
-                      fill
-                      className="object-cover"
+                      className="w-14 h-14 object-cover rounded-lg border"
                     />
+
+                    <div>
+                      <h3 className="font-medium text-text-primary text-sm md:text-base">
+                        {item.name}
+                      </h3>
+                      <button
+                        onClick={() => removeFromCart(item.id)}
+                        className="text-destructive text-sm mt-1 flex items-center gap-1"
+                      >
+                        <FaTrash size={12} /> Remove
+                      </button>
+                    </div>
                   </div>
 
-                  {/* INFO */}
-                  <div className="flex-1">
-                    <h2 className="text-lg font-medium">
-                      {item.name}
-                    </h2>
-                    <p className="text-sm text-gray-500">
-                      ${item.price}
-                    </p>
-                    <p className="text-sm font-semibold text-green-600">
-                      Total: $
-                      {(item.price * item.quantity).toFixed(2)}
-                    </p>
+                  {/* PRICE */}
+                  <div className="hidden md:block col-span-2 text-center text-ring">
+                    ${item.price.toLocaleString()}
                   </div>
 
-                  {/* QUANTITY */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => decreaseQuantity(item.id)}
-                      className="p-1 border rounded"
-                    >
-                      <FaMinus size={10} />
-                    </button>
+                  {/* QTY */}
+                  <div className="col-span-6 md:col-span-2 flex justify-start md:justify-center mt-3 md:mt-0">
+                    <div className="flex items-center border rounded-lg overflow-hidden">
+                      <button
+                        onClick={() => decreaseQuantity(item.id)}
+                        className="px-3 py-1 hover:bg-ring/50 active:scale-95 transition"
+                      >
+                        <FaMinus size={12} />
+                      </button>
 
-                    <span className="w-6 text-center text-sm">
-                      {item.quantity}
-                    </span>
+                      <span className="px-4 text-sm">{item.quantity}</span>
 
-                    <button
-                      onClick={() => increaseQuantity(item.id)}
-                      className="p-1 border rounded"
-                    >
-                      <FaPlus size={10} />
-                    </button>
+                      <button
+                        onClick={() => increaseQuantity(item.id)}
+                        className="px-3 py-1 hover:bg-ring/50 active:scale-95 transition"
+                      >
+                        <FaPlus size={12} />
+                      </button>
+                    </div>
                   </div>
 
-                  {/* REMOVE */}
-                  <button
-                    onClick={() => removeFromCart(item.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <FaTrash size={14} />
-                  </button>
+                  {/* TOTAL */}
+                  <div className="col-span-6 md:col-span-2 text-right text-text-primary font-semibold mt-3 md:mt-0">
+                    ${(item.price * item.quantity).toLocaleString()}
+                  </div>
                 </div>
               ))}
             </div>
 
             {/* RIGHT SIDE */}
             <div className="bg-white p-5 rounded-lg border h-fit sticky top-5">
+              <h2 className="font-semibold mb-4">Order Summary</h2>
 
-              <h2 className="font-semibold mb-4">
-                Order Summary
-              </h2>
-
-             
-
-              {/* SELECTED ITEMS (QUANTITY) */}
+              {/* TOTAL ITEMS (QUANTITY) */}
               <div className="flex justify-between text-sm mb-2">
                 <span>Selected Items</span>
-                <span>{selectedItemsCount}</span>
+                <span>{totalItemsCount} Items</span>
               </div>
 
-              {/* SELECTED TOTAL PRICE */}
+              {/* TOTAL PRICE */}
               <div className="flex justify-between text-sm mb-2">
                 <span>Items Total Price</span>
                 <span className="text-green-600 font-medium">
@@ -189,15 +135,10 @@ export default function CartPage() {
 
               {/* DELIVERY */}
               <div className="mb-3">
-                <label className="text-xs text-gray-500">
-                  Delivery
-                </label>
-
+                <label className="text-xs text-gray-500">Delivery</label>
                 <select
                   className="w-full border p-2 rounded mt-1 text-sm"
-                  onChange={(e) =>
-                    setDelivery(Number(e.target.value))
-                  }
+                  onChange={(e) => setDelivery(Number(e.target.value))}
                 >
                   <option value={2}>Inside Dhaka - $2</option>
                   <option value={5}>Outside Dhaka - $5</option>
@@ -207,9 +148,7 @@ export default function CartPage() {
               {/* FINAL TOTAL */}
               <div className="flex justify-between font-semibold border-t pt-2">
                 <span>Total</span>
-                <span className="text-green-600">
-                  ${total.toFixed(2)}
-                </span>
+                <span className="text-green-600">${total.toFixed(2)}</span>
               </div>
 
               <div className="py-2">
@@ -217,9 +156,11 @@ export default function CartPage() {
               </div>
 
               <div className="py-2.5">
-
-                
-                <PaymentButton />
+                <Link href="/checkout">
+                  <button className="w-full mt-2 bg-black text-white py-1 rounded-lg hover:bg-gray-800">
+                    Checkout
+                  </button>
+                </Link>
 
                 <button
                   onClick={clearCart}
@@ -228,7 +169,6 @@ export default function CartPage() {
                   Clear Cart
                 </button>
               </div>
-
             </div>
           </div>
         )}

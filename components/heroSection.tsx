@@ -4,8 +4,8 @@ import * as React from "react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 
-import img1 from "../components/image/3609477xg.png";
-import img2 from "../components/image/img2.png";
+import img1 from "../app/src/components/image/3609477xg.png";
+import img2 from "../app/src/components/image/img2.png";
 
 import {
   Carousel,

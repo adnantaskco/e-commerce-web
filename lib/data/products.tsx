@@ -1,25 +1,7 @@
-export type product = {
-  id: number;
-  image: string;
-  brand: string;
-  name: string;
-  short_description: string;
-  category: string;
-  sizes: string[];
-
-  price: {
-    retail_price: number;
-    sale_price: number;
-    is_discounted: boolean;
-  };
-
-  stock: {
-    in_stock: boolean;
-  };
-};
 
 
-export const FullProducts: product[] = [
+
+export const FullProducts = [
   {
     id: 1,
     name: "Benetton Regular Fit Sweatshirt",

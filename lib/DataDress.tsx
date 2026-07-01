@@ -1,23 +1,12 @@
-export type Product = {
-  id: number;
-  image: string;
-  brand: string;
-  name: string;
-  rating: number;
-  reviews: number;
-  price: number;
-  oldPrice?: number;
-  discount?: number;
-  hasOffer: boolean;
-};
 
-export const products1: Product[] = [
+export const DataDress = [
   {
     id: 1,
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/5/15-home_default.jpg",
     brand: "Top-10",
     name: "Benetton Regular Fit Sweatshirt",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 5,
     price: 47.5,
@@ -31,6 +20,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/6/16-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Cotton Hoodie",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 8,
     price: 65,
@@ -42,6 +32,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/7/17-home_default.jpg",
     brand: "JARA",
     name: "Slim Fit Denim Jacket",
+    size: ["M", "L", "XL"],
     rating: 4,
     reviews: 12,
     price: 80,
@@ -55,6 +46,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/8/18-home_default.jpg",
     brand: "EcoShop",
     name: "Classic White Shirt",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 20,
     price: 35,
@@ -66,6 +58,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/9/19-home_default.jpg",
     brand: "Ferrari",
     name: "Summer T-Shirt Premium",
+    size: ["M", "L", "XL"],
     rating: 4,
     reviews: 7,
     price: 25,
@@ -79,6 +72,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/0/20-home_default.jpg",
     brand: "EcoShop",
     name: "Casual Black Hoodie",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 10,
     price: 55,
@@ -90,6 +84,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/1/21-home_default.jpg",
     brand: "EcoShop",
     name: "Stylish Winter Coat",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 14,
     price: 120,
@@ -103,6 +98,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/2/22-home_default.jpg",
     brand: "EcoShop",
     name: "Sport Jacket",
+    size: ["M", "L", "XL"],
     rating: 4,
     reviews: 9,
     price: 70,
@@ -114,6 +110,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/3/23-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Hoodie Grey",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 18,
     price: 60,
@@ -127,6 +124,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/4/24-home_default.jpg",
     brand: "EcoShop",
     name: "Casual Streetwear Tee",
+    size: ["M", "L", "XL"],
     rating: 4,
     reviews: 11,
     price: 28,
@@ -138,6 +136,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/5/25-home_default.jpg",
     brand: "EcoShop",
     name: "Winter Fashion Hoodie",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 13,
     price: 72,
@@ -151,6 +150,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/6/26-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Casual Jacket",
+    size: ["M", "L", "XL"],
     rating: 4,
     reviews: 9,
     price: 85,
@@ -162,6 +162,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/7/27-home_default.jpg",
     brand: "EcoShop",
     name: "Oversized Sweatshirt",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 15,
     price: 58,
@@ -175,6 +176,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/8/28-home_default.jpg",
     brand: "EcoShop",
     name: "Modern Street Jacket",
+    size: ["M", "L", "XL"],
     rating: 4,
     reviews: 6,
     price: 95,
@@ -186,6 +188,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/9/29-home_default.jpg",
     brand: "EcoShop",
     name: "Men's Denim Shirt",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 21,
     price: 42,
@@ -199,6 +202,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/0/30-home_default.jpg",
     brand: "EcoShop",
     name: "Warm Winter Hoodie",
+    size: ["M", "L", "XL"],
     rating: 4,
     reviews: 10,
     price: 62,
@@ -210,6 +214,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/1/31-home_default.jpg",
     brand: "EcoShop",
     name: "Luxury Cotton T-Shirt",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 17,
     price: 33,
@@ -223,6 +228,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/2/32-home_default.jpg",
     brand: "EcoShop",
     name: "Urban Style Coat",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 19,
     price: 140,
@@ -236,6 +242,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/3/33-home_default.jpg",
     brand: "EcoShop",
     name: "Classic Polo T-Shirt",
+    size: ["M", "L", "XL"],
     rating: 4,
     reviews: 7,
     price: 38,
@@ -247,6 +254,7 @@ export const products1: Product[] = [
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/4/34-home_default.jpg",
     brand: "EcoShop",
     name: "Fashionable Sports Hoodie",
+    size: ["M", "L", "XL"],
     rating: 5,
     reviews: 16,
     price: 68,

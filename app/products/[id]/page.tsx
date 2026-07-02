@@ -421,7 +421,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
 
           {activeTab === 'reviews' && (
             <div className="space-y-6 max-w-3xl">
-              <div className="border border-ring/10 rounded-xl p-6 bg-ring/50 flex items-center gap-5">
+              <div className="border border-ring/10 rounded-xl p-6 bg-ring/10 flex items-center gap-5">
                 <div>
                   <h3 className="text-4xl font-black text-ring">{rating}.0</h3>
                   <div className="flex text-amber-400 text-sm mt-0.5">{"★".repeat(rating)}</div>

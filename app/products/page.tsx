@@ -300,51 +300,56 @@ function ProductsContent() {
                     onMouseLeave={() => setHovered(null)}
                     className="bg-background rounded-xl overflow-hidden border border-ring/10 hover:shadow-xl transition-all duration-500 sm:hover:-translate-y-2 group flex flex-col justify-between"
                   >
-                    <div className="relative bg-ring/5 h-[140px] sm:h-[280px] flex items-center justify-center p-2">
-                      <img src={item.image}
-                       alt={item.name}
-                        draggable={false}
-                         className="object-contain max-h-full pointer-events-none mix-blend-multiply" />
-                      
-                      {item.discount && item.discount > 0 && (
-                        <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-destructive text-text-secondary text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded shadow-sm">
-                          {item.discount}% OFF
-                        </div>
-                      )}
+                  <div className="relative bg-ring/5 h-[140px] sm:h-[280px] flex items-center justify-center p-2">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      width={260}
+                      height={300}
+                      draggable={false}
+                      className="object-contain max-h-full pointer-events-none"
+                    />
 
-                      {/* ACTION BUTTONS (Optimized layout for both Tap and Hover states) */}
-                    <div
-                      className={`
-                        absolute top-2 right-2 sm:top-5 sm:right-4 flex flex-col gap-2 z-10 transition-all duration-300
-                        ${hovered === item.id ? "opacity-100 translate-x-0" : "opacity-0 translate-x-3 sm:opacity-0 sm:translate-x-5"}
-                        group-hover:opacity-100 group-hover:translate-x-0
-                      `}
-                    >
-                      <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-text-primary transition">
-                        <FaHeart />
-                      </button>
+          {/* DISCOUNT BADGE */}
+          {item.discount && (
+            <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-primary text-text-secondary text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded">
+              {item.discount}%
+            </div>
+          )}
 
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevents click handler triggers on the parent card wrapper
-                          addToCart({
-                            id: Number(item.id),
-                            image: item.image,
-                            brand: item.brand,
-                            name: item.name,
-                            price: item.price,
-                          });
-                        }}
-                        className="w-8 h-8 md:w-10 sm:w-5 sm:h-5 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-foreground hover:text-text-secondary active:scale-96 transition"
-                      >
-                        <FaShoppingCart />
-                      </button>
+          {/* ACTION BUTTONS */}
+          <div
+            className={`
+              absolute top-2 right-2 sm:top-5 sm:right-4 flex flex-col gap-2 z-10 transition-all duration-300
+              ${hovered === item.id ? "opacity-100 translate-x-0" : "opacity-0 translate-x-3 sm:opacity-0 sm:translate-x-5"}
+              group-hover:opacity-100 group-hover:translate-x-0
+            `}
+          >
+            <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-text-primary transition">
+              <FaHeart />
+            </button>
 
-                      <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
-                        <FaEye />
-                      </button>
-                    </div>
-                    </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // Prevents click handler triggers on the parent card wrapper
+                addToCart({
+                  id: Number(item.id),
+                  image: item.image,
+                  brand: item.brand,
+                  name: item.name,
+                  price: item.price,
+                });
+              }}
+              className="w-8 h-8 md:w-10 sm:w-5 sm:h-5 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-foreground hover:text-text-secondary active:scale-96 transition"
+            >
+              <FaShoppingCart />
+            </button>
+
+            <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
+              <FaEye />
+            </button>
+          </div>
+                   </div>
                     
                     <Link href={`/products/${item.id}`} className="flex-1 flex flex-col justify-between">
                       <div className="p-2.5 sm:p-4 space-y-0.5 sm:space-y-1">

@@ -34,13 +34,17 @@ export default function CartPage() {
   const total = subtotal + delivery;
 
   return (
-    <section className="w-full min-h-screen flex justify-center bg-ring/10 py-10">
+    <section className="w-full min-h-screen flex justify-center bg-background py-10">
       <div className="container mx-auto px-4 sm:px-10 lg:px-24">
 
         {/* TITLE */}
-        <h1 className="text-2xl flex text-text-primary justify-center py-10 font-semibold mb-6">
-          Shopping Cart
-        </h1>
+  {/* HEADER */}
+          <div className="p-5  border-b">
+            <h2 className="text-lg text-text-primary font-semibold">Cart Items</h2>
+            <p className="text-sm text-text-primary text-ring">
+              {totalItemsCount} items in your cart
+            </p>
+          </div>
 
         {cartItems.length === 0 ? (
           <div className="bg-background p-10 text-center rounded-lg border">

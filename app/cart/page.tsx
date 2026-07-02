@@ -34,17 +34,17 @@ export default function CartPage() {
   const total = subtotal + delivery;
 
   return (
-    <section className="w-full min-h-screen flex justify-center bg-gray-50 py-10">
+    <section className="w-full min-h-screen flex justify-center bg-ring/10 py-10">
       <div className="container mx-auto px-4 sm:px-10 lg:px-24">
 
         {/* TITLE */}
-        <h1 className="text-2xl flex justify-center py-10 font-semibold mb-6">
+        <h1 className="text-2xl flex text-text-primary justify-center py-10 font-semibold mb-6">
           Shopping Cart
         </h1>
 
         {cartItems.length === 0 ? (
-          <div className="bg-white p-10 text-center rounded-lg border">
-            <p className="text-gray-500 text-xl">Cart is empty</p>
+          <div className="bg-background p-10 text-center rounded-lg border">
+            <p className="text-ring text-xl">Cart is empty</p>
             <Link href="/home" className="text-blue-500 font-semibold mt-2 inline-block">
               Please Click me for Happy Shopping
             </Link>
@@ -96,7 +96,7 @@ export default function CartPage() {
                         <FaMinus size={12} />
                       </button>
 
-                      <span className="px-4 text-sm">{item.quantity}</span>
+                      <span className="px-4 text-text-primary text-sm">{item.quantity}</span>
 
                       <button
                         onClick={() => increaseQuantity(item.id)}
@@ -116,17 +116,17 @@ export default function CartPage() {
             </div>
 
             {/* RIGHT SIDE */}
-            <div className="bg-white p-5 rounded-lg border h-fit sticky top-5">
+            <div className="bg-background p-5 rounded-lg border h-fit sticky top-5">
               <h2 className="font-semibold mb-4">Order Summary</h2>
 
               {/* TOTAL ITEMS (QUANTITY) */}
-              <div className="flex justify-between text-sm mb-2">
+              <div className="flex justify-between text-text-primary text-sm mb-2">
                 <span>Selected Items</span>
                 <span>{totalItemsCount} Items</span>
               </div>
 
               {/* TOTAL PRICE */}
-              <div className="flex justify-between text-sm mb-2">
+              <div className="flex justify-between text-text-primary text-sm mb-2">
                 <span>Items Total Price</span>
                 <span className="text-green-600 font-medium">
                   ${subtotal.toFixed(2)}
@@ -135,7 +135,7 @@ export default function CartPage() {
 
               {/* DELIVERY */}
               <div className="mb-3">
-                <label className="text-xs text-gray-500">Delivery</label>
+                <label className="text-xs text-ring">Delivery</label>
                 <select
                   className="w-full border p-2 rounded mt-1 text-sm"
                   onChange={(e) => setDelivery(Number(e.target.value))}
@@ -157,14 +157,14 @@ export default function CartPage() {
 
               <div className="py-2.5">
                 <Link href="/checkout">
-                  <button className="w-full mt-2 bg-black text-white py-1 rounded-lg hover:bg-gray-800">
+                  <button className="w-full mt-2 bg-primary text-white py-1 rounded-lg hover:bg-ring">
                     Checkout
                   </button>
                 </Link>
 
                 <button
                   onClick={clearCart}
-                  className="w-full mt-2 bg-black text-white py-1 rounded-lg hover:bg-gray-800"
+                  className="w-full mt-2 bg-black text-white py-1 rounded-lg hover:bg-ring"
                 >
                   Clear Cart
                 </button>

@@ -25,20 +25,20 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-ring/10 px-4">
+      <div className="w-full max-w-md bg-background p-8 rounded-2xl shadow-lg border border-gray-100">
         <h1 className="text-3xl font-bold text-center text-primary mb-2">
           Sign Up
         </h1>
 
-        <p className="text-center text-gray-500 mb-6">
+        <p className="text-center text-ring mb-6">
           Create your account
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
           <div>
-            <label className="block mb-2 text-sm font-medium">
+            <label className="block text-text-primary mb-2 text-sm font-medium">
               Full Name
             </label>
 
@@ -54,7 +54,7 @@ export default function SignUpPage() {
 
           {/* Email */}
           <div>
-            <label className="block mb-2 text-sm font-medium">
+            <label className="block text-text-primary mb-2 text-sm font-medium">
               Email Address
             </label>
 
@@ -86,7 +86,7 @@ export default function SignUpPage() {
 
           {/* Confirm Password */}
           <div>
-            <label className="block mb-2 text-sm font-medium">
+            <label className="block mb-2 text-text-primary text-sm font-medium">
               Confirm Password
             </label>
 
@@ -103,13 +103,13 @@ export default function SignUpPage() {
           {/* Button */}
           <button
             type="submit"
-            className="w-full bg-primary text-white py-3 rounded-md font-medium hover:opacity-90 transition"
+            className="w-full bg-primary text-background py-3 rounded-md font-medium hover:opacity-90 transition"
           >
             Create Account
           </button>
 
           {/* Login Link */}
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-ring">
             Already have an account?{" "}
             <Link
               href="/login"

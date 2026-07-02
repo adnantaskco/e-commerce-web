@@ -29,7 +29,7 @@ function DiscountBanners2() {
   ];
 
   return (
-    <section className="py-8 md:py-12">
+    <section className="py-4 md:py-10 bg-background">
       <div className=" container mx-auto px-6 md:px-10 lg:px-20 ">
         
         {/* Responsive Grid */}
@@ -47,11 +47,11 @@ function DiscountBanners2() {
             >
               
               {/* Overlay */}
-              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition duration-300"></div>
+              <div className="absolute inset-0 bg-foreground/10 group-hover:bgforeground/20 transition duration-300"></div>
 
               {/* Content */}
               <div className="relative z-10 p-5 sm:p-7">
-                <p className="text-xs sm:text-sm md:text-base bg-primary text-secondary w-fit px-4 py-2 rounded-full font-semibold uppercase tracking-wider">
+                <p className="text-xs sm:text-sm md:text-base bg-primary text-text-secondary w-fit px-4 py-2 rounded-full font-semibold uppercase tracking-wider">
                   {banner.discount}
                 </p>
 
@@ -59,11 +59,11 @@ function DiscountBanners2() {
                   {banner.title}
                 </h2>
 
-                <p className="text-secondary text-xl sm:text-2xl lg:text-3xl mt-1">
+                <p className="text-text-primary text-xl sm:text-2xl lg:text-3xl mt-1">
                   {banner.subtitle}
                 </p>
 
-                <button className="mt-5 underline text-black font-semibold hover:translate-x-1 transition duration-300">
+                <button className="mt-5 underline text-text-primary font-semibold hover:translate-x-1 transition duration-300">
                   Shop Now
                 </button>
               </div>

@@ -1,17 +1,18 @@
 "use client"
 import React from "react";
 import "flag-icons/css/flag-icons.min.css";
+import { FaTractor } from "react-icons/fa6";
 
 function Navbar1() {
   return (
-    <section className="bg-secondary text-white py-4 w-full overflow-hidden ">
+    <section className="bg-foreground text-text-secondary py-2 w-full overflow-hidden ">
       <div className="container mx-auto px-6 md:px-20 lg:px-20">
 
         <div className="flex flex-col lg:flex-row justify-between items-center gap-3 text-sm">
 
           {/* Left Side */}
           <div className="text-center lg:text-left">
-            <p className="text-sm font-md">
+            <p className="text-sm text-text-secondary sm:font-sm font-md">
               Tell a friend about Styleway Fashion & get 30% off your next
               order.
             </p>
@@ -22,14 +23,14 @@ function Navbar1() {
 
             <a
               href="#"
-              className="border-r border-gray-700 pr-3 text-sm font-md hover:text-primary transition"
+              className="border-r border-ring px-3 text-sm font-md hover:text-primary transition"
             >
               Need Help?
             </a>
 
             <a
               href="#"
-              className="border-r border-gray-700 pr-3 text-sm font-md hover:text-primary transition"
+              className=" border-r border-ring px-3 text-sm font-md hover:text-primary transition"
             >
               Track Order
             </a>
@@ -37,7 +38,7 @@ function Navbar1() {
             {/* Language */}
             <select
               onChange={(e) => console.log(e.target.value)}
-              className="bg-black text-white outline-none cursor-pointer text-sm font-md px-2"
+              className="bg-foreground text-text-secondary outline-none cursor-pointer text-sm font-md px-2"
               defaultValue="en"
             >
               <option value="en"> English</option>
@@ -51,7 +52,7 @@ function Navbar1() {
             {/* Currency */}
             <select
               onChange={(e) => console.log(e.target.value)}
-              className="bg-black text-white outline-none text-sm font-md cursor-pointer px-2"
+              className="bg-foreground text-text-secondary outline-none text-sm  font-md cursor-pointer px-2"
               defaultValue="usd"
             >
               <option value="usd">$ USD</option>

@@ -16,8 +16,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import MegaDropdown from "./shop";
-import MegaDropdown1 from "./shop";
+
+
 import { useCart } from "../app/src/components/context/CartContext";
 import Link from "next/link";
 import { FaHome, FaInfoCircle, FaPhoneAlt, FaShoppingCart, FaThLarge } from "react-icons/fa";
@@ -28,7 +28,7 @@ function Navbar2() {
 
 
   return (
-    <section className="sticky top-0 z-50 bg-white shadow-md p-2">
+    <section className="sticky top-0 z-50 bg-background text-text-primary shadow-md p-2">
       <div className="container mx-auto px-4 md:px-10 lg:px-20 py-3">
         <div className="flex justify-between items-center">
 
@@ -38,8 +38,8 @@ function Navbar2() {
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/a/a3/Adnan_Safee.png"
                 alt="logo"
-                width={100}
-                height={50}
+                width={88}
+                height={36}
                 className="rounded-full"
               />
             </div>
@@ -47,7 +47,7 @@ function Navbar2() {
 
           {/* DESKTOP MENU (UNCHANGED) */}
           <div className="hidden md:flex items-center gap-4">
-            <Link className="font-semibold text-sm" href="/products">Products</Link>
+            <Link className="font-semibold text-text-primary text-sm" href="/products">Products</Link>
 
            
 
@@ -59,22 +59,22 @@ function Navbar2() {
           <NavigationMenuItem>
             <NavigationMenuTrigger>Shop</NavigationMenuTrigger>
             <NavigationMenuContent className="px-4 min-w-[260px] grid ">
-              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+              <NavigationMenuLink className="hover:ring/20 rounded-md px-3 py-2 cursor-pointer">
                 Men’s Fashion
               </NavigationMenuLink>
-              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+              <NavigationMenuLink className="hover:ring/20 rounded-md px-3 py-2 cursor-pointer">
                 Women’s Collection
               </NavigationMenuLink>
-              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+              <NavigationMenuLink className="hover:bg-ring/20 rounded-md px-3 py-2 cursor-pointer">
                 Kids Wear
               </NavigationMenuLink>
-              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+              <NavigationMenuLink className="hover:bg-ring/20 rounded-md px-3 py-2 cursor-pointer">
                 Winter Collection
               </NavigationMenuLink>
-              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+              <NavigationMenuLink className="hover:bg-ring/20 rounded-md px-3 py-2 cursor-pointer">
                 New Arrivals
               </NavigationMenuLink>
-              <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+              <NavigationMenuLink className="hover:bg-ring/20 rounded-md px-3 py-2 cursor-pointer">
                 Best Sellers
               </NavigationMenuLink>
             </NavigationMenuContent>
@@ -84,19 +84,19 @@ function Navbar2() {
             <NavigationMenuItem>
               <NavigationMenuTrigger>Cloth Showroom</NavigationMenuTrigger>
               <NavigationMenuContent className="px-4 min-w-[260px] grid ">
-                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                <NavigationMenuLink className="hover:ring/20 rounded-md px-3 py-2 cursor-pointer">
                   Casual Shirts Showroom
                 </NavigationMenuLink>
-                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                <NavigationMenuLink className="hover:ring/20 rounded-md px-3 py-2 cursor-pointer">
                   Luxury Panjabi Gallery
                 </NavigationMenuLink>
-                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                <NavigationMenuLink className="hover:ring/20 rounded-md px-3 py-2 cursor-pointer">
                   Saree & Boutique Corner
                 </NavigationMenuLink>
-                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                <NavigationMenuLink className="hover:ring/20 rounded-md px-3 py-2 cursor-pointer">
                   Denim & Jeans Zone
                 </NavigationMenuLink>
-                <NavigationMenuLink className="hover:bg-gray-100 rounded-md px-3 py-2 cursor-pointer">
+                <NavigationMenuLink className="hover:ring/20 rounded-md px-3 py-2 cursor-pointer">
                   Hoodie & Jacket Studio
                 </NavigationMenuLink>
               </NavigationMenuContent>
@@ -108,8 +108,8 @@ function Navbar2() {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="flex gap-2">Catagories </NavigationMenuTrigger>
-                  <NavigationMenuContent className="px-4 min-w-[260px] flex flex-col">
+                  <NavigationMenuTrigger className="flex gap-2 text-text-primary">Catagories </NavigationMenuTrigger>
+                  <NavigationMenuContent className="px-4 min-w-[260px] flex flex-col text-text-primary">
                     <NavigationMenuLink>Classic Cotton Shirt</NavigationMenuLink>
                     <NavigationMenuLink>Premium Denim Jeans</NavigationMenuLink>
                     <NavigationMenuLink>Silk Kurti Collection</NavigationMenuLink>
@@ -152,25 +152,25 @@ function Navbar2() {
               </NavigationMenuList>
             </NavigationMenu>
 
-            <a href="/about" className="font-semibold text-sm">About</a>
+            <a href="/about" className="font-semibold text-text-primary text-sm">About</a>
           </div>
 
           {/* RIGHT ICONS */}
-          <div className="flex items-center gap-5 ">
+          <div className="flex items-center gap-5 text-text-primary">
 
           <a href="#">
-         <CiSearch  className="text-2xl"/>
+         <CiSearch  className="text-2xl sm:text-md"/>
                 </a>
 
-              <a href="/loginpage">
-           <MdAccountCircle className="text-2xl"/>
+              <a href="/login">
+           <MdAccountCircle className="text-2xl sm:text-md text-text-primary "/>
             </a>
 
             <Link
                 href="/cart"
                 className="relative flex items-center gap-2 text-sm font-semibold"
               >
-                <TiShoppingCart className="text-2xl" />
+                <TiShoppingCart className="text-2xl sm:text-md" />
 
                 <span className="absolute -top-2 -right-3 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center">
                   {totalItems}
@@ -183,7 +183,7 @@ function Navbar2() {
 
             {/* MOBILE MENU BUTTON */}
             <button
-              className="md:hidden text-2xl"
+              className="md:hidden text-2xl sm:text-md"
               onClick={() => setOpen(true)}
             >
               <FaBars />
@@ -196,23 +196,23 @@ function Navbar2() {
 {/* Overlay */}
 {open && (
   <div
-    className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-40"
+    className="fixed inset-0 bg-ring/50 backdrop-blur-[2px] z-40"
     onClick={() => setOpen(false)}
   />
 )}
 
 {/* Mobile Sidebar */}
 <div
-  className={`fixed top-0 right-0 h-screen w-72 bg-white z-50 shadow-2xl
+  className={`fixed top-0 right-0 h-screen w-72 bg-background z-50 shadow-2xl
   transition-transform duration-300 ease-in-out
   ${open ? "translate-x-0" : "translate-x-full"}`}
 >
   {/* Header */}
-  <div className="bg-primary text-white p-5">
+  <div className="bg-primary text-text-secondary p-5">
     <div className="flex justify-between items-center">
       <div>
         <h2 className="text-lg font-bold">Welcome </h2>
-        <p className="text-sm text-orange-100">
+        <p className="text-sm text-text-secondary">
           Sign in to access your account
         </p>
       </div>
@@ -225,52 +225,51 @@ function Navbar2() {
       </button>
     </div>
     <Link href="/signup">
-    <button className="mt-4 w-full bg-white text-orange-500 py-2 rounded-lg font-semibold hover:bg-orange-100 transition">
+    <button className="mt-4 w-full bg-background active:scale-90 text-primary py-2 rounded-lg font-semibold hover:bg-primary transition">
       Sign In / Register
     </button></Link>
   </div>
 
   {/* Menu */}
-  <div className="py-4">
+  <div className="py-4 text-text-primary">
 
     <Link href="/">
     <p
      
-      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-ring/10 transition"
     >
-      <FaHome className="text-orange-500" />
+      <FaHome className="text-primary" />
       Home
     </p></Link>
     <Link href="/products">
     <p
-     
-      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-ring/10 transition"
     >
-      <FaBoxOpen className="text-orange-500" />
+      <FaBoxOpen className="text-primary" />
       Products
     </p></Link>
     <Link href="/products"></Link>
     <p
       
-      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-ring/10 transition"
     >
-      <FaThLarge className="text-orange-500" />
+      <FaThLarge className="text-primary" />
       Categories
     </p>
       <Link href="/products"></Link>
     <p
       
-      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-ring/10 transition"
     >
-      <FaTags className="text-orange-500" />
+      <FaTags className="text-primary" />
       Brands
     </p>
 <Link href="/"></Link>
     <p
      
-      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-ring/10 transition"
     >
-      <FaFire className="text-red-500" />
+      <FaFire className="text-primary" />
       Flash Sale
     </p>
 
@@ -278,7 +277,7 @@ function Navbar2() {
       href="/wishlist"
       className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
     >
-      <FaHeart className="text-pink-500" />
+      <FaHeart className="text-destructive" />
       Wishlist
     </a>
 
@@ -286,7 +285,7 @@ function Navbar2() {
       href="/cart"
       className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
     >
-      <FaShoppingCart className="text-green-500" />
+      <FaShoppingCart className="text-primary" />
       Cart
     </a>
 
@@ -294,26 +293,22 @@ function Navbar2() {
 
     <a
       href="/about"
-      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-ring/10 transition"
     >
-      <FaInfoCircle className="text-indigo-500" />
+      <FaInfoCircle className="text-primary" />
       About
     </a>
 
     <a
       href="/about"
-      className="flex items-center gap-4 px-6 py-3 hover:bg-gray-100 transition"
+      className="flex items-center gap-4 px-6 py-3 hover:bg-ring/10 transition"
     >
-      <FaPhoneAlt className="text-teal-500" />
+      <FaPhoneAlt className="text-primary" />
       Contact
     </a>
   </div>
 
-  {/* Footer */}
-  <div className="absolute bottom-0 w-full border-t p-4 text-center text-sm text-gray-500">
-    <p>ShopSmart v1.0.0</p>
-    <p className="mt-1">© 2026 All Rights Reserved.</p>
-  </div>
+
 </div>
     </section>
   );

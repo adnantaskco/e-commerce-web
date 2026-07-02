@@ -92,7 +92,7 @@ const TestimonialSection = () => {
               Testimonials
             </span>
 
-            <h2 className=" text-3xl md:text-5xl lg:text-6xl font-bold sm:font-semibold mt-4 leading-tight">
+            <h2 className=" text-3xl md:text-5xl lg:text-5xl font-bold sm:font-semibold mt-4 leading-tight">
               What Our Clients
               <span className="text-primary"> Say About Us</span>
             </h2>
@@ -106,10 +106,10 @@ const TestimonialSection = () => {
                 mt-10
                 p-8 lg:p-10
                 rounded-[30px]
-                bg-white/10
+                bg-background/10
                 backdrop-blur-xl
                 border
-                border-white/20
+                border-background/20
                 shadow-2xl
               "
             >
@@ -124,7 +124,7 @@ const TestimonialSection = () => {
                 "
               />
 
-              <p className="text-gray-900 text-lg leading-9 relative z-10">
+              <p className="text-ring text-lg leading-9 relative z-10">
                 {testimonials[current].description}
               </p>
 
@@ -145,7 +145,7 @@ const TestimonialSection = () => {
                 />
 
                 <div>
-                  <h3 className="text-2xl font-bold ">
+                  <h3 className="text-2xl text-text-primary font-bold ">
                     {testimonials[current].name}
                   </h3>
 
@@ -171,7 +171,7 @@ const TestimonialSection = () => {
                     ${
                       current === index
                         ? "w-12 h-3 bg-primary"
-                        : "w-3 h-3 bg-white/40 hover:bg-white"
+                        : "w-3 h-3 bg-background/40 hover:bg-background"
                     }
                   `}
                 />

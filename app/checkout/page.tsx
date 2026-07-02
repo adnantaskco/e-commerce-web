@@ -44,7 +44,7 @@ const [useDifferentBilling, setUseDifferentBilling] =
   const [couponOpen, setCouponOpen] = useState(false);
  
   const deliveryCharge =
-  totalItems > 0 ? (location === "dhaka" ? 100 : 180) : 0;
+  totalItems > 0 ? (location === "dhaka" ? 2 : 5) : 0;
 const grandTotal = totalPrice + deliveryCharge;
 
   return (

@@ -18,7 +18,7 @@ const BabyDress = () => {
    // ✅ CART
   const { addToCart } = useCart();
   return (
-<section className="w-full px-2 sm:px-6 lg:px-10 py-6 bg-white">
+<section className="w-full px-2 sm:px-6 lg:px-10 py-6 bg-background">
   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
     {DataSheos.map((item) => (
       <div
@@ -26,10 +26,11 @@ const BabyDress = () => {
         onMouseEnter={() => setHovered(item.id)}
         onMouseLeave={() => setHovered(null)}
         onClick={() => setHovered(hovered === item.id ? null : item.id)}
-        className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group"
+        className="bg-background rounded-xl overflow-hidden border  hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group"
       >
+       
         {/* IMAGE BOX */}
-        <div className="relative bg-gray-100 h-[140px] sm:h-[280px] flex items-center justify-center p-2">
+        <div className="relative bg-background h-[140px] sm:h-[280px] flex items-center justify-center p-2">
           <img
             src={item.image}
             alt={item.name}
@@ -41,7 +42,7 @@ const BabyDress = () => {
 
           {/* DISCOUNT BADGE */}
           {item.discount && (
-            <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-primary text-white text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded">
+            <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-primary text-text-secondary text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded">
               {item.discount}%
             </div>
           )}
@@ -54,7 +55,7 @@ const BabyDress = () => {
               group-hover:opacity-100 group-hover:translate-x-0
             `}
           >
-            <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-white rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-white transition">
+            <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-text-primary transition">
               <FaHeart />
             </button>
 
@@ -69,12 +70,12 @@ const BabyDress = () => {
                   price: item.price,
                 });
               }}
-              className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-white rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition"
+              className="w-8 h-8 md:w-10 sm:w-5 sm:h-5 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-foreground hover:text-text-secondary active:scale-96 transition"
             >
               <FaShoppingCart />
             </button>
 
-            <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-white rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
+            <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
               <FaEye />
             </button>
           </div>
@@ -82,8 +83,8 @@ const BabyDress = () => {
               <Link href={`/products/${item.id}`}>
         {/* DETAILS/CONTENT BOX */}
         <div className="p-2 sm:p-4">
-          <p className="text-[11px] sm:text-sm text-gray-500 truncate">{item.brand}</p>
-          <h2 className="text-xs sm:text-base whitespace-nowrap overflow-hidden text-ellipsis font-semibold mt-0.5">
+          <p className="text-[11px] sm:text-sm text-ring truncate">{item.brand}</p>
+          <h2 className="text-xs sm:text-base whitespace-nowrap overflow-hidden text-text-primary font-semibold mt-0.5">
             {item.name}
           </h2>
 
@@ -94,15 +95,15 @@ const BabyDress = () => {
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5">
-            <span className="line-through text-gray-400 text-[11px] sm:text-sm">
+            <span className="line-through text-ring text-[11px] sm:text-sm">
               ${item.oldPrice}
             </span>
-            <span className="text-red-500 font-bold text-xs sm:text-base">
+            <span className="text-destructive font-bold text-xs sm:text-base">
               ${item.price}
             </span>
           </div>
         </div>
-        </Link>
+       </Link>
       </div>
     ))}
   </div>

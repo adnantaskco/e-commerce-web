@@ -149,11 +149,11 @@ function ProductsContent() {
   const FilterControls = () => (
     <>
       <div className="flex items-center justify-between px-1">
-        <h2 className="text-sm font-black uppercase tracking-wider text-gray-900">Filters</h2>
+        <h2 className="text-sm font-black uppercase tracking-wider text-ring">Filters</h2>
         {(selectedCategory || selectedBrands.length > 0 || priceRange < maxPrice || searchQuery !== '') && (
           <button 
             onClick={resetFilters} 
-            className="text-xs text-red-500 font-bold hover:underline transition-all"
+            className="text-xs text-destructive font-bold hover:underline transition-all"
           >
             Reset All
           </button>
@@ -161,8 +161,8 @@ function ProductsContent() {
       </div>
 
       {/* Categories */}
-      <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-        <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 mb-3">Categories</h3>
+      <div className="bg-background rounded-xl p-5 border border-ring/10 shadow-sm">
+        <h3 className="text-xs font-black uppercase tracking-wider text-ring mb-3">Categories</h3>
         <div className="flex flex-col gap-1">
           {categoriesList.map((cat) => (
             <button
@@ -170,8 +170,8 @@ function ProductsContent() {
               onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
               className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                 selectedCategory === cat
-                  ? 'bg-black text-white shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-foreground text-text-secondary shadow-sm'
+                  : 'text-ring hover:bg-ring/10 hover:text-ring'
               }`}
             >
               {cat}
@@ -181,10 +181,10 @@ function ProductsContent() {
       </div>
 
       {/* Price Range */}
-      <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+      <div className="bg-background rounded-xl p-5 border border-ring/10 shadow-sm">
         <div className="flex justify-between items-center mb-3">
-          <h3 className="text-xs font-black uppercase tracking-wider text-gray-400">Max Price</h3>
-          <span className="text-sm font-black text-black">${priceRange}</span>
+          <h3 className="text-xs font-black uppercase tracking-wider text-ring">Max Price</h3>
+          <span className="text-sm font-black text-text-primary">${priceRange}</span>
         </div>
         <input
           type="range"
@@ -192,17 +192,17 @@ function ProductsContent() {
           max={maxPrice}
           value={priceRange}
           onChange={(e) => setPriceRange(Number(e.target.value))}
-          className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-black"
+          className="w-full h-1.5 bg-ring/10 rounded-lg appearance-none cursor-pointer accent-text-primary"
         />
-        <div className="flex justify-between text-[10px] font-bold text-gray-400 mt-2">
+        <div className="flex justify-between text-[10px] font-bold text-ring mt-2">
           <span>Min: ${minPrice}</span>
           <span>Max: ${maxPrice}</span>
         </div>
       </div>
 
       {/* Brands */}
-      <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-        <h3 className="text-xs font-black uppercase tracking-wider text-gray-400 mb-3">Brands</h3>
+      <div className="bg-background rounded-xl p-5 border border-ring/10 shadow-sm">
+        <h3 className="text-xs font-black uppercase tracking-wider text-ring mb-3">Brands</h3>
         <div className="flex flex-col gap-2.5 max-h-48 overflow-y-auto pr-1 scrollbar-thin">
           {brandsList.map((brand) => (
             <label key={brand} className="flex items-center gap-3 cursor-pointer group">
@@ -210,9 +210,9 @@ function ProductsContent() {
                 type="checkbox"
                 checked={selectedBrands.includes(brand)}
                 onChange={() => handleBrandCheckboxChange(brand)}
-                className="w-4 h-4 rounded border-gray-200 text-black focus:ring-black accent-black cursor-pointer"
+                className="w-4 h-4 rounded border-ring/10 text-black focus:ring-foreground accent-text-primary cursor-pointer"
               />
-              <span className="text-xs font-bold text-gray-600 group-hover:text-black transition-colors">
+              <span className="text-xs font-bold text-ring group-hover:text-text-primary transition-colors">
                 {brand}
               </span>
             </label>
@@ -223,7 +223,7 @@ function ProductsContent() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50/40 font-sans text-gray-900 selection:bg-black selection:text-white">
+    <div className="min-h-screen bg-ring/1 font-sans text-ring selection:bg-foreground selection:text-text-secondary">
       <div className="max-w-7xl mx-auto px-4 py-6 sm:py-10">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           
@@ -234,12 +234,12 @@ function ProductsContent() {
 
           {/* ================= MOBILE FILTER DRAWER (OVERLAY BACKDROP) ================= */}
           {isMobileFilterOpen && (
-            <div className="fixed inset-0 bg-black/50 z-50 lg:hidden backdrop-blur-sm transition-opacity duration-300">
-              <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-gray-50 p-6 shadow-2xl overflow-y-auto space-y-6 flex flex-col animate-slide-in">
-                <div className="flex justify-end items-center border-b border-gray-100 pb-3">
+            <div className="fixed inset-0 bg-foreground z-50 lg:hidden backdrop-blur-sm transition-opacity duration-300">
+              <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-ring/10 p-6 shadow-2xl overflow-y-auto space-y-6 flex flex-col animate-slide-in">
+                <div className="flex justify-end items-center border-b border-ring/10 pb-3">
                   <button 
                     onClick={() => setIsMobileFilterOpen(false)}
-                    className="p-1 rounded-full bg-white border border-gray-200 text-gray-700 shadow-sm"
+                    className="p-1 rounded-full bg-background border border-ring/10 text-ring shadow-sm"
                   >
                     <FaXmark className="w-4 h-4" />
                   </button>
@@ -255,19 +255,19 @@ function ProductsContent() {
           <main className="flex-1 w-full space-y-4 sm:space-y-6">
             
             {/* SEARCH AND FEEDBACK HEADER BLOCK */}
-            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center">
+            <div className="bg-background p-4 rounded-xl border border-ring/10 shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center">
               <div className="flex items-center gap-3 w-full sm:max-w-xs">
                 {/* Mobile Drawer Trigger Button */}
                 <button 
                   onClick={() => setIsMobileFilterOpen(true)}
-                  className="lg:hidden flex items-center justify-center p-2.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 active:scale-95 transition-all"
+                  className="lg:hidden flex items-center justify-center p-2.5 rounded-lg border border-ring/10 bg-gray-50 hover:bg-ring/10 active:scale-95 transition-all"
                   title="Open Filters"
                 >
-                  <FaSliders className="w-4 h-4 text-gray-700" />
+                  <FaSliders className="w-4 h-4 text-ring" />
                 </button>
 
                 <div className="relative flex-1">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-ring">
                     <FaMagnifyingGlass className="w-3.5 h-3.5" />
                   </span>
                   <input
@@ -275,19 +275,19 @@ function ProductsContent() {
                     placeholder="Search products or brands..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2 text-xs font-medium bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:border-black focus:bg-white transition-all text-gray-900 placeholder-gray-400"
+                    className="w-full pl-9 pr-4 py-2 text-xs font-medium bg-ring/10 border border-ring/15 rounded-lg focus:outline-none focus:border-foreground focus:bg-background transition-all text-ring placeholder-ring/30"
                   />
                 </div>
               </div>
-              <p className="text-xs font-black text-gray-400 uppercase tracking-widest shrink-0 self-start sm:self-center">
+              <p className="text-xs font-black text-ring uppercase tracking-widest shrink-0 self-start sm:self-center">
                 Showing {filteredProducts.length} items
               </p>
             </div>
 
             {filteredProducts.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-gray-100 p-10 sm:p-16 text-center shadow-sm">
-                <h3 className="text-base sm:text-lg font-black text-gray-900 tracking-tight">No Products Match Your Criteria</h3>
-                <p className="text-xs sm:text-sm text-gray-400 mt-2 max-w-sm mx-auto">
+              <div className="bg-background rounded-2xl border border-ring/10 p-10 sm:p-16 text-center shadow-sm">
+                <h3 className="text-base sm:text-lg font-black text-ring tracking-tight">No Products Match Your Criteria</h3>
+                <p className="text-xs sm:text-sm text-ring mt-2 max-w-sm mx-auto">
                   Try adjusting your search keywords or resetting option parameters.
                 </p>
               </div>
@@ -298,41 +298,58 @@ function ProductsContent() {
                     key={item.id}
                     onMouseEnter={() => setHovered(Number(item.id))}
                     onMouseLeave={() => setHovered(null)}
-                    className="bg-white rounded-xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-500 sm:hover:-translate-y-2 group flex flex-col justify-between"
+                    className="bg-background rounded-xl overflow-hidden border border-ring/10 hover:shadow-xl transition-all duration-500 sm:hover:-translate-y-2 group flex flex-col justify-between"
                   >
-                    <div className="relative bg-gray-100 h-[160px] sm:h-[280px] flex items-center justify-center p-2 shrink-0">
+                    <div className="relative bg-ring/5 h-[140px] sm:h-[280px] flex items-center justify-center p-2">
                       <img src={item.image}
                        alt={item.name}
                         draggable={false}
                          className="object-contain max-h-full pointer-events-none mix-blend-multiply" />
                       
                       {item.discount && item.discount > 0 && (
-                        <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-red-500 text-white text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded shadow-sm">
+                        <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-destructive text-text-secondary text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded shadow-sm">
                           {item.discount}% OFF
                         </div>
                       )}
 
                       {/* ACTION BUTTONS (Optimized layout for both Tap and Hover states) */}
-                      <div className={`absolute top-1.5 right-1.5 sm:top-5 sm:right-4 flex flex-col gap-1.5 sm:gap-2 z-10 transition-all duration-300 ${hovered === item.id ? "opacity-100 translate-x-0" : "opacity-100 lg:opacity-0 lg:translate-x-3 group-hover:opacity-100 group-hover:translate-x-0"}`}>
-                        <button className="w-7 h-7 sm:w-10 sm:h-10 text-[10px] sm:text-base bg-white rounded-full flex items-center justify-center shadow-sm hover:bg-red-500 hover:text-white transition"><FaHeart /></button>
-                        <button 
-                        onClick={(e) => { e.stopPropagation(); 
-                            addToCart({ 
-                               id: Number(item.id),
-                                image: item.image,
-                                 brand: item.brand,
-                                  name: item.name, 
-                                  price: item.price }); 
-                                  }} 
-                                  className="w-7 h-7 sm:w-10 sm:h-10 text-[10px] sm:text-base bg-white rounded-full flex items-center justify-center shadow-sm hover:bg-black hover:text-white transition"><FaShoppingCart /></button>
-                        <button className="w-7 h-7 sm:w-10 sm:h-10 text-[10px] sm:text-base bg-white rounded-full flex items-center justify-center shadow-sm hover:bg-blue-500 hover:text-white transition"><FaEye /></button>
-                      </div>
+                    <div
+                      className={`
+                        absolute top-2 right-2 sm:top-5 sm:right-4 flex flex-col gap-2 z-10 transition-all duration-300
+                        ${hovered === item.id ? "opacity-100 translate-x-0" : "opacity-0 translate-x-3 sm:opacity-0 sm:translate-x-5"}
+                        group-hover:opacity-100 group-hover:translate-x-0
+                      `}
+                    >
+                      <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-text-primary transition">
+                        <FaHeart />
+                      </button>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevents click handler triggers on the parent card wrapper
+                          addToCart({
+                            id: Number(item.id),
+                            image: item.image,
+                            brand: item.brand,
+                            name: item.name,
+                            price: item.price,
+                          });
+                        }}
+                        className="w-8 h-8 md:w-10 sm:w-5 sm:h-5 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-foreground hover:text-text-secondary active:scale-96 transition"
+                      >
+                        <FaShoppingCart />
+                      </button>
+
+                      <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
+                        <FaEye />
+                      </button>
+                    </div>
                     </div>
                     
                     <Link href={`/products/${item.id}`} className="flex-1 flex flex-col justify-between">
                       <div className="p-2.5 sm:p-4 space-y-0.5 sm:space-y-1">
-                        <p className="text-[10px] sm:text-sm text-gray-400 truncate tracking-tight">{item.brand}</p>
-                        <h2 className="text-xs sm:text-base font-bold text-gray-800 line-clamp-2 sm:whitespace-nowrap sm:overflow-hidden sm:text-ellipsis group-hover:text-black leading-tight sm:leading-normal">
+                        <p className="text-[10px] sm:text-sm text-ring truncate tracking-tight">{item.brand}</p>
+                        <h2 className="text-xs sm:text-base font-bold text-ring line-clamp-2 sm:whitespace-nowrap sm:overflow-hidden sm:text-ellipsis group-hover:text-text-primary leading-tight sm:leading-normal">
                           {item.name}
                         </h2>
                         <div className="flex gap-0.5 text-yellow-400 text-[9px] sm:text-sm">
@@ -340,9 +357,9 @@ function ProductsContent() {
                         </div>
                         <div className="flex items-center gap-1.5 sm:gap-2 pt-0.5">
                           {item.oldPrice && item.oldPrice > item.price && (
-                            <span className="line-through text-gray-400 text-[10px] sm:text-sm">${item.oldPrice}</span>
+                            <span className="line-through text-ring text-[10px] sm:text-sm">${item.oldPrice}</span>
                           )}
-                          <span className="text-red-500 font-black text-xs sm:text-base">${item.price}</span>
+                          <span className="text-destructive font-black text-xs sm:text-base">${item.price}</span>
                         </div>
                       </div>
                     </Link>
@@ -360,8 +377,8 @@ function ProductsContent() {
 export default function AllProductsPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gray-50/40">
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest animate-pulse">Loading collection...</p>
+      <div className="min-h-screen flex items-center justify-center bg-ring-50/40">
+        <p className="text-xs font-bold text-ring uppercase tracking-widest animate-pulse">Loading collection...</p>
       </div>
     }>
       <ProductsContent />

@@ -19,13 +19,13 @@ const categories = [
   },
   {
     id: 3,
-    name: "Burberry Sunglasses",
+    name: "Burberry Sunglass",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cat-3.jpg",
   },
   {
     id: 4,
-    name: "Hooded Sweatshirt",
+    name: "Hooded T-shirt",
     image:
       "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cat-4.jpg",
   },
@@ -113,7 +113,7 @@ const CategorySection = () => {
       }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/70 to-black/90" />
+      <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 via-foreground/70 to-foreground/90" />
 
       <div className="relative z-10 container mx-auto px-4 lg:px-20">
 
@@ -123,11 +123,11 @@ const CategorySection = () => {
             Trending Collections
           </span>
 
-          <h2 className="text-white text-3xl md:text-5xl font-bold sm:font-semibold mt-4 lg:text-6xl">
+          <h2 className="text-text-secondary text-2xl md:text-5xl font-bold sm:font-bold mt-4 lg:text-5xl">
             Shop By Category
           </h2>
 
-          <div className="w-28 h-1 bg-primary mx-auto mt-5 rounded-full" />
+          <div className="w-68 sm:w-48 h-1 bg-primary mx-auto mt-5 rounded-full" />
         </div>
 
         {/* Left Button */}
@@ -143,9 +143,9 @@ const CategorySection = () => {
     w-12 h-12 lg:w-14 lg:h-14
 
     rounded-full
-    bg-white/10 backdrop-blur-md
-    border border-white/20
-    text-white
+    bg-background/10 backdrop-blur-md
+    border border-ring/20
+    text-text-secondary
 
     hover:bg-primary hover:scale-110
     focus:outline-none focus:ring-2 focus:ring-primary
@@ -168,9 +168,9 @@ const CategorySection = () => {
     w-12 h-12 lg:w-14 lg:h-14
 
     rounded-full
-    bg-white/10 backdrop-blur-md
-    border border-white/20
-    text-white
+    bg-background/10 backdrop-blur-md
+    border borderring/20
+    text-text-secondary
 
     hover:bg-primary hover:scale-110
     focus:outline-none focus:ring-2 focus:ring-primary
@@ -211,8 +211,8 @@ const CategorySection = () => {
                 className="
                   overflow-hidden
                   rounded-3xl
-                  bg-white/10 backdrop-blur-lg
-                  border border-white/20
+                  bg-background/10 backdrop-blur-lg
+                  border border-text-secondary/20
                   shadow-xl
                   transition-all duration-500
                   hover:-translate-y-3
@@ -232,20 +232,20 @@ const CategorySection = () => {
                     "
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
 
-                  <span className="absolute top-4 left-4 bg-primary text-white text-xs px-3 py-1 rounded-full font-semibold">
+                  <span className="absolute top-4 sm:top-2 sm:left-2 left-4 bg-primary  text-text-secondary text-xs sm:text-sm px-3 py-1 rounded-full font-semibold">
                     New Arrival
                   </span>
                 </div>
 
                 {/* CONTENT */}
-                <div className="p-6 text-center">
-                  <h3 className="text-white text-lg md:text-xl font-bold mb-2 group-hover:text-primary transition">
+                <div className="md:p-6 p-1 text-center sm:text-left">
+                  <h3 className="text-text-secondary whitespace-nowrap sm:text-sm text-sm md:text-xl font-bold mb-2 group-hover:text-primary transition">
                     {item.name}
                   </h3>
 
-                  <p className="hidden md:block text-gray-300 text-sm">
+                  <p className="hidden md:block text-text-secondary text-sm">
                     Explore our latest premium collection.
                   </p>
                 </div>

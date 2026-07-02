@@ -19,7 +19,7 @@ const brands = [
 
 export default function BrandLogo() {
   return (
-    <section className="md:py-20 py-8 bg-black/5 overflow-hidden">
+    <section className="md:py-20 py-8 bg-ring/10 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-20">
 
         {/* Heading */}
@@ -28,7 +28,7 @@ export default function BrandLogo() {
             Trusted Partners
           </span>
 
-          <h2 className="text-3xl md:text-5xl font-bold sm:font-semibold mt-4">
+          <h2 className="text-3xl md:text-5xl text-text-primary font-bold sm:font-semibold mt-4">
             Our Brand Partners
           </h2>
 
@@ -64,7 +64,7 @@ export default function BrandLogo() {
                   className="
                     h-[120px]
                     rounded-2xl
-                    bg-white
+                    bg-background
                     border
                     flex
                     items-center

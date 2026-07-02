@@ -21,7 +21,7 @@ function DiscountBanners() {
   ];
 
   return (
-    <section className="py-8 md:py-12">
+    <section className="py-2 md:py-10">
       <div className=" container mx-auto px-6 md:px-10 lg:px-20">
         
         {/* Responsive Grid */}
@@ -39,24 +39,24 @@ function DiscountBanners() {
             >
               
               {/* Overlay */}
-              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition duration-300"></div>
+              <div className="absolute inset-0 bg-foreground/10 group-hover:bg-foreground/20 transition duration-300"></div>
 
               {/* Content */}
               <div className="relative z-10 p-5 sm:p-7">
                 
-                <p className="text-sm sm:text-base font-semibold uppercase tracking-widest text-white">
+                <p className="text-sm sm:text-base font-semibold uppercase tracking-widest text-text-secondary">
                   {banner.discount}
                 </p>
 
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl text-white font-bold mt-2 leading-tight">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl text-text-secondary font-bold mt-2 leading-tight">
                   {banner.title}
                 </h2>
 
-                <p className="text-xl sm:text-2xl lg:text-3xl text-gray-50 mt-1">
+                <p className="text-xl sm:text-2xl lg:text-3xl text-text-secondary mt-1">
                   {banner.subtitle}
                 </p>
 
-                <button className="mt-5 px-5 py-2 bg-primary hover:bg-white hover:text-black transition duration-300 rounded-md font-semibold text-sm sm:text-base">
+                <button className="mt-5 px-5 py-2 bg-primary hover:bg-background hover:text-black active:scale-95 transition duration-300 rounded-md font-semibold text-sm sm:text-base">
                   Shop Now
                 </button>
 

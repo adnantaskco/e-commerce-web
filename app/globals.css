@@ -16,12 +16,9 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 
- 
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-   --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -59,23 +56,25 @@
 :root {
   --radius: 0.45rem;
 
-   --primary: #E38B75;
-  
-
   --border: oklch(0.928 0.006 264.531);
   --input: oklch(0.928 0.006 264.531);
-  --ring: oklch(0.707 0.022 261.325);
+/* use ring  bg and text gray */
+  --ring: #444648 ;
+   /* use for text */
+  --text-primary: #030712;           
+  --text-secondary: oklch(0.967 0.001 286.375);
+  --text-star: #F7F700 ;
+  --text-green: #3CF652;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.13 0.028 261.692);
-  --primary: #E38B75;
-  --secondary: #1E1E1E;
+   --primary: #E38B75;
   --primary-foreground: oklch(0.98 0.02 201);
-  
+  --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
   --muted: oklch(0.967 0.003 264.542);
   --muted-foreground: oklch(0.551 0.027 264.364);
-  --accent: oklch(58.22% 0.222 11.61);
+  --accent: ;
   --accent-foreground: oklch(0.98 0.02 201);
   --destructive: oklch(0.577 0.245 27.325);
 
@@ -87,14 +86,14 @@
   --chart-1: oklch(0.87 0.12 207);
   --chart-2: oklch(0.8 0.13 212);
   --chart-3: oklch(0.71 0.13 215);
-  --chart-4: oklch(58.22% 0.222 11.61);
+  --chart-4: #ff6c03;
   --chart-5: oklch(0.52 0.09 223);
 
   --sidebar: oklch(0.985 0.002 247.839);
   --sidebar-foreground: oklch(0.13 0.028 261.692);
-  --sidebar-primary: oklch(58.22% 0.222 11.61);
+  --sidebar-primary: #ff6c03;
   --sidebar-primary-foreground: oklch(0.98 0.02 201);
-  --sidebar-accent: oklch(58.22% 0.222 11.61);
+  --sidebar-accent: #ff6c03;
   --sidebar-accent-foreground: oklch(0.98 0.02 201);
   --sidebar-border: oklch(0.928 0.006 264.531);
   --sidebar-ring: oklch(0.707 0.022 261.325);
@@ -125,7 +124,7 @@
   --chart-1: oklch(0.87 0.12 207);
   --chart-2: oklch(0.8 0.13 212);
   --chart-3: oklch(0.71 0.13 215);
-  --chart-4: oklch(58.22% 0.222 11.61);
+  --chart-4: #ff6c03;
   --chart-5: oklch(0.52 0.09 223);
 
   --sidebar: oklch(0.21 0.034 264.665);
@@ -157,6 +156,11 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 @layer base {
+  html,
+  body {
+    max-width: 100vw;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -164,23 +168,72 @@ input[type='number'] {
   body {
     @apply bg-background text-foreground;
   }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+button:hover:not(:disabled),
+.button:hover:not(:disabled),
+[role='button']:hover:not([aria-disabled='true']),
+[data-slot='button']:hover:not(:disabled) {
+  cursor: pointer;
+}
+.dynamic-content {
+  line-height: 1.6;
 }
 
-/* hide scrollbar completely */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+.dynamic-content h1 {
+  @apply mb-6 text-3xl font-bold;
 }
 
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-/* Hide scrollbar */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+.dynamic-content h2 {
+  @apply mt-8 mb-4 text-2xl font-bold;
 }
 
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+.dynamic-content h3 {
+  @apply mt-6 mb-3 text-xl font-bold;
 }
+
+.dynamic-content p {
+  @apply mb-4 text-gray-700;
+}
+
+.dynamic-content ul {
+  @apply mb-4 list-disc pl-6;
+}
+
+.dynamic-content ol {
+  @apply mb-4 list-decimal pl-6;
+}
+
+.dynamic-content li {
+  @apply mb-2;
+}
+
+.dynamic-content a {
+  @apply text-primary hover:underline;
+}
+
+/* Premium smooth button hover transition override */
+button,
+.button,
+[role='button'],
+[data-slot='button'] {
+  transition:
+    background-color 0.3s ease-in-out,
+    border-color 0.3s ease-in-out,
+    color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out !important;
+}
+@theme {
+  --color-text-primary: #000000;
+  --color-text-secondary: oklch(0.967 0.001 286.375);
+}
+.text-secondary{
+  color: #D1D5DC;
+}
+
+

@@ -107,7 +107,7 @@ export default function GallerySlider() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden py-8 lg:py-12 bg-black/5">
+    <section className="relative overflow-hidden py-4 lg:py-10 bg-foreground/5">
       <div className="container mx-auto px-4 lg:px-20 relative z-10">
 
         {/* Heading */}
@@ -124,7 +124,7 @@ export default function GallerySlider() {
           
         </div>
 
-        {/* Left Button */}
+    
        {/* Left Button */}
         <button
           onClick={() => scroll("left")}
@@ -140,11 +140,11 @@ export default function GallerySlider() {
             items-center
             justify-center
             rounded-full
-            bg-white
+            bg-background
             border
             shadow-md
             hover:bg-primary
-            hover:text-white
+            hover:text-text-secondary
             hover:shadow-xl
             transition-all
             duration-300
@@ -168,11 +168,11 @@ export default function GallerySlider() {
             items-center
             justify-center
             rounded-full
-            bg-white
+            bg-background
             border
             shadow-md
             hover:bg-primary
-            hover:text-white
+            hover:text-text-secoundary
             hover:shadow-xl
             transition-all
             duration-300
@@ -199,7 +199,7 @@ export default function GallerySlider() {
                 snap-start
               "
             >
-              <div className="rounded-2xl overflow-hidden bg-white/5 border border-white/10 shadow-xl hover:-translate-y-2 transition">
+              <div className="rounded-2xl overflow-hidden bg-background/5 border border-background/10 shadow-xl hover:-translate-y-2 transition">
 
                 {/* Image */}
                 <div className="relative overflow-hidden">
@@ -211,7 +211,7 @@ export default function GallerySlider() {
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                  <span className="absolute top-4 left-4 bg-primary text-xs px-3 py-1 rounded-full text-white">
+                  <span className="absolute top-4 left-4 bg-primary text-xs px-3 py-1 rounded-full text-text-secondary">
                     {item.category}
                   </span>
                 </div>
@@ -220,7 +220,7 @@ export default function GallerySlider() {
                 <div className="p-5">
                   <p className="text-sm text-primary">{item.date}</p>
 
-                  <h3 className="font-bold text-lg mt-2">
+                  <h3 className="font-bold text-lg text-text-primary mt-2">
                     {item.title}
                   </h3>
 

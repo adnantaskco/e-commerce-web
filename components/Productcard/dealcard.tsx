@@ -132,19 +132,19 @@ export default function ProductSlider() {
   }, []);
 
   return (
-    <section className="container mx-auto px-4 md:px-10 lg:px-20 md:py-16 py-8 bg-white">
+    <section className="container mx-auto px-4 md:px-10 lg:px-20 md:py-16 py-6 bg-background">
       {/* TITLE */}
       <div className="text-center mb-10">
         <span className="uppercase tracking-[5px] text-primary font-semibold">
           Weekend Deal
         </span>
 
-        <h1 className="text-3xl md:text-5xl font-bold sm:font-semibold mt-4">
+        <h1 className="text-3xl md:text-5xl text-text-primary font-bold sm:font-semibold mt-4">
           Weekend Feature Deal Products
         </h1>
 
         <div className="flex justify-center pt-4">
-          <div className="border-t-4 border-primary w-40 md:w-60"></div>
+          <div className="border-t-4 border-primary w-40 md:w-80"></div>
         </div>
       </div>
 
@@ -165,13 +165,13 @@ export default function ProductSlider() {
             w-12
             h-12
             rounded-full
-            bg-white
+            bg-background
             shadow-lg
             border
             items-center
             justify-center
             hover:bg-primary
-            hover:text-white
+            hover:text-text-secondary
             transition
           "
         >
@@ -193,13 +193,13 @@ export default function ProductSlider() {
             w-12
             h-12
             rounded-full
-            bg-white
+            bg-background
             shadow-lg
             border
             items-center
             justify-center
             hover:bg-primary
-            hover:text-white
+            hover:text-text-secondary
             transition
           "
         >
@@ -240,7 +240,7 @@ export default function ProductSlider() {
             w-[48%]
             md:w-[31.5%]
             lg:w-[23.5%]
-            bg-white
+            bg-background
             border
             rounded-xl
             overflow-hidden
@@ -252,7 +252,7 @@ export default function ProductSlider() {
           "
         >
           {/* IMAGE */}
-          <div className="relative h-[180px] sm:h-[180px] md:h-[260px] lg:h-[280px] bg-gray-100 flex items-center justify-center">
+          <div className="relative h-[180px] sm:h-[180px] md:h-[260px] lg:h-[280px] bg-ring/5 flex items-center justify-center">
             <Image
               src={item.image}
               alt={item.name}
@@ -263,7 +263,7 @@ export default function ProductSlider() {
             />
 
             {/* DISCOUNT */}
-            <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-primary text-white text-[10px] sm:text-xs font-medium sm:font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-md">
+            <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-primary text-text-secondary text-[10px] sm:text-xs font-medium sm:font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-md">
               {item.discount}%
             </div>
 
@@ -282,7 +282,7 @@ export default function ProductSlider() {
                 group-hover:translate-x-0
               `}
             >
-              <button className="w-5 h-5 sm:w-5 sm:h-5 md:w-10 md:h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-primary hover:text-white transition">
+              <button className="w-5 h-5 sm:w-5 sm:h-5 md:w-10 md:h-10 bg-background rounded-full shadow flex items-center justify-center hover:bg-primary hover:text-tesxt-secondary transition">
                 <FaHeart />
               </button>
 
@@ -296,12 +296,12 @@ export default function ProductSlider() {
                     price: item.price,
                   })
                 }
-                className="w-5 h-5 sm:w-5 sm:h-5 md:w-10 md:h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-black hover:text-white transition"
+                className="w-5 h-5 sm:w-5 sm:h-5 md:w-10 md:h-10 bg-background rounded-full shadow flex items-center justify-center hover:bg-foreground hover:text-white active:scale-95 transition"
               >
                 <FaShoppingCart />
               </button>
 
-              <button className="w-5 h-5 sm:w-5 sm:h-5 md:w-10 md:h-10 bg-white rounded-full shadow flex items-center justify-center hover:bg-blue-500 hover:text-white transition">
+              <button className="w-5 h-5 sm:w-5 sm:h-5 md:w-10 md:h-10 bg-background rounded-full shadow flex items-center justify-center hover:bg-chart-3 hover:text-text-secondary transition">
                 <FaEye />
               </button>
             </div>
@@ -309,26 +309,26 @@ export default function ProductSlider() {
                  <Link href={`/products/${item.id}`}>
           {/* CONTENT */}
           <div className="p-3 md:p-4">
-            <p className="text-xs md:text-sm text-gray-500">
+            <p className="text-xs md:text-sm text-ring">
               {item.brand}
             </p>
 
-            <h2 className="whitespace-nowrap overflow-hidden text-ellipsis font-semibold mt-1 text-sm md:text-base min-h-[28px] line-clamp-2">
+            <h2 className="whitespace-nowrap overflow-hidden text-text-primary font-semibold mt-1 text-sm md:text-base min-h-[28px] line-clamp-2">
               {item.name}
             </h2>
 
-            <div className="flex gap-1 text-yellow-400 mt- text-sm">
+            <div className="flex gap-1 text-yellow-500 mt- text-sm">
               {[...Array(item.rating)].map((_, i) => (
                 <FaStar key={i} />
               ))}
             </div>
 
             <div className="flex flex-wrap gap-2 mt-3 items-center">
-              <span className="line-through text-gray-400 text-sm">
+              <span className="line-through text-ring text-sm">
                 ${item.oldPrice}
               </span>
 
-              <span className="text-red-500 font-bold text-base">
+              <span className="text-destructive font-bold text-base">
                 ${item.price}
               </span>
             </div>

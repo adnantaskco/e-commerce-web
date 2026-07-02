@@ -19,7 +19,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative text-white bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden">
+    <footer className="relative text-background bg-gradient-to-br from-foreground via-ring to-foreground overflow-hidden">
 
       {/* GLOW BACKGROUND EFFECT */}
       <div className="absolute inset-0 opacity-20">
@@ -34,28 +34,28 @@ const Footer = () => {
 
           {/* STORE INFO */}
           <div>
-            <h2 className="text-xl font-bold mb-4">Store Information</h2>
+            <h2 className="text-xl text-text-secondary font-bold mb-4">Store Information</h2>
             <div className="w-14 h-[2px] bg-primary mb-4"></div>
 
-            <p className="text-gray-300 leading-7 text-sm">
+            <p className="text-text-secondary leading-7 text-sm">
               99 New Theme St. XY, USA 12345, <br /> Beside the Sun point land.
             </p>
 
-            <p className="mt-4 text-sm text-gray-300">
-              Call: <span className="text-white font-semibold">+00 123-456-789</span>
+            <p className="mt-4 text-sm text-text-secondary">
+              Call: <span className="text-text-secondary font-semibold">+00 123-456-789</span>
             </p>
 
-            <p className="mt-2 text-sm text-gray-300">
+            <p className="mt-2 text-sm text-text-secondary">
               Email: admin@example.com
             </p>
           </div>
 
           {/* LINKS */}
           <div className="md:pl-10">
-            <h2 className="text-xl font-bold mb-4 ">Quick Links</h2>
+            <h2 className="text-xl text-text-secondary font-bold mb-4 ">Quick Links</h2>
             <div className="w-14 h-[2px] bg-primary mb-4"></div>
 
-            <ul className="space-y-3 text-gray-300">
+            <ul className="space-y-3 text-text-secondary">
               {["Prices Drop", "New Products", "Best Sellers", "Stores", "Sitemap"].map((item, i) => (
                 <li
                   key={i}
@@ -69,10 +69,10 @@ const Footer = () => {
 
           {/* ACCOUNT */}
           <div>
-            <h2 className="text-xl font-bold mb-4">My Account</h2>
+            <h2 className="text-xl  font-bold mb-4">My Account</h2>
             <div className="w-14 h-[2px] bg-primary mb-4"></div>
 
-            <ul className="space-y-3 text-gray-300">
+            <ul className="space-y-3 text-text-secondary">
               {["Order Tracking", "Sign In", "Create Account", "Wishlist", "Discount"].map((item, i) => (
                 <li
                   key={i}
@@ -85,26 +85,26 @@ const Footer = () => {
           </div>
 
           {/* NEWSLETTER (GLASS CARD) */}
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-2xl shadow-xl">
+          <div className="bg-foreground/5 backdrop-blur-xl border border-background/10 p-6 rounded-2xl shadow-xl">
             <h2 className="text-xl font-bold mb-4">Newsletter</h2>
             <div className="w-14 h-[2px] bg-primary mb-4"></div>
 
-            <p className="text-gray-300 text-sm mb-4 leading-6">
+            <p className="text-text-secondary text-sm mb-4 leading-6">
               Get updates, discounts and special offers.
             </p>
 
-            <div className="flex items-center bg-white/10 border border-white/20 rounded-lg overflow-hidden">
+            <div className="flex items-center bg-foreground/10 border border-background/20 rounded-lg overflow-hidden">
               <input
                 type="email"
                 placeholder="Your email"
-                className="w-full px-4 py-3 bg-transparent outline-none text-sm text-white placeholder-gray-400"
+                className="w-full px-4 py-3 bg-transparent outline-none text-sm text-text-secondary placeholder-ring"
               />
               <button className="px-4 text-xl hover:text-primary transition">
                 <IoSendOutline />
               </button>
             </div>
 
-            <label className="flex items-start gap-2 mt-4 text-xs text-gray-300">
+            <label className="flex items-start gap-2 mt-4 text-xs text-text-secondary">
               <input type="checkbox" className="mt-1" />
               I agree to terms & privacy policy
             </label>
@@ -113,7 +113,7 @@ const Footer = () => {
       </div>
 
       {/* BOTTOM */}
-      <div className="border-t border-white/10">
+      <div className="border-t border-background/10">
         <div className="mx-auto px-6 md:px-12 lg:px-24 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
 
           {/* SOCIAL */}
@@ -121,7 +121,7 @@ const Footer = () => {
             {socialIcons.map((Icon, i) => (
               <div
                 key={i}
-                className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center hover:primery hover:scale-110 transition"
+                className="w-10 h-10 rounded-full bg-background/10 border border-background/20 flex items-center justify-center hover:primery hover:scale-110 transition"
               >
                 <Icon />
               </div>
@@ -129,7 +129,7 @@ const Footer = () => {
           </div>
 
           {/* COPYRIGHT */}
-          <p className="text-gray-400 text-sm text-center">
+          <p className="text-text-secondary text-sm text-center">
             © 2026 Styleway. All Rights Reserved.
           </p>
 

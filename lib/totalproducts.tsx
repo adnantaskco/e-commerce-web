@@ -1,6 +1,7 @@
 export const totalProducts = [
   {
     id: 1,
+    slug: "benetton-regular-fit-sweatshirt",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/5/15-home_default.jpg",
     brand: "Top-10",
     name: "Benetton Regular Fit Sweatshirt",
@@ -15,6 +16,7 @@ export const totalProducts = [
   },
   {
     id: 2,
+    slug: "premium-cotton-hoodie",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/6/16-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Cotton Hoodie",
@@ -27,6 +29,7 @@ export const totalProducts = [
   },
   {
     id: 3,
+    slug: "slim-fit-denim-jacket",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/7/17-home_default.jpg",
     brand: "JARA",
     name: "Slim Fit Denim Jacket",
@@ -41,6 +44,7 @@ export const totalProducts = [
   },
   {
     id: 4,
+    slug: "classic-white-shirt",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/8/18-home_default.jpg",
     brand: "EcoShop",
     name: "Classic White Shirt",
@@ -53,6 +57,7 @@ export const totalProducts = [
   },
   {
     id: 5,
+    slug: "summer-t-shirt-premium",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/1/9/19-home_default.jpg",
     brand: "Ferrari",
     name: "Summer T-Shirt Premium",
@@ -67,6 +72,7 @@ export const totalProducts = [
   },
   {
     id: 6,
+    slug: "casual-black-hoodie",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/0/20-home_default.jpg",
     brand: "EcoShop",
     name: "Casual Black Hoodie",
@@ -79,6 +85,7 @@ export const totalProducts = [
   },
   {
     id: 7,
+    slug: "stylish-winter-coat",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/1/21-home_default.jpg",
     brand: "EcoShop",
     name: "Stylish Winter Coat",
@@ -93,6 +100,7 @@ export const totalProducts = [
   },
   {
     id: 8,
+    slug: "sport-jacket",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/2/22-home_default.jpg",
     brand: "EcoShop",
     name: "Sport Jacket",
@@ -105,6 +113,7 @@ export const totalProducts = [
   },
   {
     id: 9,
+    slug: "premium-hoodie-grey",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/3/23-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Hoodie Grey",
@@ -119,6 +128,7 @@ export const totalProducts = [
   },
   {
     id: 10,
+    slug: "casual-streetwear-tee",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/4/24-home_default.jpg",
     brand: "EcoShop",
     name: "Casual Streetwear Tee",
@@ -131,6 +141,7 @@ export const totalProducts = [
   },
   {
     id: 11,
+    slug: "winter-fashion-hoodie",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/5/25-home_default.jpg",
     brand: "EcoShop",
     name: "Winter Fashion Hoodie",
@@ -145,6 +156,7 @@ export const totalProducts = [
   },
   {
     id: 12,
+    slug: "premium-casual-jacket",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/6/26-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Casual Jacket",
@@ -157,6 +169,7 @@ export const totalProducts = [
   },
   {
     id: 13,
+    slug: "oversized-sweatshirt",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/7/27-home_default.jpg",
     brand: "EcoShop",
     name: "Oversized Sweatshirt",
@@ -171,6 +184,7 @@ export const totalProducts = [
   },
   {
     id: 14,
+    slug: "modern-street-jacket",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/8/28-home_default.jpg",
     brand: "EcoShop",
     name: "Modern Street Jacket",
@@ -183,6 +197,7 @@ export const totalProducts = [
   },
   {
     id: 15,
+    slug: "mens-denim-shirt",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/9/29-home_default.jpg",
     brand: "EcoShop",
     name: "Men's Denim Shirt",
@@ -197,6 +212,7 @@ export const totalProducts = [
   },
   {
     id: 16,
+    slug: "warm-winter-hoodie",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/0/30-home_default.jpg",
     brand: "EcoShop",
     name: "Warm Winter Hoodie",
@@ -209,6 +225,7 @@ export const totalProducts = [
   },
   {
     id: 17,
+    slug: "luxury-cotton-t-shirt",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/1/31-home_default.jpg",
     brand: "EcoShop",
     name: "Luxury Cotton T-Shirt",
@@ -223,6 +240,7 @@ export const totalProducts = [
   },
   {
     id: 18,
+    slug: "urban-style-coat",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/2/32-home_default.jpg",
     brand: "EcoShop",
     name: "Urban Style Coat",
@@ -237,6 +255,7 @@ export const totalProducts = [
   },
   {
     id: 19,
+    slug: "classic-polo-t-shirt",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/3/33-home_default.jpg",
     brand: "EcoShop",
     name: "Classic Polo T-Shirt",
@@ -249,6 +268,7 @@ export const totalProducts = [
   },
   {
     id: 20,
+    slug: "fashionable-sports-hoodie",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/4/34-home_default.jpg",
     brand: "EcoShop",
     name: "Fashionable Sports Hoodie",
@@ -263,6 +283,7 @@ export const totalProducts = [
   },
   {
     id: 21,
+    slug: "baby-girl-floral-cotton-dress",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf55sB55eKaMRmtzf4RPaTxNFNmizi84CFPJg_gtafBw&s=10",
     brand: "BabyStyle",
     name: "Baby Girl Floral Cotton Dress",
@@ -277,6 +298,7 @@ export const totalProducts = [
   },
   {
     id: 22,
+    slug: "baby-boy-casual-romper",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc30rWAsDBPf4iTCoYKr_z7Ju3QRgdstBYYHVYJG9b3cVH7FESR-4VHO90&s=10",
     brand: "BabyStyle",
     name: "Baby Boy Casual Romper",
@@ -289,6 +311,7 @@ export const totalProducts = [
   },
   {
     id: 23,
+    slug: "premium-baby-party-dress",
     image: "https://smartdeal.com.bd/public/uploads/all/a0lwZSQ6uLVrGvI7Zi0XvJAPyzNrJQ87gfoHaiLN.jpg",
     brand: "BabyStyle",
     name: "Premium Baby Party Dress",
@@ -303,6 +326,7 @@ export const totalProducts = [
   },
   {
     id: 24,
+    slug: "baby-cotton-frock",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0cllgXYsnAncoUD85MEfdPXd8uorfzjU8d5flJYE4LtHQ8Pix7CfKRuU5&s=10",
     brand: "BabyStyle",
     name: "Baby Cotton Frock",
@@ -315,6 +339,7 @@ export const totalProducts = [
   },
   {
     id: 25,
+    slug: "baby-winter-hooded-dress",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0x1dlt8MX5NR6gxDGcRn6zsqXefuFwhJMgVZ1W-MAUQ&s=10",
     brand: "BabyStyle",
     name: "Baby Winter Hooded Dress",
@@ -329,6 +354,7 @@ export const totalProducts = [
   },
   {
     id: 26,
+    slug: "soft-baby-sleepsuit",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-papvoVPsmsYPyPcGR5Jt91Wy6_kFP-1URSOWsuM7GA&s=10",
     brand: "BabyStyle",
     name: "Soft Baby Sleepsuit",
@@ -341,6 +367,7 @@ export const totalProducts = [
   },
   {
     id: 27,
+    slug: "baby-princess-party-dress",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBdhz79Bo7FzDyvz7koEvY2PAAAzkfuGLW3NHRe3lXZg&s=10",
     brand: "BabyStyle",
     name: "Baby Princess Party Dress",
@@ -355,6 +382,7 @@ export const totalProducts = [
   },
   {
     id: 28,
+    slug: "baby-summer-cotton-outfit",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAZbprz5Gr2BTF69eA0kIi4FxB75AhNF_8Y5ChJA3qDQ&s=10",
     brand: "BabyStyle",
     name: "Baby Summer Cotton Outfit",
@@ -367,6 +395,7 @@ export const totalProducts = [
   },
   {
     id: 29,
+    slug: "premium-baby-winter-set",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDZ0M3EGFWjRxy3t2rVf7J9kiVmXgj06wDrOZhbNCoyg&s=10",
     brand: "BabyStyle",
     name: "Premium Baby Winter Set",
@@ -381,6 +410,7 @@ export const totalProducts = [
   },
   {
     id: 30,
+    slug: "baby-everyday-dress",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9tQ40VVhqoqBrmSNjCnRX5IDJK6fH4dIdc8kCaDPahg&s=10",
     brand: "BabyStyle",
     name: "Baby Everyday Dress",
@@ -393,6 +423,7 @@ export const totalProducts = [
   },
   {
     id: 31,
+    slug: "classic-winter-wool-blazer-jacket",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/1/21-home_default.jpg",
     brand: "EcoShop",
     name: "Classic Winter Wool Blazer Jacket",
@@ -407,6 +438,7 @@ export const totalProducts = [
   },
   {
     id: 32,
+    slug: "slim-fit-formal-black-blazer",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/2/22-home_default.jpg",
     brand: "EcoShop",
     name: "Slim Fit Formal Black Blazer",
@@ -421,6 +453,7 @@ export const totalProducts = [
   },
   {
     id: 33,
+    slug: "premium-navy-blue-office-blazer",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/3/23-home_default.jpg",
     brand: "EcoShop",
     name: "Premium Navy Blue Office Blazer",
@@ -435,6 +468,7 @@ export const totalProducts = [
   },
   {
     id: 34,
+    slug: "casual-street-style-jacket-blazer",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/4/24-home_default.jpg",
     brand: "EcoShop",
     name: "Casual Street Style Jacket Blazer",
@@ -447,6 +481,7 @@ export const totalProducts = [
   },
   {
     id: 35,
+    slug: "mens-formal-wedding-blazer",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/5/25-home_default.jpg",
     brand: "EcoShop",
     name: "Men’s Formal Wedding Blazer",
@@ -461,6 +496,7 @@ export const totalProducts = [
   },
   {
     id: 36,
+    slug: "slim-fit-grey-business-blazer",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/6/26-home_default.jpg",
     brand: "EcoShop",
     name: "Slim Fit Grey Business Blazer",
@@ -473,6 +509,7 @@ export const totalProducts = [
   },
   {
     id: 37,
+    slug: "luxury-double-button-blazer-jacket",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/7/27-home_default.jpg",
     brand: "EcoShop",
     name: "Luxury Double Button Blazer Jacket",
@@ -487,6 +524,7 @@ export const totalProducts = [
   },
   {
     id: 38,
+    slug: "casual-denim-blazer-jacket-style",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/8/28-home_default.jpg",
     brand: "EcoShop",
     name: "Casual Denim Blazer Jacket Style",
@@ -499,6 +537,7 @@ export const totalProducts = [
   },
   {
     id: 39,
+    slug: "winter-thick-warm-blazer-coat",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/2/9/29-home_default.jpg",
     brand: "EcoShop",
     name: "Winter Thick Warm Blazer Coat",
@@ -513,6 +552,7 @@ export const totalProducts = [
   },
   {
     id: 40,
+    slug: "modern-casual-slim-fit-blazer-jacket",
     image: "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/p/3/0/30-home_default.jpg",
     brand: "EcoShop",
     name: "Modern Casual Slim Fit Blazer Jacket",
@@ -525,6 +565,7 @@ export const totalProducts = [
   },
   {
     id: 41,
+    slug: "floral-pointelle-smocked-crop-top",
     name: "Floral Pointelle Smoocked Crop Top",
     size: ["M", "L", "XL"],
     brand: "StyleHub",
@@ -538,6 +579,7 @@ export const totalProducts = [
   },
   {
     id: 42,
+    slug: "textured-top-with-cuffed-sleeves",
     name: "textured Top With Cuffed Sleeves",
     size: ["M", "L", "XL"],
     brand: "FashionEra",
@@ -551,6 +593,7 @@ export const totalProducts = [
   },
   {
     id: 43,
+    slug: "peach-coloured-ruched-tie-front-crop",
     name: "Peach Coloured Ruched Tie-Front Crop",
     size: ["M", "L", "XL"],
     brand: "UrbanWear",
@@ -564,6 +607,7 @@ export const totalProducts = [
   },
   {
     id: 44,
+    slug: "women-pink-cotton-long-sleeve-crop-top",
     name: "Women Pink Cotton Long Sleeve Crop Top",
     size: ["M", "L", "XL"],
     brand: "TrendLine",
@@ -577,6 +621,7 @@ export const totalProducts = [
   },
   {
     id: 45,
+    slug: "dressbary-womens-printed-ploy-crop-top",
     name: "DressBary Women's Printed Ploy Crop Top",
     size: ["M", "L", "XL"],
     brand: "ModernFit",
@@ -590,6 +635,7 @@ export const totalProducts = [
   },
   {
     id: 46,
+    slug: "long-sleeve-neck-top",
     name: "long Sleeve Neck Top",
     size: ["M", "L", "XL"],
     brand: "EliteStyle",
@@ -603,6 +649,7 @@ export const totalProducts = [
   },
   {
     id: 47,
+    slug: "summer-shirt",
     name: "Summer Shirt",
     size: ["M", "L", "XL"],
     brand: "CoolWear",
@@ -616,6 +663,7 @@ export const totalProducts = [
   },
   {
     id: 48,
+    slug: "womans-jacket",
     name: "Woman's Jacket",
     size: ["M", "L", "XL"],
     brand: "StyleNova",
@@ -629,6 +677,7 @@ export const totalProducts = [
   },
   {
     id: 49,
+    slug: "womans-jacket-winter-edge",
     name: "Woman's Jacket",
     size: ["M", "L", "XL"],
     brand: "WinterEdge",
@@ -642,6 +691,7 @@ export const totalProducts = [
   },
   {
     id: 50,
+    slug: "womens-dress",
     name: "Women's Dress",
     size: ["M", "L", "XL"],
     brand: "ChicStyle",
@@ -655,6 +705,7 @@ export const totalProducts = [
   },
   {
     id: 51,
+    slug: "casual-hudi",
     name: "Casual Hudi",
     size: ["M", "L", "XL"],
     brand: "EcoShop",
@@ -668,6 +719,7 @@ export const totalProducts = [
   },
   {
     id: 52,
+    slug: "casual-summer-t-shirt",
     name: "Casual Summer T-Shirt",
     size: ["M", "L", "XL"],
     brand: "EcoShop",
@@ -681,6 +733,7 @@ export const totalProducts = [
   },
   {
     id: 53,
+    slug: "slim-fit-jacket",
     name: "Slim Fit Jacket",
     size: ["M", "L", "XL"],
     brand: "EcoShop",
@@ -694,6 +747,7 @@ export const totalProducts = [
   },
   {
     id: 54,
+    slug: "classic-t-shirt",
     name: "Classic T-shirt",
     size: ["M", "L", "XL"],
     brand: "EcoShop",
@@ -707,6 +761,7 @@ export const totalProducts = [
   },
   {
     id: 55,
+    slug: "summer-shirt-ecoshop-linen",
     name: "Summer Shirt",
     size: ["M", "L", "XL"],
     brand: "EcoShop",
@@ -720,6 +775,7 @@ export const totalProducts = [
   },
   {
     id: 56,
+    slug: "fashion-shirt",
     name: "Fashion Shirt",
     size: ["M", "L", "XL"],
     brand: "EcoShop",
@@ -733,6 +789,7 @@ export const totalProducts = [
   },
   {
     id: 57,
+    slug: "summer-shirt-ecoshop-cotton",
     name: "Summer Shirt",
     size: ["M", "L", "XL"],
     brand: "EcoShop",
@@ -746,6 +803,7 @@ export const totalProducts = [
   },
   {
     id: 58,
+    slug: "womans-jacket-ecoshop-premium",
     name: "Woman's Jacket",
     size: ["M", "L", "XL"],
     brand: "EcoShop",
@@ -759,6 +817,7 @@ export const totalProducts = [
   },
   {
     id: 59,
+    slug: "womans-jacket-ecoshop-winter",
     name: "Woman's Jacket",
     size: ["M", "L", "XL"],
     brand: "EcoShop",
@@ -772,6 +831,7 @@ export const totalProducts = [
   },
   {
     id: 60,
+    slug: "womens-dress-ecoshop",
     name: "Women's Dress",
     size: ["M", "L", "XL"],
     brand: "EcoShop",

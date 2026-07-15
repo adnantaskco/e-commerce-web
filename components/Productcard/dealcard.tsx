@@ -1,11 +1,12 @@
 "use client";
-import Link from 'next/link';
+
+import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import useSWR from "swr";
 import { FaHeart, FaShoppingCart, FaStar, FaEye } from "react-icons/fa";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "../../app/src/components/context/CartContext";
-import { DataDealWeaks } from "@/lib/DataDealweek";
 
 type Product = {
   id: number;
@@ -24,10 +25,11 @@ type Product = {
   weight: number;
 };
 
+// SWR fetcher utility function
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function ProductSlider() {
-  const [Dealproducts, setProducts] = useState<Product[]>([]);
   const [hovered, setHovered] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
 
   const { addToCart } = useCart();
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -38,23 +40,14 @@ export default function ProductSlider() {
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          "https://demo.app.taskcocommerce.com/api/v1/products"
-        );
-        const data = await res.json();
-        setProducts(data.data);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Dynamic API Fetching using SWR
+  const { data, error, isLoading } = useSWR(
+    "https://demo.app.taskcocommerce.com/api/v1/products",
+    fetcher
+  );
 
-    fetchProducts();
-  }, []);
+  // Extract the product payload array safely
+  const Dealproducts: Product[] = data?.data || data || [];
 
   const getScrollAmount = () => {
     const container = sliderRef.current;
@@ -135,19 +128,30 @@ export default function ProductSlider() {
     startAutoSlide();
   };
 
+  // Synchronize auto-slide initialization with state initialization
   useEffect(() => {
-    startAutoSlide();
+    if (!isLoading && Dealproducts.length > 0) {
+      startAutoSlide();
+    }
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, []);
+  }, [isLoading, Dealproducts.length]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="py-20 text-center text-lg font-semibold">
         Loading Products...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-20 text-center text-lg font-semibold text-destructive">
+        Failed to load products.
       </div>
     );
   }
@@ -254,7 +258,7 @@ export default function ProductSlider() {
                 </div>
               </div>
 
-              <Link href={`/products/${item.id}`}>
+              <Link href={`/products/${item.slug}`}>
                 {/* CONTENT */}
                 <div className="p-3 md:p-4">
                   <p className="text-xs md:text-sm text-ring">Jumes</p>
@@ -263,7 +267,7 @@ export default function ProductSlider() {
                     {item.name}
                   </h2>
 
-                  <div className="flex gap-1 text-yellow-500  text-sm">
+                  <div className="flex gap-1 text-yellow-500 text-sm">
                     {[...Array(5)].map((_, index) => (
                       <FaStar key={index} />
                     ))}

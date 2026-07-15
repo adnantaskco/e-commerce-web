@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, use } from 'react';
-import { totalProducts } from '@/lib/totalproducts';
+import React, { useState, use, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/app/src/components/context/CartContext';
 import { Clock, ShieldCheck, Truck } from 'lucide-react';
@@ -14,127 +13,150 @@ import {
   FaXTwitter, 
   FaYoutube,
   FaHeart,
- 
   FaEye,
   FaStar 
 } from 'react-icons/fa6';
 import { FaShoppingCart } from 'react-icons/fa';
 
-// 1. Define clean TypeScript shape definitions at the root level
+// 1. Fully typed interface mapped precisely to your API key specification
 interface ProductItem {
-  id: string | number;
+  id: number;
   name: string;
-  brand: string;
-  price: number;
-  oldPrice?: number;
-  discount?: number;
-  image: string;
-  size?: string[];
-  rating?: number;
-  reviews?: number;
-  hasOffer?: boolean;
-  description?: string;
+  has_variants: boolean;
+  slug: string;
+  image: string | null;
+  sold_amount: number;
+  review: number | null;
+  retail_price: string;
+  discount_price: string;
+  has_discount: boolean;
+  sale_price: string;
+  stock_qty: number;
+  in_stock: boolean;
+  stock_availability: boolean;
+  weight: number;
 }
 
 export default function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { addToCart } = useCart();
-  const [hovered, setHovered] = useState<number | null>(null);
   
-  // 2. Unwrap async dynamic path parameters safely
-  const resolvedParams = use(params);
-  const id = resolvedParams.id;
+  // Dynamic API State Management
+  const [products, setProducts] = useState<ProductItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  // 3. Setup client side UI interaction states
+  // Client side UI interaction states
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [activeTab, setActiveTab] = useState<string>('details');
-  const [hoveredCardId, setHoveredCardId] = useState<string | number | null>(null);
+  const [hoveredCardId, setHoveredCardId] = useState<number | null>(null);
 
-  // 4. Find matching item object reference safely
-  const product = Array.isArray(totalProducts)
-    ? totalProducts.find(p => p.id.toString() === id.toString())
-    : totalProducts[id as any];
+  // Unwrap async dynamic path parameters safely using the correct dynamic segment 'id'
+  const resolvedParams = use(params);
+  const routeParam = resolvedParams?.id;
 
-  // 5. Early validation checkpoint fallback
-  if (!product) {
+  // Dynamic API Fetching Implementation
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(
+          "https://demo.app.taskcocommerce.com/api/v1/products"
+        );
+        const data = await res.json();
+        setProducts(data?.data || data || []);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Early safeguard: Check if the route parameter exists at all
+  if (!routeParam) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center font-sans">
         <h2 className="text-2xl font-bold text-gray-800 tracking-tight">Product Not Found</h2>
-        <p className="text-gray-500 mt-2">Sorry, we couldn't find a product matching ID "{id}".</p>
+        <p className="text-gray-500 mt-2">Missing product identifier.</p>
       </div>
     );
   }
 
-  // 6. Destructure layout parameters cleanly with default matching values
-  const {
-    id: currentId,
-    name = 'Premium Everyday Product',
-    brand = 'Styleway',
-    price = 0,
-    oldPrice = 0,
-    image = '',
-    size = ['M', 'L', 'XL'],
-    rating = 4,
-    reviews = 0,
-    hasOffer = false,
-  } = product;
-
-  // 7. Process matching related array collections safely
-  let relatedProducts: ProductItem[] = [];
-  if (Array.isArray(totalProducts)) {
-    const catalog = totalProducts as ProductItem[];
-    
-    relatedProducts = catalog.filter(
-      (p) => p.brand === brand && p.id.toString() !== currentId.toString()
+  if (loading) {
+    return (
+      <div className="py-40 flex flex-col items-center justify-center min-h-[60vh] text-center font-sans">
+        <div className="w-10 h-10 border-4 border-foreground border-t-transparent rounded-full animate-spin mb-4" />
+        <p className="text-sm font-black text-ring uppercase tracking-widest animate-pulse">Loading Product Details...</p>
+      </div>
     );
-    
-    // Fallback if no products match this brand
-    if (relatedProducts.length === 0) {
-      relatedProducts = catalog.filter((p) => p.id.toString() !== currentId.toString());
-    }
-    relatedProducts = relatedProducts.slice(0, 4);
   }
 
+  const searchStr = routeParam.toString();
+
+  // Find matching item from the live API response state array
+  const product = products.find(
+    (p) => 
+      (p.slug && p.slug.toString() === searchStr) || 
+      (p.id && p.id.toString() === searchStr)
+  );
+
+  // Early validation checkpoint fallback
+  if (!product) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center font-sans">
+        <h2 className="text-2xl font-bold text-gray-800 tracking-tight">Product Not Found</h2>
+        <p className="text-gray-500 mt-2">Sorry, we couldn't find a product matching "{searchStr}".</p>
+      </div>
+    );
+  }
+
+  // Fallback structures for UI parameters missing from API attributes
+  const mockSizes = ['M', 'L', 'XL'];
+  const fallbackBrand = 'Apparel';
+  const itemRating = product.review ? Math.round(product.review) : 5;
+
+  // Filter matching related products from the same catalog list
+  const relatedProducts = products
+    .filter((p) => p.id !== product.id)
+    .slice(0, 4);
+
   return (
-    <div className="min-h-screen bg-background  text-ring900 selection:bg-foregrounng selection:text-text-secondary">
+    <div className="min-h-screen bg-background text-ring900 selection:bg-foregrounng selection:text-text-secondary">
       {/* Main Container Wrapper */}
       <main className="container mx-auto px-4 py-8 sm:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 items-start">
           
           {/* Left Column: Sticky Image Container */}
-          <div className="md:sticky md:top-24 self-start bg-ring/10 rounded-2xl aspect-[4/5] sm:aspect-square flex items-center justify-center border border-gray-100 overflow-hidden group">
-            {image ? (
+          <div className="md:sticky md:top-24 self-start bg-ring/10 rounded-2xl aspect-[4/5] sm:aspect-square flex items-center justify-center border border-gray-100 overflow-hidden group p-4">
+            {product.image ? (
               <img 
-                src={image} 
-                alt={name} 
-                className="w-full h-full object-cover mix-blend-multiply transition-transform duration-500 group-hover:scale-105" 
+                src={product.image} 
+                alt={product.name} 
+                className="max-w-full max-h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-105 pointer-events-none" 
               />
             ) : (
               <span className="text-ring text-sm font-medium">[ No Image Rendered ]</span>
             )}
-
-            {/* {hasOffer && (
-              <span className="absolute top-4 left-4 bg-primary text-text-secondary text-[11px]  tracking-widest px-3 py-1.5 rounded-md shadow-sm uppercase">
-                Special Offer
-              </span>
-            )} */}
           </div>
 
           {/* Right Column: Meta Info Area */}
           <div className="flex flex-col pt-2">
-            <span className="text-xs font-bold text-ring tracking-widest uppercase mb-2">{brand}</span>
-            <h1 className="text-5xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-3">{name}</h1>
+            <span className="text-xs font-bold text-ring tracking-widest uppercase mb-2">{fallbackBrand}</span>
+            <h1 className="text-5xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-3">{product.name}</h1>
 
             <div className="flex items-center gap-2 mb-6">
               <div className="flex text-amber-400 text-sm tracking-tighter">
                 {Array.from({ length: 5 }).map((_, idx) => (
-                  <span key={idx}>{idx < rating ? "★" : "☆"}</span>
+                  <span key={idx}>{idx < itemRating ? "★" : "☆"}</span>
                 ))}
               </div>
-              <span className="text-xs font-bold text-ring">({reviews} Reviews)</span>
+              <span className="text-xs font-bold text-ring">({product.sold_amount || 0} Sold)</span>
               <span className="text-ring/50">|</span>
               <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-text-green animate-pulse"></span>
-                <span className="text-xs font-bold text-text-green uppercase tracking-wider">In Stock</span>
+                <span className={`w-1.5 h-1.5 rounded-full ${product.in_stock ? 'bg-text-green animate-pulse' : 'bg-destructive'}`}></span>
+                <span className={`text-xs font-bold uppercase tracking-wider ${product.in_stock ? 'text-text-green' : 'text-destructive'}`}>
+                  {product.in_stock ? 'In Stock' : 'Out of Stock'}
+                </span>
               </div>
             </div>
             <div className="pb-4">
@@ -146,21 +168,21 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
               </p>
             </div>
             
-            {/* Discount Pricing Layout */}
+            {/* Discount Pricing Layout mapped via API values */}
             <div className="mb-6 flex items-center gap-3">
               <span className="text-3xl font-black text-destructive tracking-tight">
-                ${price}
+                ${product.sale_price}
               </span>
 
-              {oldPrice > price && (
+              {product.has_discount && Number(product.retail_price) > Number(product.sale_price) && (
                 <span className="text-lg font-medium text-ring line-through">
-                  ${oldPrice}
+                  ${product.retail_price}
                 </span>
               )}
 
-              {oldPrice > price && (
+              {product.has_discount && product.discount_price && (
                 <span className="bg-bacground text-destructive text-xs font-bold px-2 py-1 rounded-md">
-                  {Math.round(((oldPrice - price) / oldPrice) * 100)}% OFF
+                  {product.discount_price} OFF
                 </span>
               )}
             </div>
@@ -168,50 +190,50 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
             <hr className="border-ring/10 my-2" />
 
             {/* Size Variant Selector Buttons */}
-            {size && size.length > 0 && (
-              <div className="mt-4">
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-xs font-bold text-ring tracking-wider uppercase">Select Size</h3>
-                  <span className="text-xs font-semibold text-ring/50 underline cursor-pointer hover:text-text-primary">Size Guide</span>
-                </div>
-                <div className="flex flex-wrap gap-2.5">
-                  {size.map((sz) => (
-                    <button 
-                      key={sz} 
-                      onClick={() => setSelectedSize(sz)}
-                      className={`min-w-[48px] h-12 border text-xs font-bold rounded-lg transition-all duration-150 flex items-center justify-center px-4 ${
-                        selectedSize === sz 
-                          ? 'border-foreground bg-foreground text-text-secondary shadow-sm' 
-                          : 'border-ring/50 text-ring hover:border-ring/50 bg-white'
-                      }`}
-                    >
-                      {sz}
-                    </button>
-                  ))}
-                </div>
+            <div className="mt-4">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-xs font-bold text-ring tracking-wider uppercase">Select Size</h3>
+                <span className="text-xs font-semibold text-ring/50 underline cursor-pointer hover:text-text-primary">Size Guide</span>
               </div>
-            )}
+              <div className="flex flex-wrap gap-2.5">
+                {mockSizes.map((sz) => (
+                  <button 
+                    key={sz} 
+                    onClick={() => setSelectedSize(sz)}
+                    className={`min-w-[48px] h-12 border text-xs font-bold rounded-lg transition-all duration-150 flex items-center justify-center px-4 ${
+                      selectedSize === sz 
+                        ? 'border-foreground bg-foreground text-text-secondary shadow-sm' 
+                        : 'border-ring/50 text-ring hover:border-ring/50 bg-white'
+                    }`}
+                  >
+                    {sz}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {/* Action Cart Trigger Button */}
             <div className="mt-8">
               <button
                 onClick={() =>
                   addToCart({
-                    id: currentId,
-                    image,
-                    brand,
-                    name,
-                    price,
+                    id: product.id,
+                    image: product.image || '',
+                    brand: fallbackBrand,
+                    name: product.name,
+                    price: Number(product.sale_price),
                   })
                 }
-                className="w-full bg-primary hover:bg-ring text-text-secondary font-bold py-4 px-6 rounded-xl shadow-md tracking-widest uppercase text-xs transition-all duration-150 active:scale-[0.99]"
+                disabled={!product.in_stock}
+                className={`w-full font-bold py-4 px-6 rounded-xl shadow-md tracking-widest uppercase text-xs transition-all duration-150 active:scale-[0.99] ${
+                  product.in_stock 
+                    ? 'bg-primary hover:bg-ring text-text-secondary cursor-pointer' 
+                    : 'bg-ring/20 text-ring/40 cursor-not-allowed shadow-none'
+                }`}
               >
-                Add To Cart
+                {product.in_stock ? 'Add To Cart' : 'Out of Stock'}
               </button>
             </div>
-
-            {/* Dual Quick Badges Features Info */}
-
 
             {/* Omni-Channel Social Share Deck Layout */}
             <div className="mt-4">
@@ -283,19 +305,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
               Product Description
             </h2>
 
-            <p className="text-ring leading-7 mb-4">
+            <p className="text-ring className leading-7 mb-4">
               Upgrade your wardrobe with this stylish and comfortable clothing piece,
               designed for everyday wear and every occasion. Crafted from premium-quality
               fabric, it offers a soft feel, excellent breathability, and long-lasting
               durability. The modern design provides a comfortable fit while maintaining a
               fashionable look that pairs effortlessly with your favorite outfits.
-            </p>
-
-            <p className="text-ring leading-7 mb-6">
-              Whether you're heading to work, meeting friends, traveling, or relaxing at
-              home, this versatile garment delivers the perfect balance of comfort and
-              style. Its high-quality stitching and carefully selected materials ensure
-              reliable performance, making it an essential addition to your collection.
             </p>
 
             <h3 className="text-lg font-semibold text-text-primary mb-3">
@@ -308,21 +323,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
               <li>Durable stitching for long-lasting wear</li>
               <li>Comfortable fit for all-day use</li>
               <li>Modern and versatile design</li>
-              <li>Easy to wash and maintain</li>
-              <li>Suitable for casual, daily, office, travel, and outdoor wear</li>
-              <li>Perfect for all seasons</li>
-            </ul>
-
-            <h3 className="text-lg font-semibold text-text-primary mb-3">
-              Care Instructions
-            </h3>
-
-            <ul className="list-disc list-inside text-ring space-y-2">
-              <li>Machine wash or hand wash with cold water</li>
-              <li>Do not bleach</li>
-              <li>Wash with similar colors</li>
-              <li>Tumble dry on low heat or hang to dry</li>
-              <li>Iron at low temperature if needed</li>
+              <li>Weight specification context: {product.weight}g</li>
             </ul>
           </div>
           )}
@@ -338,66 +339,24 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
             <table className="w-full border-collapse text-sm">
               <tbody>
                 <tr className="border-b border-ring/10">
-                  <td className="w-1/3  px-5 py-3 font-medium text-text-primary">
+                  <td className="w-1/3 px-5 py-3 font-medium text-text-primary">
                     Brand
                   </td>
-                  <td className="px-5 py-3 text-ring">{brand}</td>
+                  <td className="px-5 py-3 text-ring">{fallbackBrand}</td>
                 </tr>
 
                 <tr className="border-b border-ring/10">
                   <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Product Type
+                    Product Variant Matrix
                   </td>
-                  <td className="px-5 py-3 text-ring">Clothing</td>
+                  <td className="px-5 py-3 text-ring">{product.has_variants ? "Yes (Multiple Sizes Available)" : "No (Standard Sizing)"}</td>
                 </tr>
 
                 <tr className="border-b border-ring/10">
                   <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Material
+                    Package Weight
                   </td>
-                  <td className="px-5 py-3 text-ring">Premium Cotton Blend</td>
-                </tr>
-
-                <tr className="border-b border-ring/10">
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Fit
-                  </td>
-                  <td className="px-5 py-3 text-ring">Regular Fit</td>
-                </tr>
-
-                <tr className="border-b border-ring/10">
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Sleeve Type
-                  </td>
-                  <td className="px-5 py-3 text-ring">Full Sleeve / Half Sleeve</td>
-                </tr>
-
-                <tr className="border-b border-ring/10">
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Neck Style
-                  </td>
-                  <td className="px-5 py-3 text-ring">Round Neck</td>
-                </tr>
-
-                <tr className="border-b border-ring/10">
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Pattern
-                  </td>
-                  <td className="px-5 py-3 text-ring">Solid / Printed</td>
-                </tr>
-
-                <tr className="border-b border-ring/10">
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Occasion
-                  </td>
-                  <td className="px-5 py-3 text-ring">Casual, Daily Wear</td>
-                </tr>
-
-                <tr className="border-b border-ring/10">
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Season
-                  </td>
-                  <td className="px-5 py-3 text-ring">All Season</td>
+                  <td className="px-5 py-3 text-ring">{product.weight} grams</td>
                 </tr>
 
                 <tr className="border-b border-ring/10">
@@ -405,15 +364,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                     Country of Origin
                   </td>
                   <td className="px-5 py-3 text-ring">Bangladesh</td>
-                </tr>
-
-                <tr>
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Care Instructions
-                  </td>
-                  <td className="px-5 py-3 text-ring">
-                    Machine Wash Cold • Do Not Bleach • Tumble Dry Low
-                  </td>
                 </tr>
               </tbody>
             </table>
@@ -424,11 +374,11 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
             <div className="space-y-6 max-w-3xl">
               <div className="border border-ring/10 rounded-xl p-6 bg-ring/10 flex items-center gap-5">
                 <div>
-                  <h3 className="text-4xl font-black text-ring">{rating}.0</h3>
-                  <div className="flex text-amber-400 text-sm mt-0.5">{"★".repeat(rating)}</div>
+                  <h3 className="text-4xl font-black text-ring">{itemRating}.0</h3>
+                  <div className="flex text-amber-400 text-sm mt-0.5">{"★".repeat(itemRating)}</div>
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-ring">Based on {reviews} Customer Reviews</p>
+                  <p className="text-sm font-bold text-ring">Based on verified customer orders tracking matrix</p>
                 </div>
               </div>
 
@@ -458,82 +408,87 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                   key={item.id}
                   onMouseEnter={() => setHoveredCardId(item.id)}
                   onMouseLeave={() => setHoveredCardId(null)}
-                  className="bg-background rounded-xl overflow-hidden border  hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group"
+                  className="bg-background rounded-xl overflow-hidden border hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group flex flex-col justify-between"
                 >
                   {/* IMAGE BOX */}
                   <div className="relative bg-ring/5 h-[140px] sm:h-[280px] flex items-center justify-center p-2">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      width={260}
-                      height={300}
-                      draggable={false}
-                      className="object-contain max-h-full pointer-events-none"
-                    />
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        width={260}
+                        height={300}
+                        draggable={false}
+                        className="object-contain max-h-full pointer-events-none"
+                      />
+                    ) : (
+                      <div className="text-[10px] text-ring/30 font-bold uppercase tracking-widest">[ No Image ]</div>
+                    )}
 
-          {/* DISCOUNT BADGE */}
-          {item.discount && (
-            <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-primary text-text-secondary text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded">
-              {item.discount}%
-            </div>
-          )}
+                    {/* DISCOUNT BADGE */}
+                    {item.has_discount && item.discount_price && (
+                      <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-primary text-text-secondary text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded">
+                        {item.discount_price}
+                      </div>
+                    )}
 
-          {/* ACTION BUTTONS */}
-          <div
-            className={`
-              absolute top-2 right-2 sm:top-5 sm:right-4 flex flex-col gap-2 z-10 transition-all duration-300
-              ${hovered === item.id ? "opacity-100 translate-x-0" : "opacity-0 translate-x-3 sm:opacity-0 sm:translate-x-5"}
-              group-hover:opacity-100 group-hover:translate-x-0
-            `}
-          >
-            <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-text-primary transition">
-              <FaHeart />
-            </button>
+                    {/* ACTION BUTTONS */}
+                    <div
+                      className={`
+                        absolute top-2 right-2 sm:top-5 sm:right-4 flex flex-col gap-2 z-10 transition-all duration-300
+                        ${hoveredCardId === item.id ? "opacity-100 translate-x-0" : "opacity-0 translate-x-3 sm:opacity-0 sm:translate-x-5"}
+                        group-hover:opacity-100 group-hover:translate-x-0
+                      `}
+                    >
+                      <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-text-primary transition">
+                        <FaHeart />
+                      </button>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation(); // Prevents click handler triggers on the parent card wrapper
-                addToCart({
-                  id: Number(item.id),
-                  image: item.image,
-                  brand: item.brand,
-                  name: item.name,
-                  price: item.price,
-                });
-              }}
-              className="w-8 h-8 md:w-10 sm:w-5 sm:h-5 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-foreground hover:text-text-secondary active:scale-96 transition"
-            >
-              <FaShoppingCart />
-            </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addToCart({
+                            id: item.id,
+                            image: item.image || '',
+                            brand: fallbackBrand,
+                            name: item.name,
+                            price: Number(item.sale_price),
+                          });
+                        }}
+                        disabled={!item.in_stock}
+                        className={`w-8 h-8 md:w-10 sm:w-5 sm:h-5 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-foreground hover:text-text-secondary active:scale-96 transition ${!item.in_stock ? 'opacity-40 cursor-not-allowed' : ''}`}
+                      >
+                        <FaShoppingCart />
+                      </button>
 
-            <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
-              <FaEye />
-            </button>
-          </div>
-                   </div>
+                      <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
+                        <FaEye />
+                      </button>
+                    </div>
+                  </div>
 
                   {/* DETAILS/CONTENT BOX */}
-                  <Link href={`/products/${item.id}`}>
+                  <Link href={`/products/${item.slug || item.id}`} className="flex-1 flex flex-col justify-between">
                     <div className="p-2 sm:p-4">
-                      <p className="text-[11px] sm:text-sm text-ring truncate">{item.brand}</p>
+                      <p className="text-[11px] sm:text-sm text-ring truncate">{fallbackBrand}</p>
                       <h2 className="text-xs sm:text-base whitespace-nowrap overflow-hidden text-ellipsis font-semibold mt-0.5 text-ring group-hover:text-text-primary">
                         {item.name}
                       </h2>
 
                       <div className="flex gap-0.5 text-yellow-400 text-[10px] sm:text-sm mt-1">
-                        {Array.from({ length: item.rating || 5 }).map((_, i) => (
+                        {Array.from({ length: item.review ? Math.round(item.review) : 5 }).map((_, i) => (
                           <FaStar key={i} />
                         ))}
                       </div>
 
                       <div className="flex items-center gap-1.5 sm:gap-2 mt-1.5">
-                        {item.oldPrice && (
+                        {item.has_discount && Number(item.retail_price) > Number(item.sale_price) && (
                           <span className="line-through text-ring/50 text-[11px] sm:text-sm">
-                            ${item.oldPrice}
+                            ${item.retail_price}
                           </span>
                         )}
                         <span className="text-destructive font-bold text-xs sm:text-base">
-                          ${item.price}
+                          ${item.sale_price}
                         </span>
                       </div>
                     </div>

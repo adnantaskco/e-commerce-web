@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useSWR from "swr";
 import {
   FaHeart,
   FaShoppingCart,
@@ -29,37 +30,34 @@ type Product = {
   weight: number;
 };
 
-const Dressandjumpsuits = () => {
-  const [Ladydressproducts, setProducts] = useState<Product[]>([]);
-  const [hovered, setHovered] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+// SWR fetcher utility function
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
+const Dressandjumpsuits = () => {
+  const [hovered, setHovered] = useState<number | null>(null);
   const { addToCart } = useCart();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          "https://demo.app.taskcocommerce.com/api/v1/products"
-        );
+  // Dynamic API Fetching using SWR
+  const { data, error, isLoading } = useSWR(
+    "https://demo.app.taskcocommerce.com/api/v1/products",
+    fetcher
+  );
 
-        const data = await res.json();
+  // Extract the product payload array safely
+  const Ladydressproducts: Product[] = data?.data || data || [];
 
-        setProducts(data.data);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="py-20 text-center text-lg font-semibold">
         Loading Products...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-20 text-center text-lg font-semibold text-red-500">
+        Failed to load products.
       </div>
     );
   }
@@ -132,7 +130,7 @@ const Dressandjumpsuits = () => {
             </div>
 
             {/* Product Details */}
-            <Link href={`/products/${item.id}`}>
+            <Link href={`/products/${item.slug}`}>
               <div className="p-2 sm:p-4">
 
                 <p className="text-[11px] sm:text-sm text-gray-500">

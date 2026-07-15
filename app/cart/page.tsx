@@ -87,7 +87,7 @@ export default function CartPage() {
 
                   {/* PRICE */}
                   <div className="hidden md:block col-span-2 text-center text-ring">
-                    ${item.price.toLocaleString()}
+                    {item.price.toLocaleString()}
                   </div>
 
                   {/* QTY */}
@@ -113,7 +113,7 @@ export default function CartPage() {
 
                   {/* TOTAL */}
                   <div className="col-span-6 md:col-span-2 text-right text-text-primary font-semibold mt-3 md:mt-0">
-                    ${(item.price * item.quantity).toLocaleString()}
+                    {(item.price * item.quantity).toLocaleString()}
                   </div>
                 </div>
               ))}
@@ -133,7 +133,7 @@ export default function CartPage() {
               <div className="flex justify-between text-text-primary text-sm mb-2">
                 <span>Items Total Price</span>
                 <span className="text-green-600 font-medium">
-                  ${subtotal.toFixed(2)}
+                  {subtotal.toFixed(2)}
                 </span>
               </div>
 
@@ -144,15 +144,15 @@ export default function CartPage() {
                   className="w-full border p-2 rounded mt-1 text-sm"
                   onChange={(e) => setDelivery(Number(e.target.value))}
                 >
-                  <option value={2}>Inside Dhaka - $2</option>
-                  <option value={5}>Outside Dhaka - $5</option>
+                  <option value={100}>Inside Dhaka - 100</option>
+                  <option value={150}>Outside Dhaka - 150</option>
                 </select>
               </div>
 
               {/* FINAL TOTAL */}
               <div className="flex justify-between font-semibold border-t pt-2">
                 <span>Total</span>
-                <span className="text-green-600">${total.toFixed(2)}</span>
+                <span className="text-green-600">{total.toFixed(2)}</span>
               </div>
 
               <div className="py-2">
@@ -161,14 +161,15 @@ export default function CartPage() {
 
               <div className="py-2.5">
                 <Link href="/checkout">
-                  <button className="w-full mt-2 bg-primary text-white py-1 rounded-lg hover:bg-ring">
+                  <button className="w-full mt-2 bg-primary text-text-se\
+                   py-1 rounded-lg hover:bg-ring">
                     Checkout
                   </button>
                 </Link>
 
                 <button
                   onClick={clearCart}
-                  className="w-full mt-2 bg-black text-white py-1 rounded-lg hover:bg-ring"
+                  className="w-full mt-2 bg-foreground text-text-secondary py-1 rounded-lg hover:bg-ring"
                 >
                   Clear Cart
                 </button>

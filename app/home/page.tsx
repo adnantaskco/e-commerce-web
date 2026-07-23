@@ -7,7 +7,7 @@ import ProductSlider from "../../components/Productcard/dealcard";
 import DiscountBanners from "../../components/DiscountPoster";
 import DiscountBanners2 from "../../components/DiscountPoster2";
 import FeatureProduct from "../../components/Productcard/Featurescard";
-import { HeroSection } from "../../components/heroSection";
+import HeroSection from "@/components/heroSection";
 import ProductCard1 from "../../components/Productcard/jacketcard";
 import CategorySection from "../../components/scrollsection";
 import Services from "../../components/services";

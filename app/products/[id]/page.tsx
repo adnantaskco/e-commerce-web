@@ -18,7 +18,7 @@ import {
 } from 'react-icons/fa6';
 import { FaShoppingCart } from 'react-icons/fa';
 
-// 1. Fully typed interface mapped precisely to your API key specification
+// Fully typed interface for Product API object
 interface ProductItem {
   id: number;
   name: string;
@@ -37,9 +37,21 @@ interface ProductItem {
   weight: number;
 }
 
-export default function ProductDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ProductDetailsPage({ params }: { params: any }) {
   const { addToCart } = useCart();
   
+  // 1. SAFELY UNWRAP PARAMS (Compatible with Next.js 14 & Next.js 15 Promises)
+  const resolvedParams: any = 
+    params && typeof params.then === 'function' ? use(params) : params;
+
+  // 2. UNIVERSAL KEY EXTRACTION (Works regardless of folder name: [slug], [id], etc.)
+  const routeParam = 
+    resolvedParams?.slug || 
+    resolvedParams?.id || 
+    (resolvedParams && typeof resolvedParams === 'object' 
+      ? Object.values(resolvedParams)[0] 
+      : null);
+
   // Dynamic API State Management
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -49,19 +61,26 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
   const [activeTab, setActiveTab] = useState<string>('details');
   const [hoveredCardId, setHoveredCardId] = useState<number | null>(null);
 
-  // Unwrap async dynamic path parameters safely using the correct dynamic segment 'id'
-  const resolvedParams = use(params);
-  const routeParam = resolvedParams?.id;
-
   // Dynamic API Fetching Implementation
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const res = await fetch(
-          "https://demo.app.taskcocommerce.com/api/v1/products"
+          "https://demo.app.taskcocommerce.com/api/v1/home-sections"
         );
         const data = await res.json();
-        setProducts(data?.data || data || []);
+        
+        // Flatten nested array responses if home-sections returns structured section lists
+        let rawItems: ProductItem[] = [];
+        if (Array.isArray(data?.data)) {
+          rawItems = data.data.flatMap((section: any) => 
+            Array.isArray(section.products) ? section.products : section
+          );
+        } else if (Array.isArray(data)) {
+          rawItems = data;
+        }
+
+        setProducts(rawItems);
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {
@@ -72,7 +91,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     fetchProducts();
   }, []);
 
-  // Early safeguard: Check if the route parameter exists at all
+  // Safeguard: Check if route parameter exists
   if (!routeParam) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center font-sans">
@@ -82,6 +101,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     );
   }
 
+  // Loading indicator state
   if (loading) {
     return (
       <div className="py-40 flex flex-col items-center justify-center min-h-[60vh] text-center font-sans">
@@ -91,16 +111,17 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     );
   }
 
-  const searchStr = routeParam.toString();
+  // Sanitize route search parameter
+  const searchStr = decodeURIComponent(String(routeParam)).trim().toLowerCase();
 
-  // Find matching item from the live API response state array
+  // Find matching item from products state by slug or id
   const product = products.find(
     (p) => 
-      (p.slug && p.slug.toString() === searchStr) || 
+      (p.slug && p.slug.toString().trim().toLowerCase() === searchStr) || 
       (p.id && p.id.toString() === searchStr)
   );
 
-  // Early validation checkpoint fallback
+  // Fallback for non-matching search target
   if (!product) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center font-sans">
@@ -110,12 +131,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
     );
   }
 
-  // Fallback structures for UI parameters missing from API attributes
+  // Fallback structures for UI display
   const mockSizes = ['M', 'L', 'XL'];
   const fallbackBrand = 'Apparel';
   const itemRating = product.review ? Math.round(product.review) : 5;
 
-  // Filter matching related products from the same catalog list
+  // Filter related products
   const relatedProducts = products
     .filter((p) => p.id !== product.id)
     .slice(0, 4);
@@ -159,16 +180,15 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                 </span>
               </div>
             </div>
+
             <div className="pb-4">
-              <h2 className="text-xl font-bold text-text-primary mb-2">
-                Description
-              </h2>
+              <h2 className="text-xl font-bold text-text-primary mb-2">Description</h2>
               <p className="text-sm text-ring leading-6">
                 Premium-quality clothing made from soft, breathable fabric for all-day comfort. Stylish, durable, and perfect for casual, work, travel, and everyday wear.
               </p>
             </div>
             
-            {/* Discount Pricing Layout mapped via API values */}
+            {/* Discount Pricing Layout */}
             <div className="mb-6 flex items-center gap-3">
               <span className="text-3xl font-black text-destructive tracking-tight">
                 ${product.sale_price}
@@ -212,7 +232,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
               </div>
             </div>
 
-            {/* Action Cart Trigger Button */}
+            {/* Cart Trigger Action Button */}
             <div className="mt-8">
               <button
                 onClick={() =>
@@ -235,7 +255,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
               </button>
             </div>
 
-            {/* Omni-Channel Social Share Deck Layout */}
+            {/* Social Share & Policies Stack */}
             <div className="mt-4">
               <div className="flex items-center gap-4 text-md font-bold text-ring py-4">
                 <span>Share on:</span>
@@ -249,13 +269,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                 </div>
               </div>
   
-              {/* Trust Policy Stacked Cards Column */}
               <div className="space-y-2 mt-2">
                 <div className="flex gap-3 items-start p-4 rounded-xl bg-ring/10 border border-ring/10">
                   <Truck className="text-text-primary mt-0.5 shrink-0" size={18} />
-                  <p className="text-xs sm:text-sm font-bold  text-ring">
+                  <p className="text-xs sm:text-sm font-bold text-ring">
                     Free Shipping & Returns :{" "}
-                    <span className="font-normal text-ring ">Available on all orders over $99.</span>
+                    <span className="font-normal text-ring">Available on all orders over $99.</span>
                   </p>
                 </div>
   
@@ -280,7 +299,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
           </div>
         </div>
 
-        {/* --- Dynamic Content Nav Tabs --- */}
+        {/* Dynamic Nav Tabs */}
         <div className="mt-16 border-b border-ring/10">
           <div className="flex gap-8 overflow-x-auto scrollbar-none">
             {['details', 'specification', 'reviews'].map((tab) => (
@@ -301,28 +320,18 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
         <div className="py-8 min-h-[180px] text-sm sm:text-base text-ring leading-relaxed">
           {activeTab === 'details' && (
            <div className="pb-6">
-            <h2 className="text-2xl font-bold text-text-primary mb-4">
-              Product Description
-            </h2>
-
-            <p className="text-ring className leading-7 mb-4">
+            <h2 className="text-2xl font-bold text-text-primary mb-4">Product Description</h2>
+            <p className="text-ring leading-7 mb-4">
               Upgrade your wardrobe with this stylish and comfortable clothing piece,
               designed for everyday wear and every occasion. Crafted from premium-quality
-              fabric, it offers a soft feel, excellent breathability, and long-lasting
-              durability. The modern design provides a comfortable fit while maintaining a
-              fashionable look that pairs effortlessly with your favorite outfits.
+              fabric, it offers a soft feel, excellent breathability, and long-lasting durability.
             </p>
-
-            <h3 className="text-lg font-semibold text-text-primary mb-3">
-              Features
-            </h3>
-
+            <h3 className="text-lg font-semibold text-text-primary mb-3">Features</h3>
             <ul className="list-disc list-inside text-ring space-y-2 mb-6">
               <li>Premium-quality fabric for superior comfort</li>
               <li>Soft, breathable, and lightweight material</li>
               <li>Durable stitching for long-lasting wear</li>
               <li>Comfortable fit for all-day use</li>
-              <li>Modern and versatile design</li>
               <li>Weight specification context: {product.weight}g</li>
             </ul>
           </div>
@@ -331,38 +340,24 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
           {activeTab === 'specification' && (
            <div className="mt-6 overflow-hidden rounded-xl border border-ring bg-background">
             <div className="border-b bg-ring/10 px-5 py-3">
-              <h2 className="text-lg font-semibold text-text-primary">
-                Product Specifications
-              </h2>
+              <h2 className="text-lg font-semibold text-text-primary">Product Specifications</h2>
             </div>
-
             <table className="w-full border-collapse text-sm">
               <tbody>
                 <tr className="border-b border-ring/10">
-                  <td className="w-1/3 px-5 py-3 font-medium text-text-primary">
-                    Brand
-                  </td>
+                  <td className="w-1/3 px-5 py-3 font-medium text-text-primary">Brand</td>
                   <td className="px-5 py-3 text-ring">{fallbackBrand}</td>
                 </tr>
-
                 <tr className="border-b border-ring/10">
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Product Variant Matrix
-                  </td>
+                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">Product Variant Matrix</td>
                   <td className="px-5 py-3 text-ring">{product.has_variants ? "Yes (Multiple Sizes Available)" : "No (Standard Sizing)"}</td>
                 </tr>
-
                 <tr className="border-b border-ring/10">
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Package Weight
-                  </td>
+                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">Package Weight</td>
                   <td className="px-5 py-3 text-ring">{product.weight} grams</td>
                 </tr>
-
                 <tr className="border-b border-ring/10">
-                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">
-                    Country of Origin
-                  </td>
+                  <td className="bg-ring/1 px-5 py-3 font-medium text-text-primary">Country of Origin</td>
                   <td className="px-5 py-3 text-ring">Bangladesh</td>
                 </tr>
               </tbody>
@@ -394,7 +389,7 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
           )}
         </div>
 
-        {/* --- Related Products Showcase Grid --- */}
+        {/* Related Products Showcase Grid */}
         {relatedProducts.length > 0 && (
           <div className="mt-20 border-t border-ring/10 pt-14">
             <div className="flex items-center justify-between mb-8">
@@ -410,7 +405,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                   onMouseLeave={() => setHoveredCardId(null)}
                   className="bg-background rounded-xl overflow-hidden border hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group flex flex-col justify-between"
                 >
-                  {/* IMAGE BOX */}
                   <div className="relative bg-ring/5 h-[140px] sm:h-[280px] flex items-center justify-center p-2">
                     {item.image ? (
                       <img
@@ -425,14 +419,12 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                       <div className="text-[10px] text-ring/30 font-bold uppercase tracking-widest">[ No Image ]</div>
                     )}
 
-                    {/* DISCOUNT BADGE */}
                     {item.has_discount && item.discount_price && (
                       <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-primary text-text-secondary text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded">
                         {item.discount_price}
                       </div>
                     )}
 
-                    {/* ACTION BUTTONS */}
                     <div
                       className={`
                         absolute top-2 right-2 sm:top-5 sm:right-4 flex flex-col gap-2 z-10 transition-all duration-300
@@ -467,7 +459,6 @@ export default function ProductDetailsPage({ params }: { params: Promise<{ id: s
                     </div>
                   </div>
 
-                  {/* DETAILS/CONTENT BOX */}
                   <Link href={`/products/${item.slug || item.id}`} className="flex-1 flex flex-col justify-between">
                     <div className="p-2 sm:p-4">
                       <p className="text-[11px] sm:text-sm text-ring truncate">{fallbackBrand}</p>

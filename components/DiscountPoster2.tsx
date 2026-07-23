@@ -1,57 +1,78 @@
-import React from "react";
+"use client";
 
-function DiscountBanners2() {
-  const banners = [
-    {
-      id: 1,
-      image:
-        "https://img.magnific.com/free-photo/stylish-happy-girl-shopping-portrait-modern-woman-with-shop-bag-laughing-smiling-satisfied_1258-119361.jpg?semt=ais_hybrid&w=740&q=80",
-      discount: "FLAT 25% OFF",
-      title: "Model Fashion",
-      subtitle: "Influencer",
-    },
-    {
-      id: 2,
-      image:
-        "https://thumbs.dreamstime.com/b/woman-choosing-clothes-large-wardrobe-closet-woman-choosing-clothes-large-wardrobe-closet-140209311.jpg",
-      discount: "FLAT 25% OFF",
-      title: "Feminine Pink",
-      subtitle: "Clothes",
-    },
-    {
-      id: 3,
-      image:
-        "https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/cms-banner-3.jpg",
-      discount: "FLAT 35% OFF",
-      title: "Men's Stylish",
-      subtitle: "Half T-Shirt",
-    },
+import React from "react";
+import useSWR from "swr";
+import fetcher from "@/lib/fetcher";
+
+type ImageItem = {
+  uid: string;
+  status: number;
+  promotion_type: string;
+  media_url: string;
+};
+
+type BannerResponse= {
+
+banners: {
+  home_top_right: ImageItem;
+  home_middle_one: ImageItem;
+  home_middle_two: ImageItem;
+
+};
+
+};
+
+
+export default function DiscountBanners2() {
+ const { data, error, isLoading } = useSWR<BannerResponse>(
+    "https://demo.app.taskcocommerce.com/api/v1/promotion-banners?page_name=home&theme_id=1",
+    fetcher
+  );
+
+  if (isLoading) {
+    return (
+      <div className="h-[450px] flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="h-[450px] flex items-center justify-center text-red-500">
+        Failed to load banner
+      </div>
+    );
+  }
+
+  // Merge sliders + banners
+  const DiscountImages = [
+    
+    data.banners.home_top_right,
+    data.banners.home_middle_one,
+    data.banners.home_middle_two,
   ];
 
   return (
     <section className="py-4 md:py-10 bg-background">
-      <div className=" container mx-auto px-6 md:px-10 lg:px-20 ">
-        
-        {/* Responsive Grid */}
+      <div className="container mx-auto px-6 md:px-10 lg:px-20">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          
-          {banners.map((banner) => (
+          {DiscountImages?.map((banner) => (
             <div
-              key={banner.id}
+              key={banner.uid}
               className="relative min-h-70 sm:min-h-80 lg:min-h-90 flex items-center rounded-2xl overflow-hidden group"
               style={{
-                backgroundImage: `url(${banner.image})`,
+                backgroundImage: `url(${banner.media_url})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
             >
-              
               {/* Overlay */}
-              <div className="absolute inset-0 bg-foreground/10 group-hover:bgforeground/20 transition duration-300"></div>
+              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition duration-300"></div>
 
               {/* Content */}
-              <div className="relative z-10 p-5 sm:p-7">
-                <p className="text-xs sm:text-sm md:text-base bg-primary text-text-secondary w-fit px-4 py-2 rounded-full font-semibold uppercase tracking-wider">
+              {/* <div className="relative z-10 p-5 sm:p-7">
+                <p className="text-xs sm:text-sm md:text-base bg-primary text-white w-fit px-4 py-2 rounded-full font-semibold uppercase tracking-wider">
                   {banner.discount}
                 </p>
 
@@ -59,21 +80,18 @@ function DiscountBanners2() {
                   {banner.title}
                 </h2>
 
-                <p className="text-text-primary text-xl sm:text-2xl lg:text-3xl mt-1">
+                <p className="text-xl sm:text-2xl lg:text-3xl text-black mt-1">
                   {banner.subtitle}
                 </p>
 
-                <button className="mt-5 underline text-text-primary font-semibold hover:translate-x-1 transition duration-300">
+                <button className="mt-5 underline font-semibold hover:translate-x-1 transition duration-300">
                   Shop Now
                 </button>
-              </div>
+              </div> */}
             </div>
           ))}
-
         </div>
       </div>
     </section>
   );
 }
-
-export default DiscountBanners2;

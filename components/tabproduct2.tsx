@@ -8,7 +8,7 @@ import Jackets from "./Productcard/jacketcard"
 
 export default function TrendingProductsTabs() {
   return (
-    <section className="w-full mx-auto py-10 ">
+    <section className="w-full mx-auto  ">
         <div className="container mx-auto px- md:px-20">
              {/* TITLE */}
          <div className="text-center md:py-10 py-4">

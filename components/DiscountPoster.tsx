@@ -1,73 +1,80 @@
-import React from "react";
+"use client";
 
-function DiscountBanners() {
-  const banners = [
-    {
-      id: 1,
-      image:
-        "https://shotkit.com/wp-content/uploads/2023/08/tips_how_to_photograph_shoes_horizontal_3.jpg",
-      discount: "Flat 25% Off",
-      title: "Nike Air Force",
-      subtitle: "Men's Shoes",
-    },
-    {
-      id: 2,
-      image:
-        "https://t3.ftcdn.net/jpg/07/45/43/34/360_F_745433451_oghymUJTDezu6tT1PeCq53vGeyEENxHx.jpg",
-      discount: "Flat 30% Off",
-      title: "Trendy Analog",
-      subtitle: "Women Watch",
-    },
-  ];
+import React from "react";
+import useSWR from "swr";
+
+import DisCountBannerfetcher from "@/lib/Dicountbanner1";
+
+type Banner = {
+  uid: string;
+  position: string;
+  promotion_type: string;
+  media_url: string;
+};
+
+type Section = {
+  name: string;
+  type: string;
+  banners?: Banner[];
+};
+
+type ApiResponse = {
+  data: Section[];
+};
+
+export default function DiscountBanners() {
+  const { data, error, isLoading } = useSWR<ApiResponse>(
+    "https://demo.app.taskcocommerce.com/api/v1/home-sections",
+    DisCountBannerfetcher
+  );
+
+  if (isLoading) {
+    return (
+      <section className="py-10">
+        <div className="container mx-auto px-6 md:px-10 lg:px-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {[1, 2].map((item) => (
+              <div
+                key={item}
+                className="h-80 rounded-2xl bg-gray-200 animate-pulse"
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-10 text-red-500">
+        Failed to load banners.
+      </div>
+    );
+  }
+
+  const promotionBanner = data?.data.find(
+    (item) => item.type === "promotion_banner"
+  );
 
   return (
-    <section className="py-2 md:py-10">
-      <div className=" container mx-auto px-6 md:px-10 lg:px-20">
-        
-        {/* Responsive Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
-          
-          {banners.map((banner) => (
-            <div
-              key={banner.id}
-              className="relative min-h-64 sm:min-h-80 lg:min-h-90 flex items-center rounded-2xl  transition-transform duration-700 overflow-hidden group"
-              style={{
-                backgroundImage: `url(${banner.image})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-foreground/10 group-hover:bg-foreground/20 transition duration-300"></div>
-
-              {/* Content */}
-              <div className="relative z-10 p-5 sm:p-7">
-                
-                <p className="text-sm sm:text-base font-semibold uppercase tracking-widest text-text-secondary">
-                  {banner.discount}
-                </p>
-
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl text-text-secondary font-bold mt-2 leading-tight">
-                  {banner.title}
-                </h2>
-
-                <p className="text-xl sm:text-2xl lg:text-3xl text-text-secondary mt-1">
-                  {banner.subtitle}
-                </p>
-
-                <button className="mt-5 px-5 py-2 bg-primary hover:bg-background hover:text-black active:scale-95 transition duration-300 rounded-md font-semibold text-sm sm:text-base">
-                  Shop Now
-                </button>
-
-              </div>
-            </div>
-          ))}
-
+<section className="py-4 md:py-10">
+  <div className="container mx-auto px-4 sm:px-6 lg:px-20">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+      {promotionBanner?.banners?.map((banner) => (
+        <div
+          key={banner.uid}
+          className="relative overflow-hidden rounded-2xl"
+        >
+          <img
+            src={banner.media_url}
+            alt={banner.position}
+            className="w-full h-48 sm:h-64 md:h-72 lg:h-80 xl:h-96 object-cover rounded-2xl transition-transform duration-300 hover:scale-105"
+          />
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
+  </div>
+</section>
   );
 }
-
-export default DiscountBanners;

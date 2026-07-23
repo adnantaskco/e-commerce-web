@@ -1,7 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard1 from "./Productcard/Dresscard";
 import Jackets from "./Productcard/jacketcard";
-import Sheos from "./Productcard/Babydresscard";
 import BabyDress from "./Productcard/Babydresscard";
 
 // Clean, reusable configuration array for our tabs
@@ -13,45 +12,66 @@ const TAB_ITEMS = [
 
 export function TabsDemo() {
   return (
-    <section id="top" className="container mx-auto px-6 md:px-20">
-      {/* HEADER SECTION */}
-      <div className="text-center pt-5 md:pt-20">
-        <span className="uppercase tracking-[5px] text-primary sm:font-medium font-semibold">Trending</span>
-        <h1 className="text-2xl text-text-primary md:text-5xl font-bold mt-4">Trending Products</h1>
-        <div className="flex justify-center mt-3 md:mt-6">
-          <div className="border-t-4 border-primary w-48 md:w-60"></div>
-        </div>
-      </div>
+<section id="top" className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-20">
+  {/* HEADER SECTION */}
+  <div className="text-center pt-2 md:pt-16 lg:pt-20">
+    <span className="uppercase tracking-[4px] md:tracking-[5px] text-primary text-xs sm:text-sm font-semibold">
+      Trending
+    </span>
 
-      {/* TABS CONTROLLER */}
-      <div className="w-full flex justify-center py-5 md:py-10  ">
-        <Tabs defaultValue="overview" className="w-full">
-          
-          {/* NAVIGATION LIST */}
-          <TabsList
-            variant="line"
-            className="flex w-full overflow-x-auto no-scrollbar sm:overflow-visible justify-start sm:justify-center gap-3 sm:gap-6 pb-2"
-          >
-            {TAB_ITEMS.map((tab) => (
-              <TabsTrigger key={tab.value} className="whitespace-nowrap text-text-primary text-sm sm:text-base" value={tab.value}>
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+    <h1 className="mt-3 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-text-primary">
+      Trending Products
+    </h1>
 
-          {/* DYNAMIC CONTENT PANELS */}
-          {TAB_ITEMS.map(({ value, label, desc, Component }) => (
-            <TabsContent key={value} value={value} className="mt-2 md:mt-6 rounded-xl border-none sm:border sm:shadow-md bg-background p-4 sm:p-6">
-              <div className="mb-">
-                <h2 className="text-lg sm:text-xl font-semibold text-text-primary">{label}</h2>
-                <p className="text-sm sm:text-base text-ring mt-1">{desc}</p>
-              </div>
-              <Component />
-            </TabsContent>
+    <div className="flex justify-center mt-4 md:mt-6">
+      <div className="w-28 sm:w-40 md:w-52 lg:w-60 border-t-4 border-primary rounded-full" />
+    </div>
+  </div>
+
+  {/* TABS */}
+  <div className="py-6 md:py-10">
+    <Tabs defaultValue="overview" className="w-full">
+
+      {/* TAB LIST */}
+      <div className="overflow-x-auto no-scrollbar">
+        <TabsList
+          variant="line"
+          className="inline-flex min-w-max sm:w-full justify-start sm:justify-center gap-2 sm:gap-4 lg:gap-6"
+        >
+          {TAB_ITEMS.map((tab) => (
+            <TabsTrigger
+              key={tab.value}
+              value={tab.value}
+              className="whitespace-nowrap px-3 py-2 text-sm sm:text-base"
+            >
+              {tab.label}
+            </TabsTrigger>
           ))}
-          
-        </Tabs>
+        </TabsList>
       </div>
-    </section>
+
+      {/* TAB CONTENT */}
+      {TAB_ITEMS.map(({ value, label, desc, Component }) => (
+        <TabsContent
+          key={value}
+          value={value}
+          className="mt-4 md:mt-6 rounded-xl bg-background p-4 sm:p-6 lg:p-8 border sm:border shadow-none sm:shadow-md"
+        >
+          <div className="mb-5">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-text-primary">
+              {label}
+            </h2>
+
+            <p className="mt-2 text-sm sm:text-base text-ring max-w-3xl">
+              {desc}
+            </p>
+          </div>
+
+          <Component />
+        </TabsContent>
+      ))}
+    </Tabs>
+  </div>
+</section>
   );
 }

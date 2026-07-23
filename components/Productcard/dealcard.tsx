@@ -42,12 +42,23 @@ export default function ProductSlider() {
 
   // Dynamic API Fetching using SWR
   const { data, error, isLoading } = useSWR(
-    "https://demo.app.taskcocommerce.com/api/v1/products",
+    "https://demo.app.taskcocommerce.com/api/v1/home-sections",
     fetcher
   );
 
-  // Extract the product payload array safely
-  const Dealproducts: Product[] = data?.data || data || [];
+  type ProductCollection = {
+  uid: string;
+  name: string;
+  type: "product_collection";
+  slug: string;
+  products: Product[];
+};
+
+const productCollection = data?.data?.find(
+  (item: ProductCollection) => item.name === "Coffee Offer Coooection"
+);
+
+const Dealproducts = productCollection?.products ?? [];
 
   const getScrollAmount = () => {
     const container = sliderRef.current;
@@ -201,7 +212,7 @@ export default function ProductSlider() {
           onMouseUp={stopDragging}
           className="flex gap-3 md:gap-6 overflow-x-auto scroll-smooth no-scrollbar cursor-grab select-none touch-pan-x pb-2"
         >
-          {Dealproducts.map((item) => (
+          {Dealproducts.map((item: Product) => (
             <div
               key={item.id}
               onMouseEnter={() => setHovered(item.id)}

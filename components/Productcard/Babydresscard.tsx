@@ -39,12 +39,23 @@ const BabyDress = () => {
 
   // Dynamic API Fetching using SWR
   const { data, error, isLoading } = useSWR(
-    "https://demo.app.taskcocommerce.com/api/v1/products",
+    "https://demo.app.taskcocommerce.com/api/v1/home-sections",
     fetcher
   );
 
-  // Extract the product payload array safely
-  const Babydressproducts: Product[] = data?.data || data || [];
+type ProductCollection = {
+  uid: string;
+  name: string;
+  type: "product_collection";
+  slug: string;
+  products: Product[];
+};
+
+const productCollection = data?.data?.find(
+  (item: ProductCollection) => item.name === "Tech Pro Products"
+);
+
+const Babydressproducts = productCollection?.products ?? [];
 
   if (isLoading) {
     return (
@@ -65,7 +76,7 @@ const BabyDress = () => {
   return (
     <section className="w-full px-2 sm:px-6 lg:px-10 py-6 bg-background">
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-        {Babydressproducts.map((item) => (
+        {Babydressproducts.map((item: Product) => (
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}

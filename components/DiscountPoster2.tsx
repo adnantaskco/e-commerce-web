@@ -2,7 +2,7 @@
 
 import React from "react";
 import useSWR from "swr";
-import fetcher from "@/lib/fetcher";
+import fetcher from "@/lib/disc2fatcher";
 
 type ImageItem = {
   uid: string;
@@ -45,7 +45,7 @@ export default function DiscountBanners2() {
     );
   }
 
-  // Merge sliders + banners
+  // 3 banners
   const DiscountImages = [
     
     data.banners.home_top_right,

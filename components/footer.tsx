@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
+import useSWR from "swr";
 import {
   FaFacebookF,
   FaInstagram,
@@ -9,76 +12,115 @@ import {
 } from "react-icons/fa6";
 import { IoSendOutline } from "react-icons/io5";
 
+// SWR Fetcher function
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 const Footer = () => {
-  const socialIcons = [
-    FaFacebookF,
-    FaXTwitter,
-    FaInstagram,
-    FaPinterestP,
-    FaYoutube,
-  ];
+  const [email, setEmail] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch footer data dynamically using SWR
+  const { data: footerData, error, isLoading } = useSWR("https://demo.app.taskcocommerce.com/api/v1/ecommerce-pages/footer", fetcher);
+
+  const socialIconsMap: Record<string, React.ElementType> = {
+    facebook: FaFacebookF,
+    twitter: FaXTwitter,
+    instagram: FaInstagram,
+    pinterest: FaPinterestP,
+    youtube: FaYoutube,
+  };
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !agreed) return;
+
+    setIsSubmitting(true);
+    try {
+      await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setEmail("");
+      alert("Subscribed successfully!");
+    } catch (err) {
+      console.error("Failed to subscribe", err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) {
+    return <footer className="bg-foreground py-20 text-center text-background">Loading footer...</footer>;
+  }
+
+  if (error || !footerData) {
+    return <footer className="bg-foreground py-20 text-center text-background">Failed to load footer data.</footer>;
+  }
 
   return (
     <footer className="relative text-background bg-gradient-to-br from-foreground via-ring to-foreground overflow-hidden">
-
       {/* GLOW BACKGROUND EFFECT */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary blur-[120px]" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-primary blur-[120px]" />
       </div>
 
       <div className="relative container mx-auto px-6 md:px-12 lg:px-24 py-20">
-
         {/* TOP GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-
           {/* STORE INFO */}
           <div>
             <h2 className="text-xl text-text-secondary font-bold mb-4">Store Information</h2>
             <div className="w-14 h-[2px] bg-primary mb-4"></div>
 
             <p className="text-text-secondary leading-7 text-sm">
-              99 New Theme St. XY, USA 12345, <br /> Beside the Sun point land.
+              {footerData.storeInfo?.address}
             </p>
 
             <p className="mt-4 text-sm text-text-secondary">
-              Call: <span className="text-text-secondary font-semibold">+00 123-456-789</span>
+              Call: <span className="text-text-secondary font-semibold">{footerData.storeInfo?.phone}</span>
             </p>
 
             <p className="mt-2 text-sm text-text-secondary">
-              Email: admin@example.com
+              Email: {footerData.storeInfo?.email}
             </p>
           </div>
 
-          {/* LINKS */}
+          {/* QUICK LINKS */}
           <div className="md:pl-10">
-            <h2 className="text-xl text-text-secondary font-bold mb-4 ">Quick Links</h2>
+            <h2 className="text-xl text-text-secondary font-bold mb-4">Quick Links</h2>
             <div className="w-14 h-[2px] bg-primary mb-4"></div>
 
             <ul className="space-y-3 text-text-secondary">
-              {["Prices Drop", "New Products", "Best Sellers", "Stores", "Sitemap"].map((item, i) => (
-                <li
-                  key={i}
-                  className="hover:text-primary cursor-pointer transition hover:translate-x-1"
-                >
-                  {item}
+              {footerData.quickLinks?.map((item: { label: string; href: string }, i: number) => (
+                <li key={i}>
+                  <a
+                    href={item.href}
+                    className="hover:text-primary cursor-pointer transition hover:translate-x-1 inline-block"
+                  >
+                    {item.label}
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* ACCOUNT */}
+          {/* MY ACCOUNT */}
           <div>
-            <h2 className="text-xl  font-bold mb-4">My Account</h2>
+            <h2 className="text-xl font-bold mb-4">My Account</h2>
             <div className="w-14 h-[2px] bg-primary mb-4"></div>
 
             <ul className="space-y-3 text-text-secondary">
-              {["Order Tracking", "Sign In", "Create Account", "Wishlist", "Discount"].map((item, i) => (
-                <li
-                  key={i}
-                  className="hover:text-primary cursor-pointer transition hover:translate-x-1"
-                >
-                  {item}
+              {footerData.accountLinks?.map((item: { label: string; href: string }, i: number) => (
+                <li key={i}>
+                  <a
+                    href={item.href}
+                    className="hover:text-primary cursor-pointer transition hover:translate-x-1 inline-block"
+                  >
+                    {item.label}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -93,21 +135,35 @@ const Footer = () => {
               Get updates, discounts and special offers.
             </p>
 
-            <div className="flex items-center bg-foreground/10 border border-background/20 rounded-lg overflow-hidden">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="w-full px-4 py-3 bg-transparent outline-none text-sm text-text-secondary placeholder-ring"
-              />
-              <button className="px-4 text-xl hover:text-primary transition">
-                <IoSendOutline />
-              </button>
-            </div>
+            <form onSubmit={handleNewsletterSubmit}>
+              <div className="flex items-center bg-foreground/10 border border-background/20 rounded-lg overflow-hidden">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email"
+                  required
+                  className="w-full px-4 py-3 bg-transparent outline-none text-sm text-text-secondary placeholder-ring"
+                />
+                <button
+                  type="submit"
+                  disabled={isSubmitting || !agreed}
+                  className="px-4 text-xl hover:text-primary transition disabled:opacity-50"
+                >
+                  <IoSendOutline />
+                </button>
+              </div>
 
-            <label className="flex items-start gap-2 mt-4 text-xs text-text-secondary">
-              <input type="checkbox" className="mt-1" />
-              I agree to terms & privacy policy
-            </label>
+              <label className="flex items-start gap-2 mt-4 text-xs text-text-secondary cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-1"
+                />
+                I agree to terms & privacy policy
+              </label>
+            </form>
           </div>
         </div>
       </div>
@@ -115,32 +171,39 @@ const Footer = () => {
       {/* BOTTOM */}
       <div className="border-t border-background/10">
         <div className="mx-auto px-6 md:px-12 lg:px-24 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
-
           {/* SOCIAL */}
           <div className="flex gap-3">
-            {socialIcons.map((Icon, i) => (
-              <div
-                key={i}
-                className="w-10 h-10 rounded-full bg-background/10 border border-background/20 flex items-center justify-center hover:primery hover:scale-110 transition"
-              >
-                <Icon />
-              </div>
-            ))}
+            {footerData.socials?.map((social: { name: string; url: string }, i: number) => {
+              const IconComponent = socialIconsMap[social.name.toLowerCase()] || FaFacebookF;
+              return (
+                <a
+                  key={i}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-background/10 border border-background/20 flex items-center justify-center hover:text-primary hover:scale-110 transition"
+                >
+                  <IconComponent />
+                </a>
+              );
+            })}
           </div>
 
           {/* COPYRIGHT */}
           <p className="text-text-secondary text-sm text-center">
-            © 2026 Styleway. All Rights Reserved.
+            {footerData.copyrightText || `© ${new Date().getFullYear()} Styleway. All Rights Reserved.`}
           </p>
 
           {/* PAYMENT */}
-          <Image
-            src="https://azseller.s3.amazonaws.com/5fde132ca9cc36749c65b7c4/a27fc7f4-9b6b-42e9-8b11-97b0e819b95d/4ffa292d-1d26-4a29-a3e2-224a73033f77.jpg"
-            alt="payment"
-            width={140}
-            height={40}
-            className="h-8 w-auto opacity-80"
-          />
+          {footerData.paymentImageUrl && (
+            <Image
+              src={footerData.paymentImageUrl}
+              alt="payment methods"
+              width={140}
+              height={40}
+              className="h-8 w-auto opacity-80"
+            />
+          )}
         </div>
       </div>
     </footer>

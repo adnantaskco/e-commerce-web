@@ -16,12 +16,15 @@ import BrandLogo from "../../components/BrandLogo";
 import CategorySidebar from "../../components/Sidebar";
 
 import TrendingProductsTabs from "../../components/tabproduct2";
+import CategorySection2 from "@/components/catagory";
+import Navbar from "@/components/Navbar5";
 
 
 
 function Home1() {
   return (
     <>
+    
     <HeroSection></HeroSection>
     {/* <Services></Services> */}
     {/* <TrendingProductsTabs></TrendingProductsTabs> */}
@@ -29,6 +32,7 @@ function Home1() {
     <TabsDemo />
    <DiscountBanners/>
     <CategorySection/>
+   
    <ProductSlider/>
     <DiscountBanners2/>
     <FeatureProduct/>

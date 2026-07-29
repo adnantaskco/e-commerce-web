@@ -22,14 +22,14 @@ function Navbar1() {
           <div className="flex flex-wrap items-center justify-center gap-2 hidden md:block">
 
             <a
-              href="#"
+              href="/help"
               className="border-r border-ring px-3 text-sm font-md hover:text-primary transition"
             >
               Need Help?
             </a>
 
             <a
-              href="#"
+              href="/track-order"
               className=" border-r border-ring px-3 text-sm font-md hover:text-primary transition"
             >
               Track Order

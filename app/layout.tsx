@@ -8,6 +8,7 @@ import { CartProvider } from "./src/components/context/CartContext";
 import Navbar1 from "../components/navbar1";
 import Navbar2 from "../components/navbar2";
 import Footer from "../components/footer";
+import Navbar from "@/components/Navbar5";
 
 
 const geistSans = Geist({
@@ -42,7 +43,7 @@ export default function RootLayout({
        
         <CartProvider>
            <Navbar1></Navbar1>
-           <Navbar2></Navbar2>
+           <Navbar></Navbar>
  
         {children}
         </CartProvider>

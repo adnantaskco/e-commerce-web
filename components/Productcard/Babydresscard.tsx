@@ -60,7 +60,7 @@ const Babydressproducts = productCollection?.products ?? [];
   if (isLoading) {
     return (
       <div className="py-20 text-center text-lg font-semibold">
-        Loading Products...
+       <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGp4dHppaXczajhvamo5MmRoZjdueWk5ZTRzNHU3MHJwdjJidGZpZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kUTME7ABmhYg5J3psM/giphy.gif" alt="" />
       </div>
     );
   }

@@ -4,7 +4,7 @@ import * as React from "react";
 import useSWR from "swr";
 import Autoplay from "embla-carousel-autoplay";
 
-import fetcher from "@/lib/fetcher";
+import fetcher from "@/lib/herofetcher";
 
 import {
   Carousel,
@@ -51,8 +51,8 @@ export default function HeroSection() {
 
   if (isLoading) {
     return (
-      <div className="h-[450px] flex items-center justify-center">
-        Loading...
+      <div className=" flex justify-center items-center h-screen">
+       <img src="https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3aWVwMHk2YmNzM21vczk5ZW8yanNtNnlraW9uNG9rcmc3YXJxdHo4dSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/SMEGj0pb5eUKcnot8x/giphy.webp" alt="" />
       </div>
     );
   }
@@ -60,7 +60,7 @@ export default function HeroSection() {
   if (error || !data) {
     return (
       <div className="h-[450px] flex items-center justify-center text-red-500">
-        Failed to load banner
+        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXF1bnZyODFhdDV4cHU0ZGFhNXg0bXRzNWNoaGo0YTdsdmE1ZXAyMiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3ohs83bO7MKV9koZuE/giphy.webp" alt="" />
       </div>
     );
   }

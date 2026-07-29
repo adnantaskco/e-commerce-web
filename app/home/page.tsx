@@ -36,7 +36,7 @@ function Home1() {
    <ProductSlider/>
     <DiscountBanners2/>
     <FeatureProduct/>
-    <TestimonialSection/>
+    <TestimonialSection></TestimonialSection>
     
     <GallerySlider/>
     <BrandLogo/>

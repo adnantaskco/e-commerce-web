@@ -101,9 +101,9 @@ export default function Navbar() {
 
             {/* Right Icons */}
             <div className="flex items-center gap-2 shrink-0">
-              <button className="h-10 w-10 rounded-full hover:bg-gray-100 transition-all duration-300 flex items-center justify-center">
+              {/* <button className="h-10 w-10 rounded-full hover:bg-gray-100 transition-all duration-300 flex items-center justify-center">
                 <CiSearch className="text-2xl" />
-              </button>
+              </button> */}
 
               <Link
                 href="/login"

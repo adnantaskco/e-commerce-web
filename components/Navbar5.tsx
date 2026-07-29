@@ -74,9 +74,9 @@ export default function Navbar() {
             <div className="hidden lg:flex flex-1 items-center relative min-w-0 overflow-visible">
               <button
                 onClick={() => handleScroll("left")}
-                className="absolute left-0 z-20 h-9 w-9 rounded-full bg-white shadow hover:bg-primary hover:text-white transition-all duration-300 flex items-center justify-center"
+                className="absolute left-0 z-20 h-4 w-4 rounded-full bg-white shadow hover:bg-primary hover:text-white transition-all duration-300 flex items-center justify-center"
               >
-                <FaChevronLeft />
+                <FaChevronLeft  className="h-3 w-3"/>
               </button>
 
               <div
@@ -93,9 +93,9 @@ export default function Navbar() {
 
               <button
                 onClick={() => handleScroll("right")}
-                className="absolute right-0 z-20 h-9 w-9 rounded-full bg-white shadow hover:bg-primary hover:text-white transition-all duration-300 flex items-center justify-center"
+                className="absolute right-0 z-20 h-4 w-4 rounded-full bg-white shadow hover:bg-primary hover:text-white transition-all duration-300 flex items-center justify-center"
               >
-                <FaChevronRight />
+                <FaChevronRight className="h-3 w-3 " />
               </button>
             </div>
 

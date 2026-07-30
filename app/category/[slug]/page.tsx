@@ -190,8 +190,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
             {error && !isLoading && (
               <div className="bg-white border border-red-200 rounded-lg min-h-[300px] sm:min-h-[400px] flex flex-col items-center justify-center p-6 text-center shadow-sm">
-                <p className="text-red-500 font-medium text-sm sm:text-base mb-1">Failed to load products</p>
-                <p className="text-xs text-gray-400">Please check your backend connection.</p>
+                <img src="https://static.vecteezy.com/system/resources/thumbnails/068/130/243/small/apologetic-boy-holding-sorry-sign-illustration-vector.jpg" alt="" />
+                <p className="text-red-500 font-medium text-sm sm:text-base mb-1">No products found</p>
+                <p className="text-xs text-gray-400">Try adjusting your filters or search terms.</p>
               </div>
             )}
 

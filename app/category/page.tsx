@@ -184,7 +184,7 @@ function ProductsContent() {
 
       {/* Categories */}
       <div className="bg-background rounded-xl p-5 border border-ring/10 shadow-sm">
-        <h3 className="text-xs font-black uppercase tracking-wider text-ring mb-3">Categories</h3>
+        <h3 className="text-xs font-black uppercase tracking-wider ext-ring mb-3">Categories</h3>
         <div className="flex flex-col gap-1">
           {categoriesList.map((cat) => (
             <button
@@ -220,7 +220,7 @@ function ProductsContent() {
           <span>Min: ${minPrice}</span>
           <span>Max: ${maxPrice}</span>
         </div>
-      </div>
+      </div>t
     </>
   );
 

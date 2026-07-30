@@ -13,7 +13,7 @@ interface OrderDetails {
 }
 
 export default function TrackOrder() {
-  const [orderIdInput, setOrderIdInput] = useState('ORD-260419054820');
+  const [orderIdInput, setOrderIdInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch data conditionally only when searchQuery is set

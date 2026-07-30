@@ -14,7 +14,7 @@ export function TabsDemo() {
   return (
 <section id="top" className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-20">
   {/* HEADER SECTION */}
-  <div className="text-center pt-2 md:pt-16 lg:pt-20">
+  <div className="text-center pt-2 md:pt-4 lg:pt-6">
     <span className="uppercase tracking-[4px] md:tracking-[5px] text-primary text-xs sm:text-sm font-semibold">
       Trending
     </span>

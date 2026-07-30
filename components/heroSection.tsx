@@ -83,7 +83,7 @@ export default function HeroSection() {
         <CarouselContent>
           {heroImages.map((item) => (
             <CarouselItem key={item.uid}>
-              <div className="relative w-full h-[250px] md:h-[450px] lg:h-[600px]">
+              <div className="relative w-full ">
                 <img
                   src={item.media_url}
                   alt="Hero Banner"

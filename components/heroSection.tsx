@@ -74,7 +74,7 @@ export default function HeroSection() {
   ];
 
   return (
-    <section className="w-full">
+    <section className="container mx-auto px-4 md:px-16">
       <Carousel
         plugins={[plugin]}
         opts={{ loop: true }}

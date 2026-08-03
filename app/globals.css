@@ -235,5 +235,8 @@ button,
 .text-secondary{
   color: #D1D5DC;
 }
+.input {
+  @apply w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:border-emerald-500;
+}
 
 

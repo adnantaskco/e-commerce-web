@@ -5,7 +5,6 @@ import { useState } from "react";
 import { useCart } from "@/app/src/components/context/CartContext";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { PaymentButton } from "@/components/ui/payment";
-import { CheckboxBasic } from "@/components/ui/checkbox2";
 import Link from "next/link";
 
 export default function CartPage() {
@@ -17,7 +16,10 @@ export default function CartPage() {
     clearCart,
   } = useCart();
 
-  const [delivery, setDelivery] = useState(2);
+  const [delivery, setDelivery] = useState(100);
+  
+  // 1. Terms and Conditions State
+  const [isAccepted, setIsAccepted] = useState(false);
 
   // TOTAL QUANTITY OF ALL ITEMS IN CART
   const totalItemsCount = cartItems.reduce(
@@ -37,14 +39,13 @@ export default function CartPage() {
     <section className="w-full min-h-screen flex justify-center bg-background py-10">
       <div className="container mx-auto px-4 sm:px-10 lg:px-24">
 
-        {/* TITLE */}
-  {/* HEADER */}
-          <div className="p-5  border-b">
-            <h2 className="text-lg text-text-primary font-semibold">Cart Items</h2>
-            <p className="text-sm text-text-primary text-ring">
-              {totalItemsCount} items in your cart
-            </p>
-          </div>
+        {/* HEADER */}
+        <div className="p-5 border-b">
+          <h2 className="text-lg text-text-primary font-semibold">Cart Items</h2>
+          <p className="text-sm text-text-primary text-ring">
+            {totalItemsCount} items in your cart
+          </p>
+        </div>
 
         {cartItems.length === 0 ? (
           <div className="bg-background p-10 text-center rounded-lg border">
@@ -78,7 +79,7 @@ export default function CartPage() {
                       </h3>
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="text-destructive text-sm mt-1 flex items-center gap-1"
+                        className="text-destructive text-sm mt-1 flex items-center gap-1 cursor-pointer"
                       >
                         <FaTrash size={12} /> Remove
                       </button>
@@ -143,6 +144,7 @@ export default function CartPage() {
                 <select
                   className="w-full border p-2 rounded mt-1 text-sm"
                   onChange={(e) => setDelivery(Number(e.target.value))}
+                  value={delivery}
                 >
                   <option value={100}>Inside Dhaka - 100</option>
                   <option value={150}>Outside Dhaka - 150</option>
@@ -155,21 +157,44 @@ export default function CartPage() {
                 <span className="text-green-600">{total.toFixed(2)}</span>
               </div>
 
-              <div className="py-2">
-                <CheckboxBasic />
+              {/* 2. Checkbox input for accepting terms */}
+              <div className="py-3 flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  checked={isAccepted}
+                  onChange={(e) => setIsAccepted(e.target.checked)}
+                  className="w-4 h-4 cursor-pointer accent-primary"
+                />
+                <label htmlFor="terms" className="text-xs text-text-primary cursor-pointer">
+                  I accept the{" "}
+                  <Link href="/terms" className="text-blue-500 underline">
+                    Terms & Conditions
+                  </Link>
+                </label>
               </div>
 
               <div className="py-2.5">
-                <Link href="/checkout">
-                  <button className="w-full mt-2 bg-primary text-text-se\
-                   py-1 rounded-lg hover:bg-ring">
+                {/* 3. Checkout Button Conditional Rendering / Disabled State */}
+                {isAccepted ? (
+                  <Link href="/checkout">
+                    <button className="w-full mt-2 bg-primary text-text-secondary py-2 rounded-lg hover:bg-ring transition cursor-pointer">
+                      Checkout
+                    </button>
+                  </Link>
+                ) : (
+                  <button
+                    disabled
+                    className="w-full mt-2 bg-gray-300 text-gray-500 py-2 rounded-lg cursor-not-allowed"
+                    title="Please accept terms and conditions to proceed"
+                  >
                     Checkout
                   </button>
-                </Link>
+                )}
 
                 <button
                   onClick={clearCart}
-                  className="w-full mt-2 bg-foreground text-text-secondary py-1 rounded-lg hover:bg-ring"
+                  className="w-full mt-2 bg-foreground text-text-secondary py-2 rounded-lg hover:bg-ring transition cursor-pointer"
                 >
                   Clear Cart
                 </button>

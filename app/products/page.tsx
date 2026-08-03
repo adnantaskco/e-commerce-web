@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, Suspense } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { useCart } from '@/app/src/components/context/CartContext';
-import { FaHeart, FaEye, FaStar, FaMagnifyingGlass, FaSliders, FaXmark } from 'react-icons/fa6';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaChevronDown, FaChevronRight, FaSearch, FaRedo, FaShoppingCart, FaFilter, FaTimes } from 'react-icons/fa';
+import { FaEye, FaHeart, FaStar } from 'react-icons/fa6';
+import Image from 'next/image';
 
-// 1. Fully typed interface mapped precisely to your API key specification
+// Product & Category Interfaces
 interface ProductItem {
   id: number;
   name: string;
@@ -24,313 +24,508 @@ interface ProductItem {
   stock_qty: number;
   in_stock: boolean;
   stock_availability: boolean;
-  weight: number;
+  brand_name?: string;
+  category?: {
+    id: number;
+    name: string;
+    slug: string;
+  } | string;
 }
 
-// SWR fetcher utility function
+interface CategoryItem {
+  id: number;
+  name: string;
+  slug: string;
+  icon?: string;
+  image?: string | null;
+  children?: CategoryItem[];
+}
+
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-function ProductsContent() {
+function AllProductsContent() {
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState<boolean>(false);
   const { addToCart } = useCart();
-  const router = useRouter();
-  const searchParams = useSearchParams();
 
-  // Mobile Filter Drawer Toggle State
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-
-  // Dynamic API Fetching Implementation using SWR
-  const { data, error, isLoading } = useSWR(
+  // SWR API Calls
+  const { data: productsData, isLoading: isProductsLoading } = useSWR(
     "https://demo.app.taskcocommerce.com/api/v1/products",
     fetcher
   );
 
-  // Safely capture payload array matching backend pattern
-  const products: ProductItem[] = data?.data || data || [];
+  const { data: categoriesData, isLoading: isCategoriesLoading } = useSWR(
+    "https://demo.app.taskcocommerce.com/api/v1/categories",
+    fetcher
+  );
 
-  // Extract initial parameters from URL query string
-  const urlSearch = searchParams.get('search') || '';
-  const urlCategory = searchParams.get('category') || null;
-  const urlMaxPrice = searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : null;
+  const products: ProductItem[] = productsData?.data || productsData || [];
+  const categories: CategoryItem[] = categoriesData?.data || categoriesData || [];
 
-  // Component UI State Systems
-  const [searchQuery, setSearchQuery] = useState<string>(urlSearch);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
-  const [priceRange, setPriceRange] = useState<number>(urlMaxPrice || 2000);
-  const [hovered, setHovered] = useState<number | null>(null);
+  // Local UI Filter States
+  const [nameSearch, setNameSearch] = useState<string>('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [brandSearch, setBrandSearch] = useState<string>('');
+  const [minPriceInput, setMinPriceInput] = useState<number>(0);
+  const [maxPriceInput, setMaxPriceInput] = useState<number>(250000);
+  const [sortBy, setSortBy] = useState<string>('default');
+  const [itemsPerPage, setItemsPerPage] = useState<number>(20);
 
-  // 2. Extract Data Dimensions Dynamically based on the API data values
-  const { categoriesList, minPrice, maxPrice } = useMemo(() => {
-    if (!Array.isArray(products) || products.length === 0) {
-      return { categoriesList: [], minPrice: 0, maxPrice: 2000 };
-    }
-
-    const categories = new Set<string>();
-    let highestPrice = 0;
-    let lowestPrice = Infinity;
-
-    products.forEach((p) => {
-      const currentPrice = Number(p.sale_price) || 0;
-      if (currentPrice > highestPrice) highestPrice = currentPrice;
-      if (currentPrice < lowestPrice) lowestPrice = currentPrice;
-
-      const nameLower = p.name ? p.name.toLowerCase() : '';
-      if (nameLower.includes('hoodie') || nameLower.includes('hudi')) categories.add('Hoodies');
-      else if (nameLower.includes('jacket') || nameLower.includes('coat') || nameLower.includes('blazer')) categories.add('Jackets');
-      else if (nameLower.includes('t-shirt') || nameLower.includes('tee')) categories.add('T-Shirts');
-      else if (nameLower.includes('shirt')) categories.add('Shirts');
-      else if (nameLower.includes('pants') || nameLower.includes('chino') || nameLower.includes('jeans') || nameLower.includes('trouser')) categories.add('Pants & Trousers');
-      else if (nameLower.includes('dress') || nameLower.includes('frock') || nameLower.includes('romper') || nameLower.includes('sleepsuit')) categories.add('Dresses & Outfits');
-      else if (nameLower.includes('top')) categories.add('Tops');
-      else categories.add('Casual Essentials');
-    });
-
-    return {
-      categoriesList: Array.from(categories).sort(),
-      minPrice: lowestPrice === Infinity ? 0 : Math.floor(lowestPrice),
-      maxPrice: highestPrice === 0 ? 2000 : Math.ceil(highestPrice),
-    };
-  }, [products]);
-
-  // Adjust current filter roof context dynamically when live data loads
-  useEffect(() => {
-    if (maxPrice && !urlMaxPrice) {
-      setPriceRange(maxPrice);
-    }
-  }, [maxPrice, urlMaxPrice]);
-
-  // 3. Sync State back into URL Router Search Params Matrix
-  useEffect(() => {
-    const params = new URLSearchParams();
-    if (searchQuery.trim()) params.set('search', searchQuery);
-    if (selectedCategory) params.set('category', selectedCategory);
-    if (priceRange !== maxPrice) params.set('maxPrice', priceRange.toString());
-
-    router.push(`/products?${params.toString()}`, { scroll: false });
-  }, [searchQuery, selectedCategory, priceRange, maxPrice, router]);
-
-  const resetFilters = () => {
-    setSearchQuery('');
-    setSelectedCategory(null);
-    setPriceRange(maxPrice);
+  // Filter Reset Function
+  const handleResetFilters = () => {
+    setNameSearch('');
+    setSelectedCategories([]);
+    setSelectedBrands([]);
+    setBrandSearch('');
+    setMinPriceInput(0);
+    setMaxPriceInput(250000);
+    setSortBy('default');
+    setItemsPerPage(20);
   };
 
-  // 4. Filtering Engine working with the API model parameters
-  const filteredProducts = useMemo(() => {
+  // Extract Brands Dynamically
+  const availableBrands = useMemo(() => {
+    const brandsSet = new Set<string>();
+    products.forEach((p) => {
+      if (p.brand_name) brandsSet.add(p.brand_name);
+    });
+    if (brandsSet.size === 0) {
+      return ["Rfl", "Readmore", "Freshbite", "Glowup", "Autoparts Plus", "Officemax", "Techpro", "Stylehub", "Homecomfort", "Fitgear"];
+    }
+    return Array.from(brandsSet);
+  }, [products]);
+
+  const filteredBrandList = useMemo(() => {
+    if (!brandSearch.trim()) return availableBrands;
+    return availableBrands.filter((b) => b.toLowerCase().includes(brandSearch.toLowerCase()));
+  }, [availableBrands, brandSearch]);
+
+  // Toggle Category Accordion Dropdown
+  const toggleCategoryExpand = (id: number) => {
+    setExpandedCategories((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  // Collect all child slugs recursively
+  const getAllCategorySlugs = (category: CategoryItem): string[] => {
+    let slugs = [category.slug || category.name];
+    if (category.children && category.children.length > 0) {
+      category.children.forEach((child) => {
+        slugs = slugs.concat(getAllCategorySlugs(child));
+      });
+    }
+    return slugs;
+  };
+
+  // Toggle Checkbox Handlers with Parent & Child handling
+  const toggleCategory = (category: CategoryItem) => {
+    const allSlugs = getAllCategorySlugs(category);
+    const identifier = category.slug || category.name;
+    const isCurrentlySelected = selectedCategories.includes(identifier);
+
+    if (isCurrentlySelected) {
+      setSelectedCategories((prev) => prev.filter((c) => !allSlugs.includes(c)));
+    } else {
+      setSelectedCategories((prev) => Array.from(new Set([...prev, ...allSlugs])));
+    }
+  };
+
+  const toggleBrand = (brandName: string) => {
+    setSelectedBrands((prev) =>
+      prev.includes(brandName) ? prev.filter((b) => b !== brandName) : [...prev, brandName]
+    );
+  };
+
+  // Comprehensive Filtering & Sorting Logic
+  const processedProducts = useMemo(() => {
     if (!Array.isArray(products)) return [];
 
-    return products.filter((product) => {
-      const productName = product.name || '';
-      const productPrice = Number(product.sale_price) || 0;
+    let result = products.filter((p) => {
+      const price = Number(p.sale_price) || 0;
 
-      if (searchQuery.trim() !== '') {
-        const query = searchQuery.toLowerCase();
-        if (!productName.toLowerCase().includes(query)) return false;
+      // 1. Search by Name Filter
+      if (nameSearch.trim() !== '') {
+        const query = nameSearch.toLowerCase();
+        if (!p.name || !p.name.toLowerCase().includes(query)) return false;
       }
 
-      if (productPrice > priceRange) {
-        return false;
+      // 2. Price Range Filter
+      if (price < minPriceInput || price > maxPriceInput) return false;
+
+      // 3. Category Filter
+      if (selectedCategories.length > 0) {
+        const catObj = typeof p.category === 'object' ? p.category : null;
+        const catStr = typeof p.category === 'string' ? p.category : '';
+        
+        const matchesCat = selectedCategories.some((selected) => 
+          catObj?.slug === selected ||
+          catObj?.name?.toLowerCase() === selected.toLowerCase() ||
+          catStr.toLowerCase() === selected.toLowerCase() ||
+          p.name.toLowerCase().includes(selected.toLowerCase())
+        );
+
+        if (!matchesCat) return false;
       }
-      
-      if (selectedCategory) {
-        const nameLower = productName.toLowerCase();
-        let currentItemCategory = 'Casual Essentials';
 
-        if (nameLower.includes('hoodie') || nameLower.includes('hudi')) currentItemCategory = 'Hoodies';
-        else if (nameLower.includes('jacket') || nameLower.includes('coat') || nameLower.includes('blazer')) currentItemCategory = 'Jackets';
-        else if (nameLower.includes('t-shirt') || nameLower.includes('tee')) currentItemCategory = 'T-Shirts';
-        else if (nameLower.includes('shirt')) currentItemCategory = 'Shirts';
-        else if (nameLower.includes('pants') || nameLower.includes('chino') || nameLower.includes('jeans') || nameLower.includes('trouser')) currentItemCategory = 'Pants & Trousers';
-        else if (nameLower.includes('dress') || nameLower.includes('frock') || nameLower.includes('romper') || nameLower.includes('sleepsuit')) currentItemCategory = 'Dresses & Outfits';
-        else if (nameLower.includes('top')) currentItemCategory = 'Tops';
-
-        if (currentItemCategory !== selectedCategory) return false;
+      // 4. Brand Filter
+      if (selectedBrands.length > 0) {
+        if (!p.brand_name || !selectedBrands.includes(p.brand_name)) return false;
       }
 
       return true;
     });
-  }, [products, searchQuery, selectedCategory, priceRange]);
 
-  if (isLoading) {
+    // Sort Results
+    if (sortBy === 'price-low') {
+      result = [...result].sort((a, b) => Number(a.sale_price) - Number(b.sale_price));
+    } else if (sortBy === 'price-high') {
+      result = [...result].sort((a, b) => Number(b.sale_price) - Number(a.sale_price));
+    } else if (sortBy === 'name-az') {
+      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    return result;
+  }, [products, nameSearch, selectedCategories, selectedBrands, minPriceInput, maxPriceInput, sortBy]);
+
+  const displayedProducts = useMemo(() => {
+    return processedProducts.slice(0, itemsPerPage);
+  }, [processedProducts, itemsPerPage]);
+
+  // Nested Category Item Component
+  const CategoryTreeItem = ({ category, level = 0 }: { category: CategoryItem; level?: number }) => {
+    const hasChildren = category.children && category.children.length > 0;
+    const isExpanded = expandedCategories.includes(category.id);
+    const identifier = category.slug || category.name;
+    const isChecked = selectedCategories.includes(identifier);
+
     return (
-      <div className="py-40 flex flex-col items-center justify-center min-h-[60vh] text-center font-sans">
-        <div className="w-10 h-10 border-4 border-foreground border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-sm font-black text-ring uppercase tracking-widest animate-pulse">Loading Products Collection...</p>
+      <div className="space-y-1">
+        <div 
+          className="flex items-center justify-between py-1.5 px-1 rounded hover:bg-gray-50 transition"
+          style={{ paddingLeft: `${level * 12 + 4}px` }}
+        >
+          <label className="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer hover:text-emerald-600 transition flex-1">
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={() => toggleCategory(category)}
+              className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+            />
+            <span className="truncate">{category.name}</span>
+          </label>
+
+          {hasChildren && (
+            <button
+              type="button"
+              onClick={() => toggleCategoryExpand(category.id)}
+              className="p-1 text-gray-400 hover:text-emerald-600 focus:outline-none"
+            >
+              {isExpanded ? (
+                <FaChevronDown className="w-3 h-3" />
+              ) : (
+                <FaChevronRight className="w-3 h-3" />
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Child Dropdown */}
+        {hasChildren && isExpanded && (
+          <div className="space-y-1 border-l border-gray-100 ml-2">
+            {category.children!.map((child) => (
+              <CategoryTreeItem key={child.id} category={child} level={level + 1} />
+            ))}
+          </div>
+        )}
       </div>
     );
-  }
+  };
 
-  if (error) {
-    return (
-      <div className="py-40 flex flex-col items-center justify-center min-h-[60vh] text-center font-sans">
-        <p className="text-sm font-black text-destructive uppercase tracking-widest">Failed to load items collection.</p>
+  // Reusable Sidebar Content
+  const FilterSidebarContent = () => (
+    <div className="space-y-6">
+      {/* Header & Reset Button */}
+      <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+        <h2 className="text-base font-bold text-gray-900">Filters</h2>
+        <button
+          onClick={handleResetFilters}
+          className="flex items-center gap-1.5 text-xs text-emerald-600 hover:text-emerald-700 font-medium transition"
+        >
+          <FaRedo className="w-3 h-3" />
+          <span>Reset All</span>
+        </button>
       </div>
-    );
-  }
 
-  // Shared Filters Layout Component
-  const FilterControls = () => (
-    <>
-      <div className="flex items-center justify-between px-1">
-        <h2 className="text-sm font-black uppercase tracking-wider text-ring">Filters</h2>
-        {(selectedCategory || priceRange < maxPrice || searchQuery !== '') && (
-          <button 
-            onClick={resetFilters} 
-            className="text-xs text-destructive font-bold hover:underline transition-all"
-          >
-            Reset All
-          </button>
+      {/* 1. Filter By Name */}
+      <div>
+        <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
+          <h3 className="text-sm font-semibold text-gray-900">Filter By Name</h3>
+          <FaChevronDown className="w-3 h-3 text-gray-400" />
+        </div>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search product name..."
+            value={nameSearch}
+            onChange={(e) => setNameSearch(e.target.value)}
+            className="w-full text-xs bg-gray-50 border border-gray-200 rounded px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500"
+          />
+          <FaSearch className="absolute right-2.5 top-3 w-3 h-3 text-gray-400" />
+        </div>
+      </div>
+
+      {/* 2. Category Filter */}
+      <div>
+        <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
+          <h3 className="text-sm font-semibold text-gray-900">Filter By Category</h3>
+          <FaChevronDown className="w-3 h-3 text-gray-400" />
+        </div>
+
+        {isCategoriesLoading ? (
+          <div className="space-y-2 py-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="h-5 bg-gray-100 animate-pulse rounded" />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-1 max-h-60 lg:max-h-72 overflow-y-auto pr-1">
+            {categories.map((cat) => (
+              <CategoryTreeItem key={cat.id} category={cat} />
+            ))}
+          </div>
         )}
       </div>
 
-      {/* Categories */}
-      <div className="bg-background rounded-xl p-5 border border-ring/10 shadow-sm">
-        <h3 className="text-xs font-black uppercase tracking-wider text-ring mb-3">Categories</h3>
-        <div className="flex flex-col gap-1">
-          {categoriesList.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all ${
-                selectedCategory === cat
-                  ? 'bg-foreground text-text-secondary shadow-sm'
-                  : 'text-ring hover:bg-ring/10 hover:text-ring'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+      {/* 3. Brand Filter */}
+      <div>
+        <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
+          <h3 className="text-sm font-semibold text-gray-900">Filter By Brand</h3>
+          <FaChevronDown className="w-3 h-3 text-gray-400" />
+        </div>
+
+        <div className="relative mb-3">
+          <input
+            type="text"
+            placeholder="Search brands..."
+            value={brandSearch}
+            onChange={(e) => setBrandSearch(e.target.value)}
+            className="w-full text-xs bg-gray-50 border border-gray-200 rounded px-3 py-2.5 focus:outline-none focus:border-emerald-500"
+          />
+        </div>
+
+        <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+          {filteredBrandList.map((brand) => {
+            const isChecked = selectedBrands.includes(brand);
+            return (
+              <label key={brand} className="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer hover:text-emerald-600 transition">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => toggleBrand(brand)}
+                  className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                />
+                <span>{brand}</span>
+              </label>
+            );
+          })}
         </div>
       </div>
 
-      {/* Price Range */}
-      <div className="bg-background rounded-xl p-5 border border-ring/10 shadow-sm">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-xs font-black uppercase tracking-wider text-ring">Max Price</h3>
-          <span className="text-sm font-black text-text-primary">${priceRange}</span>
+      {/* 4. Price Range Filter */}
+      <div>
+        <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
+          <h3 className="text-sm font-semibold text-gray-900">Price Range</h3>
+          <FaChevronDown className="w-3 h-3 text-gray-400" />
         </div>
-        <input
-          type="range"
-          min={minPrice}
-          max={maxPrice}
-          value={priceRange}
-          onChange={(e) => setPriceRange(Number(e.target.value))}
-          className="w-full h-1.5 bg-ring/10 rounded-lg appearance-none cursor-pointer accent-text-primary"
-        />
-        <div className="flex justify-between text-[10px] font-bold text-ring mt-2">
-          <span>Min: ${minPrice}</span>
-          <span>Max: ${maxPrice}</span>
+
+        <div className="flex items-center gap-2 mb-2">
+          <input
+            type="number"
+            value={minPriceInput}
+            onChange={(e) => setMinPriceInput(Number(e.target.value))}
+            className="w-full text-xs border border-gray-200 rounded px-2 py-2 focus:outline-none focus:border-emerald-500"
+            placeholder="0"
+          />
+          <span className="text-gray-400 text-xs">-</span>
+          <input
+            type="number"
+            value={maxPriceInput}
+            onChange={(e) => setMaxPriceInput(Number(e.target.value))}
+            className="w-full text-xs border border-gray-200 rounded px-2 py-2 focus:outline-none focus:border-emerald-500"
+            placeholder="250000"
+          />
         </div>
+
+        <p className="text-[11px] text-gray-500">
+          Min: {minPriceInput.toFixed(2)} Max: {maxPriceInput.toFixed(2)}
+        </p>
       </div>
-    </>
+    </div>
   );
 
   return (
-    <div className="min-h-screen bg-ring/1 font-sans text-ring selection:bg-foreground selection:text-text-secondary">
-      <div className="max-w-7xl mx-auto px-4 py-6 sm:py-10">
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
+    <div className="bg-[#f8f9fa] min-h-screen py-4 sm:py-6 px-3 sm:px-6 md:px-8 font-sans text-gray-800">
+      <div className="max-w-[1400px] mx-auto">
+        
+        {/* Page Title & Mobile Filter Trigger */}
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">All Products</h1>
+
+          <button
+            onClick={() => setIsMobileFilterOpen(true)}
+            className="lg:hidden flex items-center gap-2 bg-emerald-600 text-white px-3 py-2 rounded-md text-xs font-medium shadow-sm hover:bg-emerald-700 transition"
+          >
+            <FaFilter className="w-3 h-3" />
+            <span>Filter Products</span>
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 xl:gap-8 items-start">
           
-          {/* ================= DESKTOP SIDEBAR ================= */}
-          <aside className="hidden lg:block w-full lg:w-64 shrink-0 space-y-6 lg:sticky lg:top-28 z-20">
-            <FilterControls />
+          {/* ================= DESKTOP SIDEBAR FILTERS ================= */}
+          <aside className="hidden lg:block bg-white rounded-md border border-gray-200 p-5">
+            <FilterSidebarContent />
           </aside>
 
-          {/* ================= MOBILE FILTER DRAWER ================= */}
+          {/* ================= MOBILE SLIDE-OVER FILTER DRAWER ================= */}
           {isMobileFilterOpen && (
-            <div className="fixed inset-0 bg-foreground z-50 lg:hidden backdrop-blur-sm transition-opacity duration-300">
-              <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-ring/10 p-6 shadow-2xl overflow-y-auto space-y-6 flex flex-col animate-slide-in">
-                <div className="flex justify-end items-center border-b border-ring/10 pb-3">
-                  <button 
+            <div className="fixed inset-0 z-50 lg:hidden flex">
+              <div 
+                className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+                onClick={() => setIsMobileFilterOpen(false)}
+              />
+
+              <div className="relative ml-auto w-full max-w-xs bg-white h-full shadow-2xl flex flex-col z-10 overflow-hidden">
+                <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                  <span className="font-bold text-sm text-gray-800">Filter Products</span>
+                  <button
                     onClick={() => setIsMobileFilterOpen(false)}
-                    className="p-1 rounded-full bg-background border border-ring/10 text-ring shadow-sm"
+                    className="p-1.5 text-gray-500 hover:text-gray-800 rounded-full hover:bg-gray-200 transition"
                   >
-                    <FaXmark className="w-4 h-4" />
+                    <FaTimes className="w-4 h-4" />
                   </button>
                 </div>
-                <div className="space-y-6 flex-1">
-                  <FilterControls />
+
+                <div className="p-4 overflow-y-auto flex-1">
+                  <FilterSidebarContent />
+                </div>
+
+                <div className="p-4 border-t border-gray-200 bg-gray-50">
+                  <button
+                    onClick={() => setIsMobileFilterOpen(false)}
+                    className="w-full bg-emerald-600 text-white py-2.5 rounded-md text-xs font-semibold hover:bg-emerald-700 transition"
+                  >
+                    Apply Filters
+                  </button>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ================= MAIN DISPLAY GRID ================= */}
-          <main className="flex-1 w-full space-y-4 sm:space-y-6">
+          {/* ================= MAIN CONTENT AREA ================= */}
+          <main className="lg:col-span-3 space-y-4">
             
-            {/* SEARCH AND FEEDBACK HEADER BLOCK */}
-            <div className="bg-background p-4 rounded-xl border border-ring/10 shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center">
-              <div className="flex items-center gap-3 w-full sm:max-w-xs">
-                <button 
-                  onClick={() => setIsMobileFilterOpen(true)}
-                  className="lg:hidden flex items-center justify-center p-2.5 rounded-lg border border-ring/10 bg-gray-50 hover:bg-ring/10 active:scale-95 transition-all"
-                  title="Open Filters"
-                >
-                  <FaSliders className="w-4 h-4 text-ring" />
-                </button>
+            {/* Top Toolbar */}
+            <div className="bg-white rounded-md border border-gray-200 p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-6">
+                
+                {/* Sort dropdown */}
+                <div className="flex items-center gap-2 text-xs flex-1 sm:flex-none">
+                  <span className="text-gray-500 font-medium whitespace-nowrap">Sort by:</span>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="w-full sm:w-auto border border-gray-200 rounded px-2 py-1.5 text-xs bg-white text-gray-700 focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value="default">Default</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name-az">Name: A to Z</option>
+                  </select>
+                </div>
 
-                <div className="relative flex-1">
-                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-ring">
-                    <FaMagnifyingGlass className="w-3.5 h-3.5" />
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2 text-xs font-medium bg-ring/10 border border-ring/15 rounded-lg focus:outline-none focus:border-foreground focus:bg-background transition-all text-ring placeholder-ring/30"
-                  />
+                {/* Show items count selector */}
+                <div className="flex items-center gap-2 text-xs flex-1 sm:flex-none">
+                  <span className="text-gray-500 font-medium whitespace-nowrap">Show:</span>
+                  <select
+                    value={itemsPerPage}
+                    onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                    className="w-full sm:w-auto border border-gray-200 rounded px-2 py-1.5 text-xs bg-white text-gray-700 focus:outline-none focus:border-emerald-500"
+                  >
+                    <option value={20}>20 Products</option>
+                    <option value={40}>40 Products</option>
+                    <option value={60}>60 Products</option>
+                  </select>
                 </div>
               </div>
-              <p className="text-xs font-black text-ring uppercase tracking-widest shrink-0 self-start sm:self-center">
-                Showing {filteredProducts.length} items
-              </p>
+
+              <div className="text-xs text-gray-500 font-medium text-right sm:text-left">
+                Showing {displayedProducts.length} of {processedProducts.length} results
+              </div>
             </div>
 
-            {filteredProducts.length === 0 ? (
-              <div className="bg-background rounded-2xl border border-ring/10 p-10 sm:p-16 text-center shadow-sm">
-                <h3 className="text-base sm:text-lg font-black text-ring tracking-tight">No Products Match Your Criteria</h3>
-                <p className="text-xs sm:text-sm text-ring mt-2 max-w-sm mx-auto">
-                  Try adjusting your search keywords or resetting option parameters.
-                </p>
+            {/* Product Grid */}
+            {isProductsLoading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="bg-white rounded-md border border-gray-200 p-3 sm:p-4 space-y-3 animate-pulse">
+                    <div className="h-32 sm:h-40 bg-gray-100 rounded" />
+                    <div className="h-4 bg-gray-100 rounded w-3/4" />
+                    <div className="h-4 bg-gray-100 rounded w-1/2" />
+                    <div className="h-8 bg-gray-100 rounded" />
+                  </div>
+                ))}
+              </div>
+            ) : displayedProducts.length === 0 ? (
+              <div className="bg-white rounded-md border border-gray-200 p-8 sm:p-12 text-center">
+                <p className="text-xs sm:text-sm text-gray-500 mb-3">No products found matching your filter criteria.</p>
+                <button
+                  onClick={handleResetFilters}
+                  className="px-4 py-2 bg-emerald-600 text-white rounded text-xs font-medium hover:bg-emerald-700 transition"
+                >
+                  Reset All Filters
+                </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
-                {filteredProducts.map((item) => (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+                {displayedProducts.map((item) => (
                   <div
                     key={item.id}
                     onMouseEnter={() => setHovered(item.id)}
                     onMouseLeave={() => setHovered(null)}
-                    className="bg-background rounded-xl overflow-hidden border border-ring/10 hover:shadow-xl transition-all duration-500 sm:hover:-translate-y-2 group flex flex-col justify-between"
+                    onClick={() => setHovered(hovered === item.id ? null : item.id)}
+                    className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group flex flex-col"
                   >
-                    <div className="relative bg-ring/5 h-[140px] sm:h-[280px] flex items-center justify-center p-2">
-                      {item.image ? (
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          width={260}
-                          height={300}
-                          draggable={false}
-                          className="object-contain max-h-full pointer-events-none"
-                        />
-                      ) : (
-                        <div className="text-[10px] text-ring/30 font-bold uppercase tracking-widest">[ No Image ]</div>
-                      )}
+                    {/* IMAGE */}
+                    <div className="relative bg-gray-50 h-[150px] sm:h-[220px] md:h-[250px] flex items-center justify-center p-2">
+                      <Image
+                        src={item.image || "/placeholder.png"}
+                        alt={item.name}
+                        width={260}
+                        height={300}
+                        unoptimized
+                        className="object-contain max-h-full pointer-events-none"
+                      />
 
-                      {/* Dynamic Badge parsing via has_discount & discount_price keys */}
-                      {item.has_discount && item.discount_price && (
-                        <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-primary text-text-secondary text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded">
+                      {/* Discount Badge */}
+                      {item.has_discount && (
+                        <div className="absolute top-2 left-2 bg-emerald-600 text-white text-[9px] sm:text-xs font-bold px-1.5 py-0.5 rounded">
                           {item.discount_price}
                         </div>
                       )}
 
-                      {/* ACTION BUTTONS */}
+                      {/* Action Buttons */}
                       <div
-                        className={`
-                          absolute top-2 right-2 sm:top-5 sm:right-4 flex flex-col gap-2 z-10 transition-all duration-300
-                          ${hovered === item.id ? "opacity-100 translate-x-0" : "opacity-0 translate-x-3 sm:opacity-0 sm:translate-x-5"}
-                          group-hover:opacity-100 group-hover:translate-x-0
-                        `}
+                        className={`absolute top-2 right-2 flex flex-col gap-1.5 transition-all duration-300 ${
+                          hovered === item.id
+                            ? "opacity-100 translate-x-0"
+                            : "opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0"
+                        }`}
                       >
-                        <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-primary hover:text-text-primary transition">
+                        <button className="w-7 h-7 sm:w-9 sm:h-9 bg-white text-gray-700 rounded-full flex items-center justify-center shadow hover:bg-emerald-600 hover:text-white transition text-xs sm:text-sm">
                           <FaHeart />
                         </button>
 
@@ -339,47 +534,65 @@ function ProductsContent() {
                             e.stopPropagation();
                             addToCart({
                               id: item.id,
-                              image: item.image || '',
-                              brand: 'Apparel',
+                              image: item.image || "/placeholder.png",
+                              brand: "Taskco",
                               name: item.name,
                               price: Number(item.sale_price),
                             });
                           }}
-                          disabled={!item.in_stock}
-                          className={`w-8 h-8 md:w-10 sm:w-5 sm:h-5 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-foreground hover:text-text-secondary active:scale-96 transition ${!item.in_stock ? 'opacity-40 cursor-not-allowed' : ''}`}
-                          title={item.in_stock ? 'Add to Cart' : 'Out of Stock'}
+                          className="w-7 h-7 sm:w-9 sm:h-9 bg-white text-gray-700 rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition text-xs sm:text-sm"
                         >
                           <FaShoppingCart />
                         </button>
 
-                        <button className="w-8 h-8 sm:w-5 sm:h-5 md:w-10 md:h-10 text-xs md:text-base bg-background rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition">
+                        <button className="w-7 h-7 sm:w-9 sm:h-9 bg-white text-gray-700 rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition text-xs sm:text-sm">
                           <FaEye />
                         </button>
                       </div>
                     </div>
-                    
+
+                    {/* Product Details */}
                     <Link href={`/products/${item.slug}`} className="flex-1 flex flex-col justify-between">
-                      <div className="p-2.5 sm:p-4 space-y-0.5 sm:space-y-1">
-                        <p className="text-[10px] sm:text-sm text-ring/60 truncate tracking-tight">
-                          {item.in_stock ? 'In Stock' : 'Out of Stock'}
+                      <div className="p-2.5 sm:p-4 space-y-1">
+                        <p className="text-[10px] sm:text-xs text-gray-400 font-medium">
+                          Taskco
                         </p>
-                        <h2 className="text-xs sm:text-base font-bold text-ring line-clamp-2 sm:whitespace-nowrap sm:overflow-hidden sm:text-ellipsis group-hover:text-text-primary leading-tight sm:leading-normal">
+
+                        <h2 className="text-xs sm:text-sm font-semibold text-gray-800 line-clamp-2">
                           {item.name}
                         </h2>
-                        
-                        {/* Dynamic Review rendering with fallbacks */}
-                        <div className="flex gap-0.5 text-yellow-400 text-[9px] sm:text-sm">
-                          {[...Array(item.review ? Math.round(item.review) : 5)].map((_, i) => (
-                            <FaStar key={i} />
+
+                        {/* Rating */}
+                        <div className="flex gap-0.5 text-yellow-400 text-[10px] sm:text-xs pt-1">
+                          {[...Array(5)].map((_, index) => (
+                            <FaStar key={index} />
                           ))}
                         </div>
 
-                        {/* Updated Dynamic Pricing Context */}
-                        <div className="flex items-center gap-1.5 sm:gap-2 pt-0.5">
-                          {item.has_discount && Number(item.retail_price) > Number(item.sale_price) && (
-                            <span className="line-through text-ring text-[10px] sm:text-sm">${item.retail_price}</span>
+                        {/* Price */}
+                        <div className="flex items-center gap-1.5 pt-1">
+                          {item.has_discount && (
+                            <span className="line-through text-gray-400 text-xs">
+                              ৳{Number(item.retail_price).toFixed(0)}
+                            </span>
                           )}
-                          <span className="text-destructive font-black text-xs sm:text-base">${item.sale_price}</span>
+
+                          <span className="font-bold text-red-500 text-xs sm:text-sm">
+                            ৳{Number(item.sale_price).toFixed(0)}
+                          </span>
+                        </div>
+
+                        {/* Stock */}
+                        <div className="pt-0.5">
+                          {item.in_stock ? (
+                            <span className="text-emerald-600 text-[10px] sm:text-xs font-medium">
+                              In Stock ({item.stock_qty})
+                            </span>
+                          ) : (
+                            <span className="text-red-500 text-[10px] sm:text-xs font-medium">
+                              Out of Stock
+                            </span>
+                          )}
                         </div>
                       </div>
                     </Link>
@@ -396,12 +609,8 @@ function ProductsContent() {
 
 export default function AllProductsPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-ring-50/40">
-        <p className="text-xs font-bold text-ring uppercase tracking-widest animate-pulse">Loading collection...</p>
-      </div>
-    }>
-      <ProductsContent />
+    <Suspense fallback={<div className="p-10 text-center text-xs">Loading collection...</div>}>
+      <AllProductsContent />
     </Suspense>
   );
 }

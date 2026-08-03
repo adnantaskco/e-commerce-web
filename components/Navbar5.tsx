@@ -21,7 +21,7 @@ export default function Navbar() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const { data, error, isLoading } = useSWR<CategoryResponse>(
-    "https://sevenone-bd.app.taskcocommerce.com/api/v1/categories",
+    "https://demo.app.taskcocommerce.com/api/v1/categories",
     fetcher
   );
 

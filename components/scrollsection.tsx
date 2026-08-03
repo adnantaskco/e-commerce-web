@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import useSWR from "swr";
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
+import Link from "next/link";
 
 // API Data Interfaces
 interface Category {
@@ -288,9 +289,13 @@ export default function CategorySection() {
                     {/* Card Content Header */}
                     <div className="p-4 md:p-6 text-center sm:text-left">
                       <div className="flex items-center justify-between gap-2">
+                        <Link href={`/category/${item.slug}`}>
                         <h3 className="text-text-secondary whitespace-nowrap sm:text-sm text-sm md:text-lg font-bold group-hover:text-primary transition overflow-hidden text-ellipsis">
                          {`${item.name || "Unnamed Category"} (${item.children?.length})`}
                         </h3>
+                        
+                        </Link>
+                        
 
                         {hasChildren && (
                           <button

@@ -9,6 +9,7 @@ import Navbar1 from "../components/navbar1";
 import Navbar2 from "../components/navbar2";
 import Footer from "../components/footer";
 import Navbar from "@/components/Navbar5";
+import Providers from "@/components/Providers";
 
 
 const geistSans = Geist({
@@ -40,13 +41,15 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-       
+       <Providers>
         <CartProvider>
            <Navbar1></Navbar1>
            <Navbar></Navbar>
+
  
         {children}
         </CartProvider>
+        </Providers>
         <Footer></Footer>
         </body>
     </html>

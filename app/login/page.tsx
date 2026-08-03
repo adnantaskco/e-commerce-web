@@ -60,7 +60,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* 💥 GOOGLE LOGIN BUTTON 💥 */}
+        {/*  GOOGLE LOGIN BUTTON  */}
         <button
           type="button"
           onClick={handleGoogleLogin}

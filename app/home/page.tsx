@@ -1,48 +1,86 @@
+"use client";
 
-"use client"
+import useSWR from "swr";
 
-import GallerySlider from "@/components/ui/GallerySlider";
-import TestimonialSection from "../../components/clientsSay";
-import ProductSlider from "../../components/Productcard/dealcard";
-import DiscountBanners from "../../components/DiscountPoster";
-import DiscountBanners2 from "../../components/DiscountPoster2";
-import FeatureProduct from "../../components/Productcard/Featurescard";
 import HeroSection from "@/components/heroSection";
-import ProductCard1 from "../../components/Productcard/jacketcard";
-import CategorySection from "../../components/scrollsection";
-import Services from "../../components/services";
-import { TabsDemo } from "../../components/TabProduct";
-import BrandLogo from "../../components/BrandLogo";
-import CategorySidebar from "../../components/Sidebar";
+import Dressandjumpsuits from "@/components/Productcard/Dresscard";
+import ProductSlider from "@/components/Productcard/dealcard";
+import DiscountBanners from "@/components/DiscountPoster";
+import DiscountBanners2 from "@/components/DiscountPoster2";
 
-import TrendingProductsTabs from "../../components/tabproduct2";
-import CategorySection2 from "@/components/catagory";
-import Navbar from "@/components/Navbar5";
+import CategorySection from "@/components/scrollsection";
+import TestimonialSection from "@/components/clientsSay";
+import GallerySlider from "@/components/ui/GallerySlider";
+import BrandLogo from "@/components/BrandLogo";
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
+export default function Home1() {
+  const { data, error, isLoading } = useSWR(
+    "https://demo.app.taskcocommerce.com/api/v1/home-sections",
+    fetcher
+  );
 
-function Home1() {
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error...</div>;
+
+  const sections = data?.data ?? [];
+
   return (
     <>
-    
-    <HeroSection></HeroSection>
-    {/* <Services></Services> */}
-    {/* <TrendingProductsTabs></TrendingProductsTabs> */}
- 
-    <TabsDemo />
-   <DiscountBanners/>
-    <CategorySection/>
-   
-   <ProductSlider/>
-    <DiscountBanners2/>
-    <FeatureProduct/>
-    <TestimonialSection></TestimonialSection>
-    
-    <GallerySlider/>
-    <BrandLogo/>
-   
-    </>
-  )
-}
+      <HeroSection />
+        <CategorySection />
 
-export default Home1;
+      {sections.map((section: any) => {
+        switch (section.type) {
+          case "product_collection":
+            if (section.design_style === "grid") {
+              return (
+                <Dressandjumpsuits
+                  key={section.uid}
+                  title={section.name}
+                  products={section.products}
+                />
+              );
+            }
+
+            if (section.design_style === "row") {
+              return (
+                <ProductSlider
+                  key={section.uid}
+                  title={section.name}
+                  products={section.products}
+                />
+              );
+            }
+
+            return null;
+
+          case "brand":
+            return (
+              <BrandLogo
+                key={section.uid || section.name}
+                brands={section.brands}
+              />
+            );
+
+          case "promotion_banner":
+            return (
+              <DiscountBanners
+                key={section.uid || section.name}
+                banners={section.banners || []}
+              />
+            );
+
+          default:
+            return null;
+        }
+      })}
+
+    
+   
+      <TestimonialSection />
+      <GallerySlider />
+    </>
+  );
+}

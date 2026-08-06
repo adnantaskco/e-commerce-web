@@ -3,8 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
-import useSWR from "swr";
-import { FaHeart, FaShoppingCart, FaStar, FaEye } from "react-icons/fa";
+import { FaHeart, FaShoppingCart, FaStar, FaEye, FaAngleDoubleRight } from "react-icons/fa";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "../../app/src/components/context/CartContext";
 
@@ -25,49 +24,36 @@ type Product = {
   weight: number;
 };
 
-// SWR fetcher utility function
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+interface ProductSliderProps {
+  title?: string;
+  subtitle?: string;
+  products?: Product[];
+}
 
-export default function ProductSlider() {
+export default function ProductSlider({
+  title,
+  subtitle,
+  products = [],
+}: ProductSliderProps) {
   const [hovered, setHovered] = useState<number | null>(null);
-
   const { addToCart } = useCart();
+
   const sliderRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Drag refs
   const isDragging = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
-  // Dynamic API Fetching using SWR
-  const { data, error, isLoading } = useSWR(
-    "https://demo.app.taskcocommerce.com/api/v1/home-sections",
-    fetcher
-  );
-
-  type ProductCollection = {
-  uid: string;
-  name: string;
-  type: "product_collection";
-  slug: string;
-  products: Product[];
-};
-
-const productCollection = data?.data?.find(
-  (item: ProductCollection) => item.name === "Coffee Offer Coooection"
-);
-
-const Dealproducts = productCollection?.products ?? [];
-
+  // Dynamic Scroll Distance based on Card Width
   const getScrollAmount = () => {
     const container = sliderRef.current;
     if (!container) return 320;
-
     const card = container.firstElementChild as HTMLElement;
     return card ? card.offsetWidth + 24 : 320;
   };
 
+  // Manual Scroll via Chevron Buttons
   const scroll = (direction: "left" | "right") => {
     const container = sliderRef.current;
     if (!container) return;
@@ -78,10 +64,9 @@ const Dealproducts = productCollection?.products ?? [];
     });
   };
 
+  // Auto Slide Logic
   const startAutoSlide = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
+    if (intervalRef.current) clearInterval(intervalRef.current);
 
     intervalRef.current = setInterval(() => {
       const container = sliderRef.current;
@@ -90,19 +75,14 @@ const Dealproducts = productCollection?.products ?? [];
       const maxScroll = container.scrollWidth - container.clientWidth;
 
       if (container.scrollLeft >= maxScroll - 10) {
-        container.scrollTo({
-          left: 0,
-          behavior: "smooth",
-        });
+        container.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        container.scrollBy({
-          left: getScrollAmount(),
-          behavior: "smooth",
-        });
+        container.scrollBy({ left: getScrollAmount(), behavior: "smooth" });
       }
     }, 3000);
   };
 
+  // Mouse Drag to Scroll Handlers
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     const slider = sliderRef.current;
     if (!slider) return;
@@ -110,12 +90,9 @@ const Dealproducts = productCollection?.products ?? [];
     isDragging.current = true;
     startX.current = e.pageX - slider.offsetLeft;
     scrollLeft.current = slider.scrollLeft;
-
     slider.style.cursor = "grabbing";
 
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
+    if (intervalRef.current) clearInterval(intervalRef.current);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -139,117 +116,100 @@ const Dealproducts = productCollection?.products ?? [];
     startAutoSlide();
   };
 
-  // Synchronize auto-slide initialization with state initialization
   useEffect(() => {
-    if (!isLoading && Dealproducts.length > 0) {
+    if (products.length > 0) {
       startAutoSlide();
     }
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isLoading, Dealproducts.length]);
-
-  if (isLoading) {
-    return (
-      <div className="py-20 text-center text-lg font-semibold">
-        Loading Products...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="py-20 text-center text-lg font-semibold text-destructive">
-        Failed to load products.
-      </div>
-    );
-  }
+  }, [products.length]);
 
   return (
-    <section className="container mx-auto px-4 md:px-10 lg:px-20 md:py-16 py-6 bg-background">
-      {/* TITLE */}
+    <section className="container mx-auto px-4 md:px-10 lg:px-20 py-6 md:py-16 bg-background">
+      {/* Header Section */}
       <div className="text-center mb-10">
-        <span className="uppercase tracking-[5px] text-primary font-semibold">
-          Weekend Deal
-        </span>
+        {subtitle && (
+          <span className="uppercase tracking-[5px] text-primary font-semibold text-sm">
+            {subtitle}
+          </span>
+        )}
 
-        <h1 className="text-3xl md:text-5xl text-text-primary font-bold sm:font-semibold mt-4">
-          Weekend Feature Deal Products
-        </h1>
+        {title && (
+          <h1 className="text-3xl md:text-5xl text-text-primary font-bold mt-2 capitalize">
+            {title}
+          </h1>
+        )}
 
-        <div className="flex justify-center pt-4">
-          <div className="border-t-4 border-primary w-40 md:w-80"></div>
-        </div>
+        {(title || subtitle) && (
+          <div className="flex justify-center pt-4">
+            <div className="border-t-4 border-primary w-24 md:w-40 rounded-full"></div>
+          </div>
+        )}
       </div>
 
-      {/* SLIDER WRAPPER */}
-      <div className="relative">
-        {/* LEFT BUTTON */}
+      {/* Slider Area */}
+      <div className="relative group">
+        {/* Left Arrow */}
         <button
           onClick={() => scroll("left")}
-          className="hidden md:flex absolute left-0 md:-left-5 lg:-left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-background shadow-lg border items-center justify-center hover:bg-primary hover:text-text-secondary transition"
+          aria-label="Previous Slide"
+          className="hidden md:flex absolute left-[-20px] top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-background shadow-md border items-center justify-center hover:bg-primary hover:text-white transition-all"
         >
-          <ChevronLeft size={22} />
+          <ChevronLeft className="w-6 h-6" />
         </button>
 
-        {/* RIGHT BUTTON */}
+        {/* Right Arrow */}
         <button
           onClick={() => scroll("right")}
-          className="hidden md:flex absolute right-0 md:-right-3 lg:-right-3 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-background shadow-lg border items-center justify-center hover:bg-primary hover:text-text-secondary transition"
+          aria-label="Next Slide"
+          className="hidden md:flex absolute right-[-20px] top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-background shadow-md border items-center justify-center hover:bg-primary hover:text-white transition-all"
         >
-          <ChevronRight size={22} />
+          <ChevronRight className="w-6 h-6" />
         </button>
 
-        {/* SLIDER */}
+        {/* Product Cards Container */}
         <div
           ref={sliderRef}
-          onMouseEnter={() => intervalRef.current && clearInterval(intervalRef.current)}
+          onMouseEnter={() =>
+            intervalRef.current && clearInterval(intervalRef.current)
+          }
           onMouseLeave={stopDragging}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={stopDragging}
-          className="flex gap-3 md:gap-6 overflow-x-auto scroll-smooth no-scrollbar cursor-grab select-none touch-pan-x pb-2"
+          className="flex gap-4 md:gap-6 overflow-x-auto scroll-smooth no-scrollbar cursor-grab select-none py-2"
         >
-          {Dealproducts.map((item: Product) => (
+          {products.map((item) => (
             <div
               key={item.id}
               onMouseEnter={() => setHovered(item.id)}
               onMouseLeave={() => setHovered(null)}
-              className="flex-shrink-0 w-[48%] md:w-[31.5%] lg:w-[23.5%] bg-background border rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group"
+              className="flex-shrink-0 w-[48%] md:w-[31.5%] lg:w-[23.5%] bg-background border rounded-xl overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300"
             >
-              {/* IMAGE */}
-              <div className="relative h-[180px] sm:h-[180px] md:h-[260px] lg:h-[280px] bg-ring/5 flex items-center justify-center">
+              {/* Product Image Area */}
+              <div className="relative h-[260px] md:h-[280px] flex items-center justify-center p-4 bg-gray-50/50">
                 <Image
                   src={item.image || "/placeholder.png"}
                   alt={item.name}
                   width={260}
                   height={300}
                   unoptimized
-                  className="object-contain max-h-full pointer-events-none"
+                  className="object-contain max-h-full transition-transform duration-300 hover:scale-105"
                 />
 
-                {/* DISCOUNT */}
-                {item.has_discount && (
-                  <div className="absolute top-2 left-2 md:top-3 md:left-3 bg-primary text-text-secondary text-[10px] sm:text-xs font-medium sm:font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-md">
-                    {item.discount_price}
-                  </div>
-                )}
-
-                {/* ACTION BUTTONS */}
+                {/* Hover Action Buttons */}
                 <div
-                  className={`absolute top-5 right-4 flex flex-col gap-3 transition-all duration-300 ${
-                    hovered === item.id ? "opacity-100 translate-x-0" : "opacity-0 translate-x-5"
-                  } group-hover:opacity-100 group-hover:translate-x-0`}
+                  className={`absolute top-4 right-4 flex flex-col gap-2 transition-opacity duration-300 ${
+                    hovered === item.id ? "opacity-100" : "opacity-0"
+                  }`}
                 >
-                  <button className="w-5 h-5 sm:w-5 sm:h-5 md:w-10 md:h-10 bg-background rounded-full shadow flex items-center justify-center hover:bg-primary hover:text-text-secondary transition">
-                    <FaHeart />
+                  <button className="w-9 h-9 rounded-full bg-white shadow flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition">
+                    <FaHeart className="w-4 h-4" />
                   </button>
-
                   <button
                     onClick={(e) => {
-                      e.stopPropagation();
+                      e.preventDefault();
                       addToCart({
                         id: item.id,
                         image: item.image || "/placeholder.png",
@@ -258,57 +218,48 @@ const Dealproducts = productCollection?.products ?? [];
                         price: Number(item.sale_price),
                       });
                     }}
-                    className="w-8 h-8 md:w-10 md:h-10 bg-background rounded-full flex items-center justify-center shadow hover:bg-foreground hover:text-text-secondary transition"
+                    className="w-9 h-9 rounded-full bg-white shadow flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition"
                   >
-                    <FaShoppingCart />
+                    <FaShoppingCart className="w-4 h-4" />
                   </button>
-
-                  <button className="w-5 h-5 sm:w-5 sm:h-5 md:w-10 md:h-10 bg-background rounded-full shadow flex items-center justify-center hover:bg-chart-3 hover:text-text-secondary transition">
-                    <FaEye />
+                  <button className="w-9 h-9 rounded-full bg-white shadow flex items-center justify-center text-gray-600 hover:bg-primary hover:text-white transition">
+                    <FaEye className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
+              {/* Product Details */}
               <Link href={`/products/${item.slug}`}>
-                {/* CONTENT */}
-                <div className="p-3 md:p-4">
-                  <p className="text-xs md:text-sm text-ring">Jumes</p>
-
-                  <h2 className="whitespace-nowrap overflow-hidden text-text-primary font-semibold mt-1 text-sm md:text-base min-h-[28px] line-clamp-2">
+                <div className="p-4 flex flex-col gap-2">
+                  <h2 className="font-semibold text-text-primary text-base line-clamp-1 hover:text-primary transition">
                     {item.name}
                   </h2>
 
-                  <div className="flex gap-1 text-yellow-500 text-sm">
-                    {[...Array(5)].map((_, index) => (
-                      <FaStar key={index} />
+                  {/* Rating Stars */}
+                  <div className="flex text-yellow-500 text-xs gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar key={i} />
                     ))}
                   </div>
 
-                  <div className="flex flex-wrap gap-2 mt-1 items-center">
-                    <span className="line-through text-ring text-sm">
+                  {/* Price */}
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="line-through text-gray-400 text-sm">
                       ${Number(item.retail_price).toFixed(0)}
                     </span>
-                    <span className="text-destructive font-bold text-base">
+                    <span className="font-bold text-primary text-lg">
                       ${item.sale_price}
                     </span>
-                  </div>
-
-                  {/* Stock */}
-                  <div className="">
-                    {item.in_stock ? (
-                      <span className="text-green-600 text-xs font-medium">
-                        In Stock ({item.stock_qty})
-                      </span>
-                    ) : (
-                      <span className="text-destructive text-xs font-medium">
-                        Out of Stock
-                      </span>
-                    )}
                   </div>
                 </div>
               </Link>
             </div>
           ))}
+        </div>
+        <div className="flex items-center justify-center text-text-primary py-5">
+          <h1 className="flex text-xl items-center gap-2">
+            View All <FaAngleDoubleRight />
+          </h1>
         </div>
       </div>
     </section>

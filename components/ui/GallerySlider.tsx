@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from "react";
 import useSWR from "swr";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
-// API Item Interface
+
 interface BlogItem {
   slug: string;
   title: string;

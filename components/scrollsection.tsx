@@ -1,12 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import useSWR from "swr";
-import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-// API Data Interfaces
 interface Category {
   id: number;
   name: string;
@@ -14,325 +12,245 @@ interface Category {
   image: string | null;
   image_url?: string;
   image_variants?: string;
-  is_top?: boolean;
-  sort_order?: number;
   children?: Category[];
 }
 
 interface ApiResponse {
   data: Category[];
+  title?: string;
+  view_all_text?: string;
+  view_all_url?: string;
+  error_message?: string;
+  empty_message?: string;
+  try_again_text?: string;
 }
 
-const API_URL = "https://demo.app.taskcocommerce.com/api/v1/categories";
+interface CategorySectionProps {
+  sectionTitle?: string;
+  viewAllText?: string;
+  viewAllLink?: string;
+  errorMessage?: string;
+  emptyMessage?: string;
+  tryAgainText?: string;
+  apiUrl?: string;
+}
 
-// Typed fetcher function
-const fetcher = async (url: string): Promise<ApiResponse> => {
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
-};
+const DEFAULT_API_URL = "https://demo.app.taskcocommerce.com/api/v1/categories";
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function CategorySection() {
-  const [expandedCategories, setExpandedCategories] = useState<
-    Record<number, boolean>
-  >({});
-
+export default function CategorySection(props: CategorySectionProps) {
   const sliderRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // SWR hook with generic types
+  // Active item and trigger positioning state
+  const [activeItem, setActiveItem] = useState<{
+    category: Category;
+    rect: DOMRect;
+  } | null>(null);
+
   const { data, error, isLoading, mutate } = useSWR<ApiResponse>(
-    API_URL,
+    props.apiUrl || DEFAULT_API_URL,
     fetcher,
-    {
-      revalidateOnFocus: false,
-    }
+    { revalidateOnFocus: false }
   );
 
   const categories = data?.data || [];
+  const getScroll = useCallback(
+    () =>
+      (sliderRef.current?.querySelector(".category-card") as HTMLElement)
+        ?.offsetWidth + 16 || 200,
+    []
+  );
 
-  const toggleSubcategories = (id: number) => {
-    setExpandedCategories((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
-  const getScrollAmount = useCallback(() => {
-    const container = sliderRef.current;
-    if (!container) return 350;
-
-    const card = container.querySelector(".category-card") as HTMLElement;
-    return card ? card.offsetWidth + 24 : 350;
-  }, []);
-
-  const scroll = (direction: "left" | "right") => {
-    const container = sliderRef.current;
-    if (!container) return;
-
-    container.scrollBy({
-      left: direction === "left" ? -getScrollAmount() : getScrollAmount(),
+  const scroll = (dir: "left" | "right") => {
+    setActiveItem(null);
+    sliderRef.current?.scrollBy({
+      left: dir === "left" ? -getScroll() : getScroll(),
       behavior: "smooth",
     });
   };
 
   const startAutoSlide = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-
-    if (!categories || categories.length <= 1) return;
-
+    if (!categories.length) return;
     intervalRef.current = setInterval(() => {
-      const container = sliderRef.current;
-      if (!container) return;
-
-      const maxScroll = container.scrollWidth - container.clientWidth;
-
-      if (container.scrollLeft >= maxScroll - 20) {
-        container.scrollTo({
-          left: 0,
-          behavior: "smooth",
-        });
-      } else {
-        container.scrollBy({
-          left: getScrollAmount(),
-          behavior: "smooth",
-        });
-      }
-    }, 3000);
-  }, [categories, getScrollAmount]);
+      const el = sliderRef.current;
+      if (!el) return;
+      el.scrollLeft >= el.scrollWidth - el.clientWidth - 10
+        ? el.scrollTo({ left: 0, behavior: "smooth" })
+        : el.scrollBy({ left: getScroll(), behavior: "smooth" });
+    }, 3500);
+  }, [categories, getScroll]);
 
   const stopAutoSlide = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
-      intervalRef.current = null;
     }
   }, []);
 
   useEffect(() => {
-    if (categories && categories.length > 0) {
-      startAutoSlide();
-    }
+    if (categories.length) startAutoSlide();
     return () => stopAutoSlide();
   }, [categories, startAutoSlide, stopAutoSlide]);
 
+  // Keep popover open while hovering over trigger or menu
+  const handleMouseEnter = (e: React.MouseEvent<HTMLElement>, item: Category) => {
+    if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+    if (!item.children || item.children.length === 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setActiveItem({ category: item, rect });
+  };
+
+  const handleMouseLeave = () => {
+    hideTimeoutRef.current = setTimeout(() => {
+      setActiveItem(null);
+    }, 200); // 200ms grace period to move mouse into popup
+  };
+
   return (
-    <section
-      className="relative overflow-hidden py-8 md:py-20 lg:py-28"
-      style={{
-        backgroundImage:
-          "url('https://media.istockphoto.com/id/1289003879/photo/beautiful-happy-and-excited-young-girl-friends-with-paper-bags-and-smart-phone-are-walking.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed",
-      }}
-    >
-      {/* Background Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 via-foreground/70 to-foreground/90" />
+    <section className="py-10 bg-[#F9FAFB]">
+      <div className="container mx-auto px-4 md:px-8 relative">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8">
+          {props.sectionTitle || data?.title || "Featured Categories"}
+        </h2>
 
-      <div className="relative z-10 container mx-auto px-4 lg:px-20">
-        {/* Heading Section */}
-        <div className="text-center mb-14">
-          <span className="uppercase tracking-[4px] text-primary font-semibold">
-            Trending Collections
-          </span>
-
-          <h2 className="text-text-secondary text-2xl md:text-5xl font-bold sm:font-bold mt-4 lg:text-5xl">
-            Shop By Category
-          </h2>
-
-          <div className="w-68 sm:w-48 h-1 bg-primary mx-auto mt-5 rounded-full" />
-        </div>
-
-        {/* Left Navigation Button */}
-        <button
-          onClick={() => scroll("left")}
-          aria-label="Scroll Left"
-          className="
-            hidden md:flex items-center justify-center
-            absolute left-4 lg:left-8 top-2/3 -translate-y-1/2 z-20
-            w-12 h-12 lg:w-14 lg:h-14
-            rounded-full bg-background/20 backdrop-blur-md
-            border border-ring/20 text-text-secondary
-            hover:bg-primary hover:scale-110
-            focus:outline-none focus:ring-2 focus:ring-primary
-            transition-all duration-300
-          "
-        >
-          <ChevronLeft size={24} />
-        </button>
-
-        {/* Right Navigation Button (Fixed positioning class) */}
-        <button
-          onClick={() => scroll("right")}
-          aria-label="Scroll Right"
-          className="
-            hidden md:flex items-center justify-center
-            absolute right-4 lg:right-8 top-2/3 -translate-y-1/2 z-20
-            w-12 h-12 lg:w-14 lg:h-14
-            rounded-full bg-background/20 backdrop-blur-md
-            border border-ring/20 text-text-secondary
-            hover:bg-primary hover:scale-110
-            focus:outline-none focus:ring-2 focus:ring-primary
-            transition-all duration-300
-          "
-        >
-          <ChevronRight size={24} />
-        </button>
+        {/* Navigation Buttons */}
+        {(["left", "right"] as const).map((dir) => (
+          <button
+            key={dir}
+            onClick={() => scroll(dir)}
+            className={`hidden md:flex items-center justify-center absolute ${
+              dir === "left" ? "left-1" : "right-1"
+            } top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white border border-gray-200 text-gray-700 shadow-md hover:bg-gray-50`}
+          >
+            {dir === "left" ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+          </button>
+        ))}
 
         {/* Slider Container */}
         <div
           ref={sliderRef}
           onMouseEnter={stopAutoSlide}
           onMouseLeave={startAutoSlide}
-          className="
-            flex gap-4 sm:gap-6
-            overflow-x-auto scroll-smooth
-            snap-x snap-mandatory no-scrollbar
-            px-2 py-4
-          "
+          onScroll={() => setActiveItem(null)}
+          className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar py-2"
         >
-          {/* 1. Loading State */}
           {isLoading &&
-            Array.from({ length: 4 }).map((_, index) => (
+            Array.from({ length: 6 }).map((_, i) => (
               <div
-                key={index}
-                className="flex-shrink-0 w-[48%] sm:w-[48%] md:w-[32%] lg:w-[24%] snap-start"
-              >
-                <div className="animate-pulse rounded-3xl bg-background/20 backdrop-blur-lg border border-text-secondary/10 overflow-hidden">
-                  <div className="h-[180px] md:h-[260px] lg:h-[280px] bg-foreground/30" />
-                  <div className="p-4 md:p-6 space-y-3">
-                    <div className="h-4 bg-foreground/30 rounded w-3/4 mx-auto sm:mx-0" />
-                    <div className="hidden md:block h-3 bg-foreground/20 rounded w-full" />
-                  </div>
-                </div>
-              </div>
+                key={i}
+                className="flex-shrink-0 w-[42%] sm:w-[28%] md:w-[20%] lg:w-[14%] animate-pulse bg-white rounded-2xl p-4 border h-36"
+              />
             ))}
 
-          {/* 2. Error State */}
           {error && (
-            <div className="w-full text-center py-10 text-text-secondary bg-background/10 backdrop-blur-md rounded-2xl border border-text-secondary/20">
-              <p className="text-primary font-medium mb-3">Failed to load categories.</p>
+            <div className="w-full text-center py-8 bg-white rounded-2xl border text-red-500">
+              <p>{props.errorMessage || data?.error_message || "Failed to load categories."}</p>
               <button
                 onClick={() => mutate()}
-                className="px-4 py-2 bg-primary text-text-secondary text-xs font-semibold rounded-lg hover:opacity-90 transition-opacity"
+                className="mt-2 px-4 py-1.5 bg-gray-800 text-white text-xs rounded-lg"
               >
-                Try Again
+                {props.tryAgainText || data?.try_again_text || "Try Again"}
               </button>
             </div>
           )}
 
-          {/* 3. Empty State */}
-          {!isLoading && !error && categories.length === 0 && (
-            <div className="w-full text-center py-10 text-text-secondary bg-background/10 backdrop-blur-md rounded-2xl border border-text-secondary/20">
-              <p>No categories found.</p>
-            </div>
-          )}
-
-          {/* 4. Loaded Cards State */}
           {!isLoading &&
             !error &&
             categories.map((item, index) => {
-              const hasChildren = item.children && item.children.length > 0;
-              const isExpanded = expandedCategories[item.id];
+              const imgSrc =
+                item.image || item.image_url || item.image_variants || "/placeholder.png";
 
               return (
                 <div
                   key={item.id ?? index}
-                  className="
-                    category-card
-                    flex-shrink-0
-                    w-[48%] sm:w-[48%]
-                    md:w-[32%]
-                    lg:w-[24%]
-                    snap-start
-                    group
-                  "
+                  className="category-card relative flex-shrink-0 w-[42%] sm:w-[28%] md:w-[20%] lg:w-[14%] snap-start"
                 >
-                  <div
-                    className="
-                      overflow-hidden
-                      rounded-3xl
-                      bg-background/10 backdrop-blur-lg
-                      border border-text-secondary/20
-                      shadow-xl
-                      transition-all duration-500
-                      hover:-translate-y-2
-                      hover:shadow-[0_15px_40px_rgba(243,59,59,0.3)]
-                    "
-                  >
-                    {/* Image Container */}
-                    <div className="relative h-[180px] md:h-[260px] lg:h-[280px] overflow-hidden">
-                      <img
-                        src={
-                          item.image ||
-                          item.image_url ||
-                          item.image_variants ||
-                          "/placeholder.png"
-                        }
-                        alt={item.name || "Category Image"}
-                        className="
-                          w-full h-full object-cover
-                          transition-all duration-700
-                          group-hover:scale-110
-                        "
-                      />
-
-                      <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
-
-                      {/* <span className="absolute top-4 sm:top-2 sm:left-2 left-4 bg-primary text-text-secondary text-xs sm:text-sm px-3 py-1 rounded-full font-semibold">
-                        New Arrival
-                      </span> */}
-                    </div>
-
-                    {/* Card Content Header */}
-                    <div className="p-4 md:p-6 text-center sm:text-left">
-                      <div className="flex items-center justify-between gap-2">
-                        <Link href={`/category/${item.slug}`}>
-                        <h3 className="text-text-secondary whitespace-nowrap sm:text-sm text-sm md:text-lg font-bold group-hover:text-primary transition overflow-hidden text-ellipsis">
-                         {`${item.name || "Unnamed Category"} (${item.children?.length})`}
-                        </h3>
-                        
-                        </Link>
-                        
-
-                        {hasChildren && (
-                          <button
-                            onClick={() => toggleSubcategories(item.id)}
-                            className="p-1.5 rounded-full hover:bg-background/20 text-text-secondary transition-colors"
-                            aria-label="Toggle subcategories"
-                          >
-                            {isExpanded ? (
-                              <ChevronUp size={18} />
-                            ) : (
-                              <ChevronDown size={18} />
-                            )}
-                          </button>
-                        )}
+                  <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm transition-all flex flex-col items-center text-center">
+                    {/* Category Image */}
+                    <Link href={`/category/${item.slug}`} className="w-full">
+                      <div className="w-full h-28 md:h-32 bg-[#F5F5F5] rounded-xl flex items-center justify-center p-2 mb-3">
+                        <img
+                          src={imgSrc}
+                          alt={item.name}
+                          className="max-h-full max-w-full object-contain hover:scale-105 transition-transform"
+                        />
                       </div>
+                    </Link>
 
-
-
-                      {/* Subcategories (Children) List */}
-                      {hasChildren && isExpanded && (
-                        <div className="mt-4 pt-3 border-t border-text-secondary/20 space-y-2 max-h-40 overflow-y-auto no-scrollbar">
-                          {item.children?.map((child) => (
-                            <a
-                              key={child.id}
-                              href={`/category/${child.slug}`}
-                              className="block text-xs md:text-sm text-text-secondary/90 hover:text-primary hover:underline transition-colors truncate"
-                            >
-                              • {child.name}
-                            </a>
-                          ))}
-                        </div>
-                      )}
+                    {/* Category Name Hover Trigger */}
+                    <div className="w-full">
+                      <Link href={`/category/${item.slug}`}>
+                        <h3
+                          onMouseEnter={(e) => handleMouseEnter(e, item)}
+                          onMouseLeave={handleMouseLeave}
+                          className="text-xs md:text-sm font-semibold text-gray-800 line-clamp-1 hover:text-blue-600 transition-colors cursor-pointer py-1"
+                        >
+                          {item.name}
+                        </h3>
+                      </Link>
                     </div>
                   </div>
                 </div>
               );
             })}
+        </div>
+
+        {/* Global Popover for Children Categories */}
+        {activeItem &&
+          activeItem.category.children &&
+          activeItem.category.children.length > 0 && (
+            <div
+              onMouseEnter={() => {
+                if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+                stopAutoSlide();
+              }}
+              onMouseLeave={handleMouseLeave}
+              style={{
+                position: "fixed",
+                top: `${activeItem.rect.bottom}px`,
+                left: `${activeItem.rect.left + activeItem.rect.width / 2}px`,
+                transform: "translateX(-50%)",
+              }}
+              className="fixed z-50 pt-2"
+            >
+              <div className="flex gap-2 bg-white p-2.5 rounded-xl shadow-2xl border border-gray-200 min-w-max">
+                {activeItem.category.children.map((child) => (
+                  <Link
+                    key={child.id}
+                    href={`/category/${child.slug}`}
+                    className="flex flex-col items-center w-14 hover:scale-105 transition-transform"
+                  >
+                    <div className="w-11 h-11 bg-gray-50 rounded-lg p-1 flex items-center justify-center border border-gray-100">
+                      <img
+                        src={
+                          child.image ||
+                          child.image_url ||
+                          child.image_variants ||
+                          "/placeholder.png"
+                        }
+                        alt={child.name}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                    <span className="text-[10px] text-gray-700 font-medium line-clamp-1 mt-1 text-center">
+                      {child.name}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+        {/* View All Button */}
+        <div className="text-center mt-6">
+          <Link
+            href={props.viewAllLink || data?.view_all_text || "/categories"}
+            className="inline-flex items-center gap-1.5 text-xs md:text-sm font-semibold text-gray-700 hover:text-black uppercase tracking-wider"
+          >
+            {props.viewAllText || data?.view_all_text || "VIEW ALL"} <ArrowRight size={16} />
+          </Link>
         </div>
       </div>
     </section>

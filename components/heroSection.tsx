@@ -23,12 +23,7 @@ type ImageItem = {
 
 type BannerResponse= {
 sliders: ImageItem[];
-banners: {
-  home_top_right: ImageItem;
-  home_middle_one: ImageItem;
-  home_middle_two: ImageItem;
 
-};
 
 };
 
@@ -67,10 +62,7 @@ export default function HeroSection() {
 
   // Merge sliders + banners
   const heroImages = [
-    ...data.sliders,
-    data.banners.home_top_right,
-    data.banners.home_middle_one,
-    data.banners.home_middle_two,
+    ...data.sliders
   ];
 
   return (

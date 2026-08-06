@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import useSWR from "swr";
 import {
   FaHeart,
   FaShoppingCart,
@@ -30,53 +29,31 @@ type Product = {
   weight: number;
 };
 
-// SWR fetcher utility function
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+interface DressandjumpsuitsProps {
+  title: string;
+  products: Product[];
+}
 
-const Dressandjumpsuits = () => {
+const Dressandjumpsuits = ({
+  title,
+  products,
+}: DressandjumpsuitsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
   const { addToCart } = useCart();
 
-  // Dynamic API Fetching using SWR
-  const { data, error, isLoading } = useSWR(
-    "https://demo.app.taskcocommerce.com/api/v1/home-sections",
-    fetcher
-  );
-
-type ProductCollection = {
-  uid: string;
-  name: string;
-  type: "product_collection";
-  slug: string;
-  products: Product[];
-};
-
-const productCollection = data?.data?.find(
-  (item: ProductCollection) => item.name === "Top Selling Products"
-);
-
-const Ladydressproducts = productCollection?.products ?? [];
-
-  if (isLoading) {
-    return (
-      <div className="py-20 text-center text-lg font-semibold">
-        Loading Products...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="py-20 text-center text-lg font-semibold text-red-500">
-        Failed to load products.
-      </div>
-    );
-  }
-
   return (
-    <section className="w-full px-2 sm:px-6 lg:px-10 py-6 bg-background">
+    <section className="container mx-auto px-4 md:px-16 py-6 bg-background">
+      {/* Section Title */}
+      <div className="flex justify-between items-center justify-between mb-6">
+        <h2 className=" text-xl md:text-3xl font-bold text-text-primary">
+          {title} 
+        </h2>
+        <span className="text-blue-400 text-md font-medium">See All</span>
+      </div>
+
+      {/* Products */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-        {Ladydressproducts?.map((item: Product) => (
+        {products.slice(0, 4).map((item) => (
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}
@@ -88,7 +65,6 @@ const Ladydressproducts = productCollection?.products ?? [];
           >
             {/* IMAGE */}
             <div className="relative bg-background h-[140px] sm:h-[280px] flex items-center justify-center p-2">
-
               <Image
                 src={item.image || "/placeholder.png"}
                 alt={item.name}
@@ -98,14 +74,14 @@ const Ladydressproducts = productCollection?.products ?? [];
                 className="object-contain max-h-full pointer-events-none"
               />
 
-              {/* Discount Badge */}
+              {/* Discount */}
               {item.has_discount && (
                 <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-primary text-white text-[10px] sm:text-xs font-bold px-2 py-1 rounded">
                   {item.discount_price}
                 </div>
               )}
 
-              {/* Action Buttons */}
+              {/* Actions */}
               <div
                 className={`absolute top-2 right-2 sm:top-5 sm:right-4 flex flex-col gap-2 transition-all duration-300 ${
                   hovered === item.id
@@ -140,10 +116,9 @@ const Ladydressproducts = productCollection?.products ?? [];
               </div>
             </div>
 
-            {/* Product Details */}
+            {/* Details */}
             <Link href={`/products/${item.slug}`}>
               <div className="p-2 sm:p-4">
-
                 <p className="text-[11px] sm:text-sm text-gray-500">
                   Taskco
                 </p>
@@ -161,7 +136,6 @@ const Ladydressproducts = productCollection?.products ?? [];
 
                 {/* Price */}
                 <div className="flex items-center gap-2 mt-2">
-
                   {item.has_discount && (
                     <span className="line-through text-gray-400 text-sm">
                       ৳{Number(item.retail_price).toFixed(0)}
@@ -171,11 +145,10 @@ const Ladydressproducts = productCollection?.products ?? [];
                   <span className="font-bold text-red-500 text-base">
                     ৳{Number(item.sale_price).toFixed(0)}
                   </span>
-
                 </div>
 
                 {/* Stock */}
-                <div className="">
+                <div>
                   {item.in_stock ? (
                     <span className="text-green-600 text-xs font-medium">
                       In Stock ({item.stock_qty})
@@ -186,7 +159,6 @@ const Ladydressproducts = productCollection?.products ?? [];
                     </span>
                   )}
                 </div>
-
               </div>
             </Link>
           </div>

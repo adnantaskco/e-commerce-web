@@ -219,7 +219,7 @@ export default function CategorySection(props: CategorySectionProps) {
                       href={`/category/${child.slug}`}
                       className="flex flex-col items-center gap-1 p-1 hover:bg-gray-50 rounded-lg transition-colors"
                     >
-                      <div className="w-8 h-8 rounded-md border border-gray-100 flex items-center justify-center bg-gray-50 overflow-hidden">
+                      <div className="w-20 h-20 rounded-md border border-gray-100 flex items-center justify-center bg-gray-50 overflow-hidden">
                         <img
                           src={
                             child.image ||

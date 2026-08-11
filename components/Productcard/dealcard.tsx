@@ -194,7 +194,7 @@ export default function ProductSlider({
 
                 {/* Discount Badge */}
                 {item.has_discount && (
-                  <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-red-500 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-md shadow-sm">
+                  <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-destructive text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-md shadow-sm">
                     {item.discount_price}
                   </div>
                 )}
@@ -236,7 +236,7 @@ export default function ProductSlider({
                       e.preventDefault();
                       e.stopPropagation();
                     }}
-                    className="w-8 h-8 sm:w-9 sm:h-9 bg-white text-gray-800 hover:bg-blue-600 hover:text-white rounded-lg flex items-center justify-center shadow-md hover:shadow-lg active:scale-95 transition-all"
+                    className="w-8 h-8 sm:w-9 sm:h-9 bg-white text-ring hover:bg-blue-600 hover:text-white rounded-lg flex items-center justify-center shadow-md hover:shadow-lg active:scale-95 transition-all"
                   >
                     <FaEye className="text-xs sm:text-sm" />
                   </button></Link>
@@ -264,7 +264,7 @@ export default function ProductSlider({
                         {currency} {Number(item.retail_price).toFixed(0)}
                       </span>
                     )}
-                    <span className="font-bold text-primary text-lg">
+                    <span className="font-bold text-destructive text-lg">
                       {currency}{item.sale_price}
                     </span>
                   </div>

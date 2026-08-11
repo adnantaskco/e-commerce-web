@@ -10,11 +10,11 @@ export function UseCurrency() {
     error,
     isLoading,
   } = useSWR(
-    "https://demo.app.taskcocommerce.com/api/v1/settings",
+    "https://demo.app.taskcocommerce.com/api/v1/ecommerce-settings",
     currencyFetcher
   );
 
-  const currency = data?.data?.currency || "";
+  const currency = data?.data?.currency || "৳";
 
   return {
     currency,

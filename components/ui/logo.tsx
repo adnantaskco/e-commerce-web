@@ -3,13 +3,12 @@
 import useSWR from "swr";
 import { currencyFetcher } from "@/lib/currencyFetcher";
 
-export function useLogo() {
+export function UseLogo() {
   const { data, error, isLoading } = useSWR(
-    "https://demo.app.taskcocommerce.com/api/v1/settings",
+    "https://demo.app.taskcocommerce.com/api/v1/ecommerce-settings",
     currencyFetcher
   );
 
-  // Extract logo URL safely from data object
   const logo = data?.data?.logo || "";
 
   return {

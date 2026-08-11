@@ -15,13 +15,14 @@ import { useCart } from "@/app/src/components/context/CartContext";
 import { CategoryResponse } from "@/app/types/category";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLogo } from "./ui/logo";
+import { UseLogo } from "./ui/logo";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
-  const { Logo } = useLogo();
+  const { logo } = UseLogo();
+ 
   
 
   const { totalItems } = useCart();
@@ -116,7 +117,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="shrink-0">
               <img
-                src={Logo}
+                src={logo || null}
                 alt="Logo"
                 width={90}
                 height={40}
@@ -231,7 +232,7 @@ export default function Navbar() {
               open ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            <div className="relative bg-gradient-to-r from-primary via-red-500 to-pink-500 p-6 text-white">
+            <div className="relative bg-gradient-to-r from-primary via-primary to-primary/50 p-6 text-white">
               <Button
                 variant="ghost"
                 size="icon"
@@ -256,7 +257,7 @@ export default function Navbar() {
                   onClick={() => setOpen(false)}
                   className="flex flex-col items-center gap-1 hover:scale-105 transition"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-orange-500 shadow">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary shadow">
                     <FaShopify className="text-2xl" />
                   </div>
                   <span className="text-xs">Products</span>
@@ -267,7 +268,7 @@ export default function Navbar() {
                   onClick={() => setOpen(false)}
                   className="flex flex-col items-center gap-1 hover:scale-105 transition"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-orange-500 shadow">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary shadow">
                     <MdAccountCircle className="text-2xl" />
                   </div>
                   <span className="text-xs">Account</span>
@@ -278,11 +279,11 @@ export default function Navbar() {
                   onClick={() => setOpen(false)}
                   className="relative flex flex-col items-center gap-1 hover:scale-105 transition"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary shadow">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background text-primary shadow">
                     <TiShoppingCart className="text-2xl" />
                   </div>
 
-                  <span className="absolute right-3 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white">
+                  <span className="absolute right-3 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-white">
                     {totalItems}
                   </span>
 
@@ -302,7 +303,7 @@ export default function Navbar() {
                 {data?.data.map((category) => (
                   <li
                     key={category.id}
-                    className="overflow-hidden rounded-xl border border-gray-100 transition hover:border-orange-200 hover:bg-orange-50"
+                    className="overflow-hidden rounded-xl border border-gray-100 transition hover:border-primary/40 hover:bg-orange-50"
                   >
                     <MenuItem
                       item={category}
@@ -315,7 +316,7 @@ export default function Navbar() {
             </div>
 
             <div className="absolute bottom-0 w-full border-t bg-gray-50 p-4">
-              <p className="text-center text-xs text-gray-500">
+              <p className="text-center text-xs text-text-primary">
                 ❤️ Happy Shopping
               </p>
             </div>

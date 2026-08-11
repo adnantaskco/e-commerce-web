@@ -42,7 +42,7 @@ const Dressandjumpsuits = ({
     <section className="container mx-auto px-4 md:px-16 py-6 bg-background">
       {/* Section Title */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl md:text-3xl font-bold text-text-primary">
+        <h2 className="text-3xl md:text-5xl text-text-primary font-bold mt-2 capitalize">
           {title}
         </h2>
         <span className="text-blue-400 text-md font-medium cursor-pointer hover:underline">

@@ -1,7 +1,6 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Calendar, User } from "lucide-react";
+import { ArrowLeft, Calendar, User, Clock, Share2 } from "lucide-react";
 import { notFound } from "next/navigation";
 
 interface BlogDetail {
@@ -10,7 +9,7 @@ interface BlogDetail {
   media_url: string;
   created_at: string;
   short_description: string;
-  description?: string; // Long content field from API
+  description?: string;
   created_by: string | null;
 }
 
@@ -23,7 +22,7 @@ async function getBlogPost(slug: string): Promise<BlogDetail | null> {
   try {
     const res = await fetch(
       `https://demo.app.taskcocommerce.com/api/v1/blogs/${slug}`,
-      { cache: "no-store" } // or { next: { revalidate: 60 } }
+      { cache: "no-store" }
     );
 
     if (!res.ok) return null;
@@ -38,70 +37,101 @@ async function getBlogPost(slug: string): Promise<BlogDetail | null> {
 export default async function BlogDetailPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const post = await getBlogPost(params.slug);
+  const { slug } = await params;
+  const post = await getBlogPost(slug);
 
-  // Trigger 404 page if post doesn't exist
   if (!post) {
     notFound();
   }
 
-  return (
-    <article className="min-h-screen py-10 bg-background text-text-primary">
-      <div className="container mx-auto px-4 lg:px-20 max-w-4xl">
-        {/* Back Button */}
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-primary font-medium hover:underline mb-6"
-        >
-          <ArrowLeft size={18} />
-          Back to Articles
-        </Link>
+  // Calculate estimated reading time
+  const wordCount = (post.description || post.short_description || "").replace(
+    /<[^>]+>/g,
+    ""
+  ).split(/\s+/).length;
+  const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
-        {/* Header Section */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-4 text-sm text-ring">
-            <span className="flex items-center gap-1">
-              <Calendar size={16} />
+  return (
+    <article className="min-h-screen py-10 md:py-16 bg-background text-text-primary">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        {/* Navigation Bar */}
+        <div className="flex items-center justify-between mb-8">
+          <Link
+            href="/blogs"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors"
+          >
+            <span className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 group-hover:-translate-x-1 transition-transform">
+              <ArrowLeft size={16} />
+            </span>
+            Back to Articles
+          </Link>
+        </div>
+
+        {/* Article Header */}
+        <header className="space-y-6">
+          {/* Metadata Badges */}
+          <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500 font-medium">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+              <Calendar size={14} className="text-primary" />
               {new Date(post.created_at).toLocaleDateString("en-US", {
                 year: "numeric",
-                month: "long",
+                month: "short",
                 day: "numeric",
               })}
             </span>
-            <span className="flex items-center gap-1">
-              <User size={16} />
+
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+              <User size={14} className="text-primary" />
               {post.created_by || "Admin"}
+            </span>
+
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+              <Clock size={14} className="text-primary" />
+              {readTime} min read
             </span>
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-bold leading-tight">
+          {/* Title */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.2] text-gray-900 dark:text-white">
             {post.title}
           </h1>
-        </div>
 
-        {/* Featured Image */}
-        <div className="my-8 relative h-[350px] md:h-[500px] w-full rounded-2xl overflow-hidden shadow-lg border border-background/10">
+          {/* Short Summary Callout */}
+          {post.short_description && (
+            <p className="text-lg sm:text-xl font-medium text-gray-600 dark:text-gray-300 leading-relaxed border-l-4 border-primary pl-4 py-1 italic bg-primary/5 rounded-r-lg">
+              {post.short_description}
+            </p>
+          )}
+        </header>
+
+        {/* Featured Banner Image */}
+        <div className="my-8 sm:my-10 relative h-[280px] sm:h-[400px] md:h-[480px] w-full rounded-2xl overflow-hidden shadow-xl border border-gray-100 dark:border-gray-800 bg-gray-100">
           <img
-            src={post.media_url}
+            src={post.media_url || "/placeholder.png"}
             alt={post.title}
             className="w-full h-full object-cover"
           />
         </div>
 
-        {/* Short Summary Highlight */}
-        <p className="text-lg md:text-xl font-medium text-ring leading-relaxed mb-8 border-l-4 border-primary pl-4 italic">
-          {post.short_description}
-        </p>
-
-        {/* Full Article Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none leading-relaxed space-y-4">
+        {/* Article Main Body Content */}
+        <div className="prose prose-lg dark:prose-invert max-w-none leading-relaxed prose-headings:font-bold prose-a:text-primary hover:prose-a:underline prose-img:rounded-xl">
           {post.description ? (
             <div dangerouslySetInnerHTML={{ __html: post.description }} />
           ) : (
             <p>{post.short_description}</p>
           )}
+        </div>
+
+        {/* Footer Divider & Actions */}
+        <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
+          <Link
+            href="/blogs"
+            className="text-sm font-semibold text-primary hover:underline"
+          >
+            ← View all blog posts
+          </Link>
         </div>
       </div>
     </article>

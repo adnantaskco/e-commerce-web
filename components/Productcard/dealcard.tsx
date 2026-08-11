@@ -265,9 +265,21 @@ export default function ProductSlider({
                       </span>
                     )}
                     <span className="font-bold text-destructive text-lg">
-                      {currency}{item.sale_price}
+                      {currency} {item.sale_price}
                     </span>
                   </div>
+                                  {/* Stock */}
+                <div className="mt-1">
+                  {item.in_stock ? (
+                    <span className="text-green-600 text-xs font-medium">
+                      In Stock ({item.stock_qty})
+                    </span>
+                  ) : (
+                    <span className="text-destructive text-xs font-medium">
+                      Out of Stock
+                    </span>
+                  )}
+                </div>
                 </div>
               </Link>
             </div>

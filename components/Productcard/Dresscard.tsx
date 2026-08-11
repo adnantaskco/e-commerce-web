@@ -146,7 +146,7 @@ const Dressandjumpsuits = ({
                     </span>
                   )}
 
-                  <span className="font-bold text-red-500 text-base">
+                  <span className="font-bold text-destructive text-base">
                     {currency} {Number(item.sale_price).toFixed(0)}
                   </span>
                 </div>
@@ -158,7 +158,7 @@ const Dressandjumpsuits = ({
                       In Stock ({item.stock_qty})
                     </span>
                   ) : (
-                    <span className="text-red-500 text-xs font-medium">
+                    <span className="text-destructive text-xs font-medium">
                       Out of Stock
                     </span>
                   )}

@@ -114,15 +114,15 @@ export default function CategorySection(props: CategorySectionProps) {
       `}</style>
 
       <div className="container mx-auto px-4 md:px-8 mb-6">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center">
+        <h2 className="text-3xl md:text-5xl font-bold text-gray-900 text-center">
           {props.sectionTitle || data?.title || "Featured Categories"}
         </h2>
       </div>
 
-      <div className="marquee-container flex flex-col gap-4">
+      <div className="marquee-container flex flex-col ">
         {/* ROW 1 (Scrolls Left) */}
-        <div className="flex overflow-hidden select-none py-1">
-          <div className="animate-marquee-left flex gap-4 pr-4">
+        <div className="flex overflow-hidden select-none">
+          <div className="animate-marquee-left flex ">
             {row1Loop.map((item, index) => {
               const imgSrc =
                 item.image ||
@@ -138,11 +138,11 @@ export default function CategorySection(props: CategorySectionProps) {
                   className="flex-shrink-0"
                 >
                   <Link href={`/category/${item.slug}`}>
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-white rounded-2xl p-2 border border-gray-100 shadow-sm hover:shadow-md flex items-center justify-center transition-transform duration-300 hover:scale-105">
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32   border-ring/20 border-r border-t flex items-center justify-center transition-transform duration-300 hover:scale-105">
                       <img
                         src={imgSrc}
                         alt={item.name}
-                        className="max-h-full max-w-full object-contain rounded-xl pointer-events-none"
+                        className="max-h-full max-w-full object-contain p-1  pointer-events-none"
                       />
                     </div>
                   </Link>
@@ -153,8 +153,8 @@ export default function CategorySection(props: CategorySectionProps) {
         </div>
 
         {/* ROW 2 (Scrolls Right) */}
-        <div className="flex overflow-hidden select-none py-1">
-          <div className="animate-marquee-right flex gap-4 pr-4">
+        <div className="flex overflow-hidden select-none ">
+          <div className="animate-marquee-right flex ">
             {row2Loop.map((item, index) => {
               const imgSrc =
                 item.image ||
@@ -170,11 +170,11 @@ export default function CategorySection(props: CategorySectionProps) {
                   className="flex-shrink-0"
                 >
                   <Link href={`/category/${item.slug}`}>
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 bg-white rounded-2xl p-2 border border-gray-100 shadow-sm hover:shadow-md flex items-center justify-center transition-transform duration-300 hover:scale-105">
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32  border-y border-r border-ring/20  flex items-center justify-center transition-transform duration-300 hover:scale-105">
                       <img
                         src={imgSrc}
                         alt={item.name}
-                        className="max-h-full max-w-full object-contain rounded-xl pointer-events-none"
+                        className="max-h-full max-w-full object-contain  pointer-events-none"
                       />
                     </div>
                   </Link>
@@ -217,9 +217,9 @@ export default function CategorySection(props: CategorySectionProps) {
                     <Link
                       key={child.id}
                       href={`/category/${child.slug}`}
-                      className="flex flex-col items-center gap-1 p-1 hover:bg-gray-50 rounded-lg transition-colors"
+                      className="flex flex-col items-center  hover:bg-gray-50 rounded-lg transition-colors"
                     >
-                      <div className="w-20 h-20 rounded-md border border-gray-100 flex items-center justify-center bg-gray-50 overflow-hidden">
+                      <div className="w-20 h-20 rounded-md border border-gray-100 flex items-center justify-center  overflow-hidden">
                         <img
                           src={
                             child.image ||

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+
 import React, { useEffect, useState } from "react";
 import { FaQuoteLeft } from "react-icons/fa";
 
@@ -64,21 +64,12 @@ const TestimonialSection = () => {
             <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-3xl" />
 
            <div className="relative overflow-hidden rounded-[20px] md:rounded-[30px] shadow-2xl">
-  <Image
+  <img
     src="https://prestashop.codezeel.com/PRS05/PRS050101/default/img/cms/testimonial-img.jpg"
     alt="testimonial"
     width={800}
     height={700}
-    className="
-      w-full
-      h-[250px]
-      sm:h-[320px]
-      md:h-[400px]
-      lg:h-[500px]
-      object-cover
-      transition-all
-      duration-700
-      group-hover:scale-110
+    className="w-full h-[250px] sm:h-[320px]  md:h-[400px] lg:h-[500px]  object-cover  transition-all duration-700  group-hover:scale-110
     "
   />
 </div>

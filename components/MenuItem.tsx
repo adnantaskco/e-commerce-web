@@ -1,55 +1,60 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { Category } from "@/app/types/category";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { FaChevronDown } from "react-icons/fa6";
 
-interface Category {
-  id: number | string;
-  name: string;
-  slug?: string;
-  children?: Category[];
-  sub_categories?: Category[];
+interface MenuItemProps {
+  item: Category;
+  mobile?: boolean;
+  onSelect?: () => void;
 }
 
-export default function MenuItem({ item, mobile }: { item: Category; mobile?: boolean }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const [coords, setCoords] = useState({ top: 0, left: 0 });
+export default function MenuItem({ item, mobile = false, onSelect }: MenuItemProps) {
+  const [mobileSubOpen, setMobileSubOpen] = useState(false);
+  const hasChildren = Boolean(item.children && item.children.length > 0);
 
-  const children = item.children || item.sub_categories || [];
-  const hasChildren = children.length > 0;
-
-  const handleMouseEnter = () => {
-    if (triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      setCoords({
-        // Align dropdown right below the navbar link text (adjust -4 offset if needed)
-        top: rect.bottom - 4, 
-        left: rect.left,
-      });
-    }
-    setIsOpen(true);
-  };
-
+  // Mobile View Rendering
   if (mobile) {
     return (
       <div className="w-full">
-        <div className="flex items-center justify-between px-5 py-3 hover:bg-gray-50">
-          <Link href={`/category/${item.slug}`} className="text-gray-700 font-medium text-sm flex-1">
+        <div className="flex items-center justify-between px-4 py-3">
+          <Link
+            href={`/category/${item.slug || item.id}`}
+            onClick={onSelect}
+            className="text-sm font-medium text-gray-700 hover:text-primary transition-colors flex-1"
+          >
             {item.name}
           </Link>
           {hasChildren && (
-            <button onClick={() => setIsOpen(!isOpen)} className="p-2 text-gray-500">
-              <FaChevronDown className={`text-xs transition-transform ${isOpen ? "rotate-180" : ""}`} />
+            <button
+              onClick={() => setMobileSubOpen(!mobileSubOpen)}
+              className="p-1 text-gray-500 hover:text-primary transition-transform duration-200"
+              style={{ transform: mobileSubOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+              aria-label="Toggle subcategories"
+            >
+              <FaChevronDown className="h-3 w-3" />
             </button>
           )}
         </div>
-        {hasChildren && isOpen && (
-          <ul className="bg-gray-50 pl-8 pr-5 py-2 space-y-1">
-            {children.map((child) => (
+
+        {/* Mobile Nested Accordion Subcategories */}
+        {hasChildren && mobileSubOpen && (
+          <ul className="bg-orange-50/50 border-t border-orange-100 pl-6 pr-4 py-2 space-y-2">
+            {item.children?.map((child) => (
               <li key={child.id}>
-                <Link href={`/category/${child.slug || child.id}`} className="text-sm text-gray-600 block py-1">
+                <Link
+                  href={`/category/${child.slug || child.id}`}
+                  onClick={onSelect}
+                  className="block text-xs font-normal text-gray-600 hover:text-primary py-1 transition-colors"
+                >
                   {child.name}
                 </Link>
               </li>
@@ -60,42 +65,41 @@ export default function MenuItem({ item, mobile }: { item: Category; mobile?: bo
     );
   }
 
-  return (
-    <li
-      className="relative shrink-0 flex items-center h-full"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setIsOpen(false)}
-    >
-      <div ref={triggerRef} className="py-0">
-        <Link
-          href={`/category/${item.slug || item.id}`}
-          className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
-        >
-          {item.name}
-          {hasChildren && <FaChevronDown className="text-[10px]" />}
-        </Link>
-      </div>
-
-      {/* DROPDOWN ALIGNED CLOSE TO TRIGGER */}
-      {hasChildren && isOpen && (
-        <div
-          style={{ top: `${coords.top}px`, left: `${coords.left}px` }}
-          className="fixed z-[100] pt-0 min-w-[200px]"
-        >
-          <ul className="bg-white rounded-lg shadow-xl border border-gray-100 py-4">
-            {children.map((child) => (
-              <li key={child.id}>
+  // Desktop View with Shadcn DropdownMenu
+  if (hasChildren) {
+    return (
+      <li>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-primary transition-colors outline-none cursor-pointer py-1">
+            <span>{item.name}</span>
+            <FaChevronDown className="h-2.5 w-2.5 text-gray-400 group-hover:text-primary transition-transform duration-200" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48 bg-white/95 backdrop-blur-md shadow-lg rounded-xl border border-gray-100 p-1.5 z-50">
+            {item.children?.map((child) => (
+              <DropdownMenuItem key={child.id} asChild className="rounded-lg cursor-pointer focus:bg-orange-50 focus:text-primary">
                 <Link
                   href={`/category/${child.slug || child.id}`}
-                  className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-primary transition-colors"
+                  className="w-full text-xs font-medium py-2 px-3 transition-colors"
                 >
                   {child.name}
                 </Link>
-              </li>
+              </DropdownMenuItem>
             ))}
-          </ul>
-        </div>
-      )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </li>
+    );
+  }
+
+  // Standard Link without Subcategories
+  return (
+    <li>
+      <Link
+        href={`/category/${item.slug || item.id}`}
+        className="text-sm font-medium text-gray-700 hover:text-primary transition-colors block py-1"
+      >
+        {item.name}
+      </Link>
     </li>
   );
 }

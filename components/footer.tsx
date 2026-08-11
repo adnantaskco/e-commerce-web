@@ -1,213 +1,263 @@
-"use client";
+"use client"
+import React, { useState, useEffect } from 'react';
 
-import Image from "next/image";
-import React, { useState } from "react";
-import useSWR from "swr";
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaPinterestP,
-  FaYoutube,
-  FaXTwitter,
-} from "react-icons/fa6";
-import { IoSendOutline } from "react-icons/io5";
+// 1. Define explicit types for your API response data
+interface SocialIcon {
+  name: string;
+  link: string;
+}
 
-// SWR Fetcher function
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
 
-const Footer = () => {
-  const [email, setEmail] = useState("");
-  const [agreed, setAgreed] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+interface QuickLink {
+  name: string;
+  slug: string;
+}
 
-  // Fetch footer data dynamically using SWR
-  const { data: footerData, error, isLoading } = useSWR("https://demo.app.taskcocommerce.com/api/v1/ecommerce-pages/footer", fetcher);
+interface EcommerceSettings {
+  logo?: string;
+  store_name?: string;
+  footer_description?: string;
+  address?: string;
+  contact_number?: string;
+  whatsapp_number?: string; // Explicitly typed as string | undefined
+  footer_email?: string;
+  copy_right_text?: string;
+  social_icons?: SocialIcon[];
+  featured_categories?: Category[];
+  quick_links?: QuickLink[];
+  primary_color?: string;
+  secondary_color?: string;
+}
 
-  const socialIconsMap: Record<string, React.ElementType> = {
-    facebook: FaFacebookF,
-    twitter: FaXTwitter,
-    instagram: FaInstagram,
-    pinterest: FaPinterestP,
-    youtube: FaYoutube,
-  };
+const DynamicFooter: React.FC = () => {
+  // 2. Pass the interface to useState so TypeScript knows the exact type
+  const [data, setData] = useState<EcommerceSettings | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !agreed) return;
+  useEffect(() => {
+    let isMounted = true;
 
-    setIsSubmitting(true);
-    try {
-      await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+    fetch('https://demo.app.taskcocommerce.com/api/v1/ecommerce-settings')
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+      })
+      .then((json) => {
+        if (isMounted) {
+          if (json?.data) {
+            setData(json.data);
+          }
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching footer data:', err);
+        if (isMounted) setLoading(false);
       });
-      setEmail("");
-      alert("Subscribed successfully!");
-    } catch (err) {
-      console.error("Failed to subscribe", err);
-    } finally {
-      setIsSubmitting(false);
-    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <footer className="bg-gray-900 py-10 text-center text-gray-400">
+        Loading footer...
+      </footer>
+    );
+  }
+
+  if (!data) return null;
+
+  const {
+    logo,
+    store_name,
+    footer_description,
+    address,
+    contact_number,
+    whatsapp_number,
+    footer_email,
+    social_icons,
+    featured_categories,
+    quick_links,
+    primary_color = '#008060',
+    secondary_color = '#f5a623',
+  } = data;
+
+  const formatUrl = (url?: string): string => {
+    if (!url) return '#';
+    return url.startsWith('http://') || url.startsWith('https://')
+      ? url
+      : `https://${url}`;
   };
 
-  if (isLoading) {
-    return <footer className="bg-foreground py-20 text-center text-background">Loading footer...</footer>;
-  }
-
-  if (error || !footerData) {
-    return <footer className="bg-foreground py-20 text-center text-background">Failed to load footer data.</footer>;
-  }
+  // 3. Helper function ensures whatsapp_number is treated safely as a string
+  const formatWhatsAppNumber = (num?: string): string => {
+    if (!num) return '';
+    return String(num).replace(/[^0-9]/g, '');
+  };
 
   return (
-    <footer className="relative text-background bg-gradient-to-br from-foreground via-ring to-foreground overflow-hidden">
-      {/* GLOW BACKGROUND EFFECT */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary blur-[120px]" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-primary blur-[120px]" />
-      </div>
+    <footer className="bg-gray-900 text-gray-300 pt-12 pb-6 border-t border-gray-800">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+          
+          {/* Brand Info & Socials */}
+          <div className="space-y-4">
+            {logo ? (
+              <img
+                src={logo}
+                alt={store_name || 'Store Logo'}
+                className="h-12 object-contain"
+              />
+            ) : (
+              <h2 className="text-xl font-bold text-white">
+                {store_name || 'Store'}
+              </h2>
+            )}
 
-      <div className="relative container mx-auto px-6 md:px-12 lg:px-24 py-20">
-        {/* TOP GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {/* STORE INFO */}
-          <div>
-            <h2 className="text-xl text-text-secondary font-bold mb-4">Store Information</h2>
-            <div className="w-14 h-[2px] bg-primary mb-4"></div>
+            {footer_description && (
+              <p className="text-sm text-gray-400 leading-relaxed">
+                {footer_description}
+              </p>
+            )}
 
-            <p className="text-text-secondary leading-7 text-sm">
-              {footerData.storeInfo?.address}
-            </p>
-
-            <p className="mt-4 text-sm text-text-secondary">
-              Call: <span className="text-text-secondary font-semibold">{footerData.storeInfo?.phone}</span>
-            </p>
-
-            <p className="mt-2 text-sm text-text-secondary">
-              Email: {footerData.storeInfo?.email}
-            </p>
-          </div>
-
-          {/* QUICK LINKS */}
-          <div className="md:pl-10">
-            <h2 className="text-xl text-text-secondary font-bold mb-4">Quick Links</h2>
-            <div className="w-14 h-[2px] bg-primary mb-4"></div>
-
-            <ul className="space-y-3 text-text-secondary">
-              {footerData.quickLinks?.map((item: { label: string; href: string }, i: number) => (
-                <li key={i}>
+            {social_icons && social_icons.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {social_icons.map((icon, idx) => (
                   <a
-                    href={item.href}
-                    className="hover:text-primary cursor-pointer transition hover:translate-x-1 inline-block"
+                    key={idx}
+                    href={formatUrl(icon.link)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="capitalize text-xs px-3 py-1.5 rounded bg-gray-800 text-gray-200 transition-colors duration-200"
+                    onMouseEnter={(e) => {
+                      if (primary_color) e.currentTarget.style.backgroundColor = primary_color;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = '';
+                    }}
                   >
-                    {item.label}
+                    {icon.name}
                   </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* MY ACCOUNT */}
-          <div>
-            <h2 className="text-xl font-bold mb-4">My Account</h2>
-            <div className="w-14 h-[2px] bg-primary mb-4"></div>
-
-            <ul className="space-y-3 text-text-secondary">
-              {footerData.accountLinks?.map((item: { label: string; href: string }, i: number) => (
-                <li key={i}>
-                  <a
-                    href={item.href}
-                    className="hover:text-primary cursor-pointer transition hover:translate-x-1 inline-block"
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* NEWSLETTER (GLASS CARD) */}
-          <div className="bg-foreground/5 backdrop-blur-xl border border-background/10 p-6 rounded-2xl shadow-xl">
-            <h2 className="text-xl font-bold mb-4">Newsletter</h2>
-            <div className="w-14 h-[2px] bg-primary mb-4"></div>
-
-            <p className="text-text-secondary text-sm mb-4 leading-6">
-              Get updates, discounts and special offers.
-            </p>
-
-            <form onSubmit={handleNewsletterSubmit}>
-              <div className="flex items-center bg-foreground/10 border border-background/20 rounded-lg overflow-hidden">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email"
-                  required
-                  className="w-full px-4 py-3 bg-transparent outline-none text-sm text-text-secondary placeholder-ring"
-                />
-                <button
-                  type="submit"
-                  disabled={isSubmitting || !agreed}
-                  className="px-4 text-xl hover:text-primary transition disabled:opacity-50"
-                >
-                  <IoSendOutline />
-                </button>
+                ))}
               </div>
-
-              <label className="flex items-start gap-2 mt-4 text-xs text-text-secondary cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  className="mt-1"
-                />
-                I agree to terms & privacy policy
-              </label>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      {/* BOTTOM */}
-      <div className="border-t border-background/10">
-        <div className="mx-auto px-6 md:px-12 lg:px-24 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* SOCIAL */}
-          <div className="flex gap-3">
-            {footerData.socials?.map((social: { name: string; url: string }, i: number) => {
-              const IconComponent = socialIconsMap[social.name.toLowerCase()] || FaFacebookF;
-              return (
-                <a
-                  key={i}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full bg-background/10 border border-background/20 flex items-center justify-center hover:text-primary hover:scale-110 transition"
-                >
-                  <IconComponent />
-                </a>
-              );
-            })}
+            )}
           </div>
 
-          {/* COPYRIGHT */}
-          <p className="text-text-secondary text-sm text-center">
-            {footerData.copyrightText || `© ${new Date().getFullYear()} Styleway. All Rights Reserved.`}
-          </p>
-
-          {/* PAYMENT */}
-          {footerData.paymentImageUrl && (
-            <Image
-              src={footerData.paymentImageUrl}
-              alt="payment methods"
-              width={140}
-              height={40}
-              className="h-8 w-auto opacity-80"
-            />
+          {/* Quick Links */}
+          {quick_links && quick_links.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-white">
+                Quick Links
+              </h3>
+              <ul className="space-y-2">
+                {quick_links.map((link, idx) => (
+                  <li key={idx}>
+                    <a
+                      href={`/${link.slug}`}
+                      className="text-sm text-gray-400 hover:underline transition-colors"
+                      onMouseEnter={(e) => {
+                        if (secondary_color) e.currentTarget.style.color = secondary_color;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = '';
+                      }}
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
+
+          {/* Featured Categories */}
+          {featured_categories && featured_categories.length > 0 && (
+            <div>
+              <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-white">
+                Categories
+              </h3>
+              <ul className="space-y-2">
+                {featured_categories.map((cat) => (
+                  <li key={cat.id}>
+                    <a
+                      href={`/category/${cat.slug}`}
+                      className="text-sm text-gray-400 hover:underline transition-colors"
+                      onMouseEnter={(e) => {
+                        if (secondary_color) e.currentTarget.style.color = secondary_color;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = '';
+                      }}
+                    >
+                      {cat.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Contact Details */}
+          <div>
+            <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-white">
+              Contact Us
+            </h3>
+            <ul className="space-y-3 text-sm">
+              {address && (
+                <li className="text-gray-400 leading-snug">{address}</li>
+              )}
+              {contact_number && (
+                <li>
+                  <span className="text-gray-400">Phone: </span>
+                  <a
+                    href={`tel:${contact_number}`}
+                    className="text-gray-300 hover:underline"
+                  >
+                    {contact_number}
+                  </a>
+                </li>
+              )}
+              {whatsapp_number && (
+                <li>
+                  <span className="text-gray-400">WhatsApp: </span>
+                  <a
+                    href={`https://wa.me/${formatWhatsAppNumber(whatsapp_number)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-300 hover:underline"
+                  >
+                    {whatsapp_number}
+                  </a>
+                </li>
+              )}
+              {footer_email && (
+                <li>
+                  <span className="text-gray-400">Email: </span>
+                  <a
+                    href={`mailto:${footer_email}`}
+                    className="text-gray-300 hover:underline"
+                  >
+                    {footer_email}
+                  </a>
+                </li>
+              )}
+            </ul>
+          </div>
+
         </div>
+
+
       </div>
     </footer>
   );
 };
 
-export default Footer;
+export default DynamicFooter;

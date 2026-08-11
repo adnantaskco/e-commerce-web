@@ -10,6 +10,7 @@ import Navbar2 from "../components/navbar2";
 import Footer from "../components/footer";
 import Navbar from "@/components/Navbar5";
 import Providers from "@/components/Providers";
+import FooterBottom from "@/components/footer2";
 
 
 const geistSans = Geist({
@@ -51,6 +52,7 @@ export default function RootLayout({
         </CartProvider>
         </Providers>
         <Footer></Footer>
+        <FooterBottom></FooterBottom>
         </body>
     </html>
   );

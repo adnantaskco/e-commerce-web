@@ -9,9 +9,10 @@ const nextConfig: NextConfig = {
        "i.ibb.co",
        "shared-user-bucket.blr1.digitaloceanspaces.com",
        "shared-user-bucket.blr1.digitaloceanspaces.com",
-       "img.magnific.com"
+       "taskco-space-live.blr1.digitaloceanspaces.com",
+       "img.magnific.com",
+       
     ],
   },
 };
 
-export default nextConfig;

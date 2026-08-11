@@ -2,8 +2,8 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import useSWR from "swr";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-
 
 interface BlogItem {
   slug: string;
@@ -35,12 +35,12 @@ export default function GallerySlider() {
 
   const gallery = data?.data || [];
 
-  // ✅ stable step = 1 card width (responsive safe)
+  // Step calculation configured for 4 cards on desktop screens
   const getStep = () => {
     const container = sliderRef.current;
     if (!container) return 300;
 
-    return container.clientWidth / 3;
+    return container.clientWidth / 4;
   };
 
   const scroll = (direction: "left" | "right") => {
@@ -57,7 +57,6 @@ export default function GallerySlider() {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
     intervalRef.current = setInterval(() => {
-      // Pause auto-sliding if modal is open
       if (selectedArticle) return;
 
       const container = sliderRef.current;
@@ -130,7 +129,7 @@ export default function GallerySlider() {
           <ChevronRight size={22} />
         </button>
 
-        {/* Slider */}
+        {/* Slider Container */}
         <div
           ref={sliderRef}
           onMouseEnter={() => intervalRef.current && clearInterval(intervalRef.current)}
@@ -150,46 +149,66 @@ export default function GallerySlider() {
           )}
 
           {gallery.map((item) => (
-            <div key={item.slug} className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 snap-start">
-              <div className="rounded-2xl overflow-hidden bg-background/5 border border-background/10 shadow-xl hover:-translate-y-2 transition">
-                {/* Image */}
-                <div className="relative overflow-hidden">
-                  <img
-                    src={item.media_url}
-                    alt={item.title}
-                    className="w-full h-[320px] object-cover transition duration-700 hover:scale-110"
-                  />
+            <div
+              key={item.slug}
+              className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 snap-start"
+            >
+              <div className="rounded-2xl overflow-hidden bg-background/5 border border-background/10 shadow-xl hover:-translate-y-2 transition h-full flex flex-col justify-between">
+                <div>
+                  {/* Image & Quick View trigger */}
+                  <div
+                    className="relative overflow-hidden cursor-pointer group"
+                    onClick={() => setSelectedArticle(item)}
+                  >
+                    <img
+                      src={item.media_url}
+                      alt={item.title}
+                      className="w-full h-[240px] object-cover transition duration-700 group-hover:scale-110"
+                    />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                  <span className="absolute top-4 left-4 bg-primary text-xs px-3 py-1 rounded-full text-text-secondary">
-                    {item.created_by || "Article"}
-                  </span>
+                    <span className="absolute top-4 left-4 bg-primary text-xs px-3 py-1 rounded-full text-text-secondary">
+                      {item.created_by || "Article"}
+                    </span>
+                  </div>
+
+                  {/* Card Body */}
+                  <div className="p-4">
+                    <p className="text-xs text-primary">
+                      {new Date(item.created_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </p>
+
+                    <Link href={`/blogs/${item.slug}`}>
+                      <h3 className="font-bold text-base text-text-primary mt-2 line-clamp-1 hover:text-primary transition-colors">
+                        {item.title}
+                      </h3>
+                    </Link>
+
+                    <p className="text-ring line-clamp-2 text-sm mt-1">
+                      {item.short_description}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Content */}
-                <div className="p-5">
-                  <p className="text-sm text-primary">
-                    {new Date(item.created_at).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </p>
-
-                  <h3 className="font-bold text-lg text-text-primary mt-2 line-clamp-1">
-                    {item.title}
-                  </h3>
-
-                  <p className="text-ring line-clamp-2 text-md mt-1">
-                    {item.short_description}
-                  </p>
+                {/* Footer Action Link */}
+                <div className="p-4 pt-0 flex justify-between items-center">
+                  <Link
+                    href={`/blogs/${item.slug}`}
+                    className="text-primary font-semibold hover:underline text-sm"
+                  >
+                    Read More →
+                  </Link>
 
                   <button
                     onClick={() => setSelectedArticle(item)}
-                    className="mt-4 text-primary font-semibold hover:underline"
+                    className="text-xs text-text-primary/60 hover:text-primary transition"
                   >
-                    Read More →
+                    Quick View
                   </button>
                 </div>
               </div>
@@ -198,7 +217,7 @@ export default function GallerySlider() {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Quick View Modal */}
       {selectedArticle && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn"
@@ -206,7 +225,7 @@ export default function GallerySlider() {
         >
           <div
             className="bg-background border border-background/20 rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl relative max-h-[90vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()} // Prevent close on modal content click
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Close Button */}
             <button
@@ -229,7 +248,7 @@ export default function GallerySlider() {
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 overflow-y-auto">
+            <div className="p-6 overflow-y-auto flex-1">
               <p className="text-sm text-primary font-medium">
                 {new Date(selectedArticle.created_at).toLocaleDateString("en-US", {
                   year: "numeric",
@@ -241,12 +260,23 @@ export default function GallerySlider() {
               <h2 className="text-2xl font-bold text-text-primary mt-2">
                 {selectedArticle.title}
               </h2>
-              <h5>Artical Created BY  {selectedArticle.created_by || "Unknown"}</h5>
+              <h5 className="text-sm text-text-primary/70 mt-1">
+                Article Created By: {selectedArticle.created_by || "Unknown"}
+              </h5>
 
               <p className="text-text-primary mt-4 leading-relaxed text-base">
                 {selectedArticle.short_description}
               </p>
 
+              <div className="mt-6">
+                <Link
+                  href={`/blogs/${selectedArticle.slug}`}
+                  className="inline-block bg-primary text-text-secondary px-6 py-2.5 rounded-lg font-semibold hover:opacity-90 transition"
+                  onClick={() => setSelectedArticle(null)}
+                >
+                  View Full Article
+                </Link>
+              </div>
             </div>
           </div>
         </div>

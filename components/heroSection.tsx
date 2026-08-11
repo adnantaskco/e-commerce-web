@@ -13,6 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type ImageItem = {
   uid: string;
@@ -21,13 +22,9 @@ type ImageItem = {
   media_url: string;
 };
 
-type BannerResponse= {
-sliders: ImageItem[];
-
-
+type BannerResponse = {
+  sliders: ImageItem[];
 };
-
-
 
 export default function HeroSection() {
   const plugin = React.useMemo(
@@ -44,29 +41,30 @@ export default function HeroSection() {
     fetcher
   );
 
+  // Skeleton Loader State
   if (isLoading) {
     return (
-      <div className=" flex justify-center items-center h-screen">
-       <img src="https://media3.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3aWVwMHk2YmNzM21vczk5ZW8yanNtNnlraW9uNG9rcmc3YXJxdHo4dSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/SMEGj0pb5eUKcnot8x/giphy.webp" alt="" />
-      </div>
+      <section className="container mx-auto px-4 md:px-16 py-4">
+        <div className="relative w-full h-[200px] sm:h-[300px] md:h-[420px] lg:h-[480px]">
+          <Skeleton className="w-full h-full rounded-2xl shadow-sm" />
+        </div>
+      </section>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="h-[450px] flex items-center justify-center text-red-500">
-        <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXF1bnZyODFhdDV4cHU0ZGFhNXg0bXRzNWNoaGo0YTdsdmE1ZXAyMiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3ohs83bO7MKV9koZuE/giphy.webp" alt="" />
+      <div className="h-[300px] md:h-[450px] flex items-center justify-center text-red-500">
+        <p className="text-sm font-medium">Failed to load hero banner</p>
       </div>
     );
   }
 
-  // Merge sliders + banners
-  const heroImages = [
-    ...data.sliders
-  ];
+  // Merge sliders
+  const heroImages = [...data.sliders];
 
   return (
-    <section className="container mx-auto px-4 md:px-16">
+    <section className="container mx-auto px-4 md:px-16 py-4">
       <Carousel
         plugins={[plugin]}
         opts={{ loop: true }}
@@ -75,12 +73,11 @@ export default function HeroSection() {
         <CarouselContent>
           {heroImages.map((item) => (
             <CarouselItem key={item.uid}>
-              <div className="relative w-full ">
+              <div className="relative w-full h-[200px] sm:h-[300px] md:h-[420px] lg:h-[480px] overflow-hidden rounded-2xl">
                 <img
                   src={item.media_url}
                   alt="Hero Banner"
-                  
-                  className="object-cover"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </CarouselItem>

@@ -1,146 +1,145 @@
-"use client";
+// "use client";
 
-import useSWR from "swr";
+// import useSWR from "swr";
 
-import HeroSection from "@/components/heroSection";
-import Dressandjumpsuits from "@/components/Productcard/Dresscard";
-import ProductSlider from "@/components/Productcard/dealcard";
-import DiscountBanners from "@/components/DiscountPoster";
+// import HeroSection from "@/components/heroSection";
+// import Dressandjumpsuits from "@/components/Productcard/Dresscard";
+// import ProductSlider from "@/components/Productcard/dealcard";
+// import DiscountBanners from "@/components/DiscountPoster";
 
-import CategorySection from "@/components/scrollsection";
-import TestimonialSection from "@/components/clientsSay";
-import GallerySlider from "@/components/ui/GallerySlider";
-import BrandLogo from "@/components/BrandLogo";
+// import CategorySection from "@/components/scrollsection";
+// import TestimonialSection from "@/components/clientsSay";
+// import GallerySlider from "@/components/ui/GallerySlider";
+// import BrandLogo from "@/components/BrandLogo";
+// import { Skeleton } from "@/components/ui/skeleton";
 
+// const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const fetcher = (url: string) =>
-  fetch(url).then((res) => res.json());
+// export default function Home1() {
+//   const { data, error, isLoading } = useSWR(
+//     "https://demo.app.taskcocommerce.com/api/v1/home-sections",
+//     fetcher
+//   );
 
+//   // Full Home Page Skeleton Loader
+//   if (isLoading) {
+//     return (
+//       <div className="space-y-12 py-4">
+//         {/* 1. Hero Banner Skeleton */}
+//         <div className="container mx-auto px-4 md:px-16">
+//           <Skeleton className="w-full h-[220px] sm:h-[320px] md:h-[450px] rounded-2xl" />
+//         </div>
 
-export default function Home1() {
+//         {/* 2. Category Section Skeleton */}
+//         <div className="container mx-auto px-4 md:px-16">
+//           <div className="flex justify-center mb-6">
+//             <Skeleton className="h-8 w-48 rounded-lg" />
+//           </div>
+//           <div className="flex gap-4 overflow-hidden py-2">
+//             {Array.from({ length: 6 }).map((_, i) => (
+//               <div
+//                 key={i}
+//                 className="flex-shrink-0 w-[42%] sm:w-[28%] md:w-[20%] lg:w-[14%] bg-white rounded-2xl p-3 border border-gray-100 flex flex-col items-center gap-2"
+//               >
+//                 <Skeleton className="w-full h-28 md:h-32 rounded-full" />
+//                 <Skeleton className="h-4 w-3/4 rounded-md" />
+//               </div>
+//             ))}
+//           </div>
+//         </div>
 
-  const { data, error, isLoading } = useSWR(
-    "https://demo.app.taskcocommerce.com/api/v1/home-sections",
-    fetcher
-  );
+//         {/* 3. Product Grid Skeleton */}
+//         <div className="container mx-auto px-4 md:px-16">
+//           <div className="flex justify-between items-center mb-6">
+//             <Skeleton className="h-8 w-40 rounded-lg" />
+//             <Skeleton className="h-5 w-20 rounded-md" />
+//           </div>
+//           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+//             {Array.from({ length: 10 }).map((_, i) => (
+//               <div key={i} className="bg-white rounded-2xl p-3 border border-gray-100 space-y-3">
+//                 <Skeleton className="w-full h-44 rounded-xl" />
+//                 <Skeleton className="h-4 w-5/6 rounded-md" />
+//                 <Skeleton className="h-4 w-1/2 rounded-md" />
+//                 <Skeleton className="h-8 w-full rounded-lg" />
+//               </div>
+//             ))}
+//           </div>
+//         </div>
 
+//         {/* 4. Promotion Banner Skeleton */}
+//         <div className="container mx-auto px-4 md:px-16">
+//           <Skeleton className="w-full h-40 md:h-60 rounded-2xl" />
+//         </div>
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+//         {/* 5. Brand Logos Skeleton */}
+//         <div className="container mx-auto px-4 md:px-16">
+//           <div className="flex justify-between items-center gap-4 overflow-hidden">
+//             {Array.from({ length: 6 }).map((_, i) => (
+//               <Skeleton key={i} className="h-16 w-32 rounded-xl shrink-0" />
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
 
+//   if (error) return <div className="text-center py-20 text-red-500 font-medium">Failed to load content.</div>;
 
-  if (error) {
-    return <div>Error loading homepage</div>;
-  }
+//   const sections = data?.data ?? [];
 
+//   return (
+//     <>
+//       <HeroSection />
+//       <CategorySection />
 
-  const sections = data?.data ?? [];
+//       {sections.map((section: any) => {
+//         switch (section.type) {
+//           case "product_collection":
+//             if (section.design_style === "grid") {
+//               return (
+//                 <Dressandjumpsuits
+//                   key={section.uid}
+//                   title={section.name}
+//                   products={section.products}
+//                 />
+//               );
+//             }
 
+//             if (section.design_style === "row") {
+//               return (
+//                 <ProductSlider
+//                   key={section.uid}
+//                   title={section.name}
+//                   products={section.products}
+//                 />
+//               );
+//             }
 
-  return (
-    <>
+//             return null;
 
-      {/* Static Hero */}
-      <HeroSection />
+//           case "brand":
+//             return (
+//               <BrandLogo
+//                 key={section.uid || section.name}
+//                 brands={section.brands}
+//               />
+//             );
 
+//           case "promotion_banner":
+//             return (
+//               <DiscountBanners
+//                 key={section.uid || section.name}
+//                 banners={section.banners || []}
+//               />
+//             );
 
-      {/* Dynamic Home Sections */}
-      {sections.map((section: any, index: number) => {
+//           default:
+//             return null;
+//         }
+//       })}
 
-        return (
-          <div key={section.uid || index}>
-
-
-            {/* Product Collection */}
-            {section.type === "product_collection" && (
-
-              section.design_style === "grid" ? (
-
-                <Dressandjumpsuits
-                  title={section.name}
-                  products={section.products || []}
-                />
-
-              ) : section.design_style === "row" ? (
-
-                <ProductSlider
-                  title={section.name}
-                  products={section.products || []}
-                />
-
-              ) : null
-
-            )}
-
-
-
-            {/* Brand Section */}
-            {section.type === "brand" && (
-
-              <BrandLogo
-                brands={section.brands || []}
-              />
-
-            )}
-
-
-
-            {/* Promotion Banner */}
-            {section.type === "promotion_banner" && (
-
-              <DiscountBanners
-                banners={section.banners || []}
-              />
-
-            )}
-
-
-
-
-            {/* 
-              Custom Sections Position Control
-
-              API section index অনুযায়ী
-              মাঝখানে component বসবে
-            */}
-
-
-
-            {/* After 1st API section */}
-            {index === 0 && (
-              <CategorySection />
-            )}
-
-
-
-            {/* After 3rd API section */}
-            {/* {index === 2 && (
-              <FeatureProduct />
-            )} */}
-
-
-
-            {/* After 5th API section */}
-            {index === 4 && (
-              <TestimonialSection />
-            )}
-
-
-
-            {/* After 6th API section */}
-            {index === 5 && (
-              <GallerySlider />
-            )}
-
-
-
-          </div>
-        );
-
-      })}
-
-
-    </>
-  );
-}
+//       <TestimonialSection />
+//       <GallerySlider />
+//     </>
+//   );
+// }

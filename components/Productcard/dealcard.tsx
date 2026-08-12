@@ -222,9 +222,9 @@ export default function ProductSlider({
                           price: Number(item.sale_price),
                         });
                       }}
-                      className="flex-1 bg-black/80 hover:bg-black text-white text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
+                      className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
                     >
-                      <FaShoppingCart className="text-[10px] sm:text-xs" />
+                      <FaShoppingCart className="text-sm sm:text-xs" />
                       <span className="hidden sm:inline">Add to Cart</span>
                     </button>
 
@@ -233,9 +233,9 @@ export default function ProductSlider({
                       href={`/products/${item.slug}`}
                       onClick={(e) => e.stopPropagation()}
                       title="Quick View"
-                      className="w-7 h-7 sm:w-8 sm:h-8 bg-white text-ring hover:bg-blue-600 hover:text-white rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
+                      className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
                     >
-                      <FaEye className="text-[10px] sm:text-xs" />
+                      <FaEye className="text-sm sm:text-xs" />
                     </Link>
                   </div>
                 </div>
@@ -259,7 +259,7 @@ export default function ProductSlider({
                     {/* Price */}
                     <div className="flex items-center gap-1.5 flex-wrap">
                       {item.has_discount && (
-                        <span className="line-through text-gray-400 text-[10px] sm:text-xs">
+                        <span className="line-through text-ring text-sm sm:text-xs">
                           {currency} {Number(item.retail_price).toFixed(0)}
                         </span>
                       )}
@@ -271,11 +271,11 @@ export default function ProductSlider({
                     {/* Stock */}
                     <div className="mt-0.5">
                       {item.in_stock ? (
-                        <span className="text-green-600 text-[10px] sm:text-xs font-medium">
+                        <span className="text-green-600 text-sm sm:text-xs font-medium">
                           In Stock ({item.stock_qty})
                         </span>
                       ) : (
-                        <span className="text-destructive text-[10px] sm:text-xs font-medium">
+                        <span className="text-destructive text-sm sm:text-xs font-medium">
                           Out of Stock
                         </span>
                       )}
@@ -297,7 +297,7 @@ export default function ProductSlider({
                   className={`h-2 rounded-full transition-all duration-300 ${
                     activeIndex === idx
                       ? "w-6 bg-primary"
-                      : "w-2 bg-gray-300 hover:bg-gray-400"
+                      : "w-2 bg-ring/70 hover:bg-ring/60"
                   }`}
                 />
               ))}

@@ -35,12 +35,19 @@ export default function GallerySlider() {
 
   const gallery = data?.data || [];
 
-  // Step calculation configured for 4 cards on desktop screens
+  // Step calculation configured dynamically based on responsive layout
   const getStep = () => {
     const container = sliderRef.current;
     if (!container) return 300;
 
-    return container.clientWidth / 4;
+    // Detect screen width to calculate item step matching CSS grid/flex widths
+    if (window.innerWidth >= 1024) {
+      return container.clientWidth / 4; // 4 cards on lg
+    } else if (window.innerWidth >= 768) {
+      return container.clientWidth / 3; // 3 cards on md
+    } else {
+      return container.clientWidth / 2; // 2 cards on mobile/sm
+    }
   };
 
   const scroll = (direction: "left" | "right") => {
@@ -134,7 +141,7 @@ export default function GallerySlider() {
           ref={sliderRef}
           onMouseEnter={() => intervalRef.current && clearInterval(intervalRef.current)}
           onMouseLeave={startAutoSlide}
-          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar"
+          className="flex gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar"
         >
           {isLoading && (
             <div className="w-full text-center py-10 text-primary">
@@ -143,7 +150,7 @@ export default function GallerySlider() {
           )}
 
           {error && (
-            <div className="w-full text-center py-10 text-red-500">
+            <div className="w-full text-center py-10 text-destructive">
               Failed to load articles.
             </div>
           )}
@@ -151,7 +158,7 @@ export default function GallerySlider() {
           {gallery.map((item) => (
             <div
               key={item.slug}
-              className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 snap-start"
+              className="flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/4 snap-start"
             >
               <div className="rounded-2xl overflow-hidden bg-background/5 border border-background/10 shadow-xl hover:-translate-y-2 transition h-full flex flex-col justify-between">
                 <div>
@@ -163,19 +170,19 @@ export default function GallerySlider() {
                     <img
                       src={item.media_url}
                       alt={item.title}
-                      className="w-full h-[240px] object-cover transition duration-700 group-hover:scale-110"
+                      className="w-full h-[160px] sm:h-[240px] object-cover transition duration-700 group-hover:scale-110"
                     />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
 
-                    <span className="absolute top-4 left-4 bg-primary text-xs px-3 py-1 rounded-full text-text-secondary">
+                    <span className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-primary text-[10px] sm:text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-text-secondary">
                       {item.created_by || "Article"}
                     </span>
                   </div>
 
                   {/* Card Body */}
-                  <div className="p-4">
-                    <p className="text-xs text-primary">
+                  <div className="p-3 sm:p-4">
+                    <p className="text-[10px] sm:text-xs text-primary">
                       {new Date(item.created_at).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -184,29 +191,29 @@ export default function GallerySlider() {
                     </p>
 
                     <Link href={`/blogs/${item.slug}`}>
-                      <h3 className="font-bold text-base text-text-primary mt-2 line-clamp-1 hover:text-primary transition-colors">
+                      <h3 className="font-bold text-xs sm:text-base text-text-primary mt-1 sm:mt-2 line-clamp-1 hover:text-primary transition-colors">
                         {item.title}
                       </h3>
                     </Link>
 
-                    <p className="text-ring line-clamp-2 text-sm mt-1">
+                    <p className="text-ring line-clamp-2 text-xs sm:text-sm mt-1">
                       {item.short_description}
                     </p>
                   </div>
                 </div>
 
                 {/* Footer Action Link */}
-                <div className="p-4 pt-0 flex justify-between items-center">
+                <div className="p-3 sm:p-4 pt-0 flex flex-wrap gap-1 justify-between items-center">
                   <Link
                     href={`/blogs/${item.slug}`}
-                    className="text-primary font-semibold hover:underline text-sm"
+                    className="text-primary font-semibold hover:underline text-xs sm:text-sm"
                   >
                     Read More →
                   </Link>
 
                   <button
                     onClick={() => setSelectedArticle(item)}
-                    className="text-xs text-text-primary/60 hover:text-primary transition"
+                    className="text-[10px] sm:text-xs text-text-primary/60 hover:text-primary transition"
                   >
                     Quick View
                   </button>
@@ -230,7 +237,7 @@ export default function GallerySlider() {
             {/* Modal Close Button */}
             <button
               onClick={() => setSelectedArticle(null)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition"
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-foreground/50 text-white flex items-center justify-center hover:bg-foreground/70 transition"
             >
               <X size={20} />
             </button>

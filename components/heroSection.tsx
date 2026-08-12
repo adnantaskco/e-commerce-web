@@ -54,7 +54,7 @@ export default function HeroSection() {
 
   if (error || !data) {
     return (
-      <div className="h-[300px] md:h-[450px] flex items-center justify-center text-red-500">
+      <div className="h-[300px] md:h-[450px] flex items-center justify-center text-destructive">
         <p className="text-sm font-medium">Failed to load hero banner</p>
       </div>
     );
@@ -64,7 +64,7 @@ export default function HeroSection() {
   const heroImages = [...data.sliders];
 
   return (
-    <section className="container mx-auto px-4 md:px-16 py-4">
+    <section className="container mx-auto px-2 md:px-16">
       <Carousel
         plugins={[plugin]}
         opts={{ loop: true }}
@@ -73,7 +73,7 @@ export default function HeroSection() {
         <CarouselContent>
           {heroImages.map((item) => (
             <CarouselItem key={item.uid}>
-              <div className="relative w-full h-[200px] sm:h-[300px] md:h-[420px] lg:h-[480px] overflow-hidden rounded-2xl">
+              <div className="relative w-full h-[200px] sm:h-[300px] md:h-[420px] lg:h-[480px] overflow-hidden ">
                 <img
                   src={item.media_url}
                   alt="Hero Banner"

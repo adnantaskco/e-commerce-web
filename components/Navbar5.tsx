@@ -101,8 +101,8 @@ export default function Navbar() {
 
   if (error) {
     return (
-      <nav className="sticky top-0 z-50 bg-white border-b shadow-sm">
-        <div className="max-w-7xl mx-auto h-16 flex items-center justify-center text-red-500">
+      <nav className="sticky top-0 z-50 bg-background border-b shadow-sm">
+        <div className="max-w-7xl mx-auto h-16 flex items-center justify-center text-destructive">
           Failed to load categories
         </div>
       </nav>
@@ -111,7 +111,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-200 shadow-sm">
+      <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-lg border-b border-ring/10 shadow-sm">
         <div className="container mx-auto px-1 md:px-16">
           <div className="h-16 flex items-center justify-between gap-4">
             {/* Logo */}
@@ -133,7 +133,7 @@ export default function Navbar() {
                   variant="outline"
                   size="icon"
                   onClick={() => handleScroll("left")}
-                  className="absolute left-0 z-20 h-7 w-7 rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white"
+                  className="absolute left-0 z-20 h-7 w-7 rounded-full  transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-text-secondary"
                   aria-label="Scroll left"
                 >
                   <FaChevronLeft className="h-3 w-3" />
@@ -160,7 +160,7 @@ export default function Navbar() {
                   variant="outline"
                   size="icon"
                   onClick={() => handleScroll("right")}
-                  className="absolute right-0 z-20 h-7 w-7 rounded-full shadow-md transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-white"
+                  className="absolute right-0 z-20 h-7 w-7 rounded-full  transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-text-secondary"
                   aria-label="Scroll right"
                 >
                   <FaChevronRight className="h-3 w-3" />
@@ -174,10 +174,10 @@ export default function Navbar() {
                 variant="ghost"
                 size="icon"
                 asChild
-                className="rounded-full hover:bg-gray-100 transition-all duration-300"
+                className="rounded-full hover:bg-ring/5 transition-all duration-300"
               >
                 <Link href="/products">
-                  <FaShopify className="text-2xl" />
+                  <FaShopify className="text-3xl" />
                 </Link>
               </Button>
 
@@ -185,10 +185,10 @@ export default function Navbar() {
                 variant="ghost"
                 size="icon"
                 asChild
-                className="rounded-full hover:bg-gray-100 transition-all duration-300"
+                className="rounded-full hover:bg-ring/10 transition-all duration-300"
               >
                 <Link href="/login">
-                  <MdAccountCircle className="text-2xl" />
+                  <MdAccountCircle className="text-3xl" />
                 </Link>
               </Button>
 
@@ -196,11 +196,11 @@ export default function Navbar() {
                 variant="ghost"
                 size="icon"
                 asChild
-                className="relative rounded-full hover:bg-gray-100 transition-all duration-300"
+                className="relative rounded-full hover:ring/10 transition-all duration-300"
               >
                 <Link href="/cart">
-                  <TiShoppingCart className="text-2xl" />
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-white text-[11px] font-semibold flex items-center justify-center">
+                  <TiShoppingCart className="text-3xl" />
+                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-text-secondary text-sm font-semibold flex items-center justify-center">
                     {totalItems}
                   </span>
                 </Link>
@@ -210,7 +210,7 @@ export default function Navbar() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setOpen(true)}
-                className="lg:hidden rounded-full hover:bg-gray-100 transition-all duration-300"
+                className="lg:hidden rounded-full hover:bg-ring/10 transition-all duration-300"
               >
                 <FaBars className="text-xl" />
               </Button>
@@ -228,16 +228,16 @@ export default function Navbar() {
           />
 
           <div
-            className={`fixed top-0 left-0 z-50 h-screen w-80 bg-white shadow-2xl transition-transform duration-300 lg:hidden ${
+            className={`fixed top-0 left-0 z-50 h-screen w-80 bg-background shadow-2xl transition-transform duration-300 lg:hidden ${
               open ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            <div className="relative bg-gradient-to-r from-primary via-primary to-primary/50 p-6 text-white">
+            <div className="relative bg-gradient-to-r from-primary via-primary to-primary/70 p-6 text-text-primary">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setOpen(false)}
-                className="absolute right-4 top-4 h-10 w-10 rounded-full bg-white/20 text-white hover:bg-white/30 transition flex items-center justify-center"
+                className="absolute right-4 top-4 h-10 w-10 rounded-full bg-background/20 text-text-primary hover:bg-white/30 transition flex items-center justify-center"
               >
                 ✕
               </Button>
@@ -245,19 +245,19 @@ export default function Navbar() {
               <div className="flex items-center gap-4 mt-6">
                 <div>
                   <h2 className="text-xl font-bold">Welcome</h2>
-                  <p className="text-sm text-white/80">
+                  <p className="text-sm text-text-secondary">
                     Explore thousands of products
                   </p>
                 </div>
               </div>
 
-              <div className="mt-6 flex justify-between rounded-2xl bg-white/15 p-3 backdrop-blur-md">
+              <div className="mt-6 flex justify-between rounded-2xl bg-background/15 p-3 backdrop-blur-md">
                 <Link
                   href="/products"
                   onClick={() => setOpen(false)}
                   className="flex flex-col items-center gap-1 hover:scale-105 transition"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary shadow">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background text-primary ">
                     <FaShopify className="text-2xl" />
                   </div>
                   <span className="text-xs">Products</span>
@@ -293,7 +293,7 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center justify-between border-b px-5 py-4">
-              <h3 className="flex items-center justify-center gap-2 text-lg font-bold text-gray-800">
+              <h3 className="flex items-center justify-center gap-2 text-lg font-bold text-ring">
                 <GiShoppingCart className="text-2xl font-bold" /> Categories
               </h3>
             </div>
@@ -303,7 +303,7 @@ export default function Navbar() {
                 {data?.data.map((category) => (
                   <li
                     key={category.id}
-                    className="overflow-hidden rounded-xl border border-gray-100 transition hover:border-primary/40 hover:bg-orange-50"
+                    className="overflow-hidden rounded-xl border border-ring/10 transition hover:border-primary/40 hover:bg-primary/10"
                   >
                     <MenuItem
                       item={category}
@@ -315,7 +315,7 @@ export default function Navbar() {
               </ul>
             </div>
 
-            <div className="absolute bottom-0 w-full border-t bg-gray-50 p-4">
+            <div className="absolute bottom-0 w-full border-t bg-ring/10 p-4">
               <p className="text-center text-xs text-text-primary">
                 ❤️ Happy Shopping
               </p>

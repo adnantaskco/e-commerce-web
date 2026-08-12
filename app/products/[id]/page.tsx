@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   PhoneCall,
   MessageCircle,
-  Share2,
   Plus,
   Minus,
 } from "lucide-react";
@@ -114,13 +113,11 @@ export default function ProductDetailsPage({ params }: { params: any }) {
     return 0;
   };
 
-  // Helper to safely parse specifications into key-value pairs regardless of raw shape
   const getParsedSpecifications = (): Array<{ key: string; value: string }> => {
     const rawSpecs = product?.specifications;
 
     if (!rawSpecs) return [];
 
-    // If it's already an array
     if (Array.isArray(rawSpecs)) {
       return rawSpecs.map((spec) => ({
         key: spec.key || spec.name || "Spec",
@@ -128,7 +125,6 @@ export default function ProductDetailsPage({ params }: { params: any }) {
       }));
     }
 
-    // If it's an object key-value map
     if (typeof rawSpecs === "object") {
       return Object.entries(rawSpecs).map(([key, value]) => ({
         key,
@@ -165,10 +161,14 @@ export default function ProductDetailsPage({ params }: { params: any }) {
     if (type === "inc") setQuantity(quantity + 1);
   };
 
+  const handleAddToCart = () => {
+    if (!product) return;
+    addToCart({ ...product, price: currentPrice, quantity } as any);
+  };
+
   return (
     <div className="min-h-screen bg-white py-6 text-gray-800 font-sans">
-      <div className="container  mx-auto px-4 sm:px-6 lg:px-16">
-        
+      <div className="container mx-auto px-4 sm:px-6 lg:px-16">
         {/* Breadcrumb Header */}
         <nav className="flex items-center gap-2 text-xs text-gray-400 mb-8">
           <Link href="/" className="hover:text-teal-600">Home</Link>
@@ -180,14 +180,13 @@ export default function ProductDetailsPage({ params }: { params: any }) {
 
         {/* Top Product Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
           {/* Gallery Area */}
           <div className="lg:col-span-5 flex flex-col gap-4">
             <div className="w-full aspect-[4/3] bg-gray-50 border border-gray-100 rounded-lg overflow-hidden flex items-center justify-center p-6">
               <img
                 src={selectedImage || product?.images?.[0]}
                 alt={product?.name}
-                className="max-h-full max-w-full  object-contain"
+                className="max-h-full max-w-full object-contain"
               />
             </div>
             {product?.images && product.images.length > 1 && (
@@ -200,8 +199,7 @@ export default function ProductDetailsPage({ params }: { params: any }) {
                       selectedImage === img ? "border-teal-600 border-2" : "border-gray-200"
                     }`}
                   >
-                    <img src={img} alt=""
-                     className="w-full h-full object-contain" />
+                    <img src={img} alt="" className="w-full h-full object-contain" />
                   </button>
                 ))}
               </div>
@@ -255,7 +253,7 @@ export default function ProductDetailsPage({ params }: { params: any }) {
                 </div>
 
                 <button
-                  onClick={() => addToCart({ ...product, price: currentPrice, quantity })}
+                  onClick={handleAddToCart}
                   className="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 px-4 rounded-md text-xs tracking-wide transition flex items-center justify-center gap-2"
                 >
                   Add to Cart
@@ -305,8 +303,6 @@ export default function ProductDetailsPage({ params }: { params: any }) {
 
           {/* Right Sidebar: Selected Items Summary + Suggestions */}
           <div className="lg:col-span-3 space-y-4">
-            
-            {/* Summary Box */}
             <div className="bg-gray-50/80 p-4 rounded-md border border-gray-100 text-xs text-gray-600">
               <h3 className="font-semibold text-gray-500 text-[11px] mb-3">
                 Selected Items ({quantity} pcs)
@@ -338,7 +334,6 @@ export default function ProductDetailsPage({ params }: { params: any }) {
               </div>
             </div>
 
-            {/* Suggestions Box */}
             {suggestedProducts.length > 0 && (
               <div className="bg-gray-50/80 p-4 rounded-md border border-gray-100">
                 <h3 className="text-xs font-bold text-gray-700 mb-3">Suggestions</h3>
@@ -368,7 +363,6 @@ export default function ProductDetailsPage({ params }: { params: any }) {
                 </div>
               </div>
             )}
-
           </div>
         </div>
 
@@ -391,9 +385,7 @@ export default function ProductDetailsPage({ params }: { params: any }) {
           </div>
 
           <div className="py-6 text-xs text-gray-500 leading-relaxed">
-            {activeTab === "descriptions" && (
-              <p>{product?.description}</p>
-            )}
+            {activeTab === "descriptions" && <p>{product?.description}</p>}
 
             {activeTab === "specifications" && (
               <table className="w-full text-left max-w-lg border-collapse">
@@ -462,7 +454,7 @@ export default function ProductDetailsPage({ params }: { params: any }) {
                       </div>
                     </Link>
                     <button
-                      onClick={() => addToCart({ ...item, price: relPrice, quantity: 1 })}
+                      onClick={() => addToCart({ ...item, price: relPrice, quantity: 1 } as any)}
                       className="mt-3 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-1.5 rounded text-[11px] transition"
                     >
                       Add To Cart
@@ -473,7 +465,6 @@ export default function ProductDetailsPage({ params }: { params: any }) {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

@@ -41,51 +41,50 @@ const Dressandjumpsuits = ({
   return (
     <section className="container mx-auto px-4 md:px-16 py-6 bg-background">
       {/* Section Title */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl md:text-5xl text-text-primary font-bold mt-2 capitalize">
+      <div className="flex items-end justify-between mb-6">
+        <h2 className="text-xl md:text-3xl lg:text-4xl text-text-primary font-bold capitalize">
           {title}
         </h2>
-        <span className="text-blue-400 text-md font-medium cursor-pointer hover:underline">
+
+        <button
+          type="button"
+          className="text-sm md:text-base font-medium text-text-blue hover:text-primary hover:underline underline-offset-4 transition-colors duration-200"
+        >
           See All
-        </span>
+        </button>
       </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-        {products.slice(0, 4).map((item) => (
+      {/* Products X-Axis Horizontal Scroll on Mobile / Grid on Desktop */}
+      <div className="flex overflow-x-auto no-scrollbar scroll-smooth gap-3 pb-2 md:pb-0 md:grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 md:gap-4">
+        {products.slice(0, 6).map((item) => (
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() =>
-              setHovered(hovered === item.id ? null : item.id)
-            }
-            className="bg-background rounded-xl overflow-hidden border hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 group relative"
+            onClick={() => setHovered(hovered === item.id ? null : item.id)}
+            className="flex-shrink-0 w-[160px] sm:w-[180px] md:w-auto bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
           >
-            {/* IMAGE AREA */}
-            <div className="relative bg-background h-[140px] sm:h-[280px] flex items-center justify-center p-2 overflow-hidden">
-              <Image
+            {/* IMAGE AREA WITH OVERLAID ACTION BUTTONS */}
+            <div className="relative bg-background h-32 sm:h-40 w-full flex items-center justify-center p-2 overflow-hidden">
+              <img
                 src={item.image || "/placeholder.png"}
                 alt={item.name}
-                width={260}
-                height={300}
-                unoptimized
-                className="object-contain max-h-full pointer-events-none transition-transform duration-500 group-hover:scale-105"
+                className="max-h-full max-w-full object-contain pointer-events-none transition-transform duration-500 group-hover:scale-105"
               />
 
               {/* Discount Badge */}
               {item.has_discount && (
-                <div className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-red-500 text-white text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-md shadow-sm">
+                <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-primary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
                   {item.discount_price}
                 </div>
               )}
 
-              {/* Bottom Action Bar */}
+              {/* Overlaid Action Bar */}
               <div
-                className={`absolute bottom-0 inset-x-0 p-2 sm:p-3 flex items-center justify-center gap-2 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-all duration-300 z-20 ${
+                className={`absolute inset-x-0 bottom-0 p-1.5 sm:p-2 flex items-center justify-center gap-1.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 z-20 ${
                   hovered === item.id
                     ? "opacity-100 translate-y-0 pointer-events-auto"
-                    : "opacity-0 translate-y-4 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto"
+                    : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto"
                 }`}
               >
                 {/* Add to Cart Button */}
@@ -102,63 +101,63 @@ const Dressandjumpsuits = ({
                       price: Number(item.sale_price),
                     });
                   }}
-                  className="flex-1 bg-black/90 hover:bg-black text-white text-xs sm:text-sm font-medium py-2 px-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transition-all"
+                  className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
                 >
-                  <FaShoppingCart className="text-xs sm:text-sm" />
+                  <FaShoppingCart className="text-[10px] sm:text-xs" />
                   <span className="hidden sm:inline">Add to Cart</span>
                 </button>
 
                 {/* Quick View Button */}
-                <Link href={`/products/${item.slug}`}> <button
-                  type="button"
-                  title="Quick View"
+                <Link
+                  href={`/products/${item.slug}`}
                   onClick={(e) => e.stopPropagation()}
-                  className="w-8 h-8 sm:w-9 sm:h-9 bg-white text-gray-800 hover:bg-blue-600 hover:text-white rounded-lg flex items-center justify-center shadow-md hover:shadow-lg active:scale-95 transition-all"
+                  title="Quick View"
+                  className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
                 >
-                  <FaEye className="text-xs sm:text-sm" />
-                </button></Link>
+                  <FaEye className="text-[10px] sm:text-xs" />
+                </Link>
               </div>
             </div>
 
-            {/* Details */}
-            <Link href={`/products/${item.slug}`}>
-              <div className="p-2 sm:p-4">
-                <p className="text-[11px] sm:text-sm text-gray-500">
-                  Taskco
-                </p>
+            {/* DETAILS AREA */}
+            <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
+              <div>
+                <p className="text-[10px] sm:text-xs text-ring">Taskco</p>
 
-                <h2 className="text-xs sm:text-base font-semibold truncate text-text-primary">
+                <h2 className="text-xs sm:text-sm font-semibold truncate text-text-primary">
                   {item.name}
                 </h2>
 
                 {/* Rating */}
-                <div className="flex gap-1 text-yellow-400 text-xs mt-2">
+                <div className="flex gap-0.5 text-yellow-400 text-[10px] sm:text-xs mt-1">
                   {[...Array(5)].map((_, index) => (
                     <FaStar key={index} />
                   ))}
                 </div>
+              </div>
 
+              <div className="mt-2">
                 {/* Price */}
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-1.5 flex-wrap">
                   {item.has_discount && (
-                    <span className="line-through text-gray-400 text-sm">
+                    <span className="line-through text-ring/70 text-[10px] sm:text-xs">
                       {currency} {Number(item.retail_price).toFixed(0)}
                     </span>
                   )}
 
-                  <span className="font-bold text-destructive text-base">
+                  <span className="font-bold text-destructive text-xs sm:text-sm">
                     {currency} {Number(item.sale_price).toFixed(0)}
                   </span>
                 </div>
 
-                {/* Stock */}
-                <div className="mt-1">
+                {/* Stock Status */}
+                <div className="mt-0.5">
                   {item.in_stock ? (
-                    <span className="text-green-600 text-xs font-medium">
+                    <span className="text-green-600 text-[10px] sm:text-xs font-medium">
                       In Stock ({item.stock_qty})
                     </span>
                   ) : (
-                    <span className="text-destructive text-xs font-medium">
+                    <span className="text-destructive text-[10px] sm:text-xs font-medium">
                       Out of Stock
                     </span>
                   )}
@@ -167,6 +166,13 @@ const Dressandjumpsuits = ({
             </Link>
           </div>
         ))}
+      </div>
+
+      {/* Mobile Only Drag Helper */}
+      <div className="flex md:hidden items-center justify-center gap-2 text-xs text-muted-foreground mt-3 text-center">
+        <span>←</span>
+        <span>Drag to explore</span>
+        <span>→</span>
       </div>
     </section>
   );

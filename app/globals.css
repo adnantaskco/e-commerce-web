@@ -65,6 +65,7 @@
   --text-secondary: oklch(0.967 0.001 286.375);
   --text-star: #F7F700 ;
   --text-green: #3CF652;
+  --text-blue: #4A47FA;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.13 0.028 261.692);
@@ -239,4 +240,7 @@ button,
   @apply w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:border-emerald-500;
 }
 
+@theme {
+  --color-blue: #4A47FA;
+}
 

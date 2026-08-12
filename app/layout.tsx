@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { CartProvider } from "./src/components/context/CartContext";
 import Navbar1 from "../components/navbar1";
-import Navbar2 from "../components/navbar2";
+
 import Footer from "../components/footer";
 import Navbar from "@/components/Navbar5";
 import Providers from "@/components/Providers";

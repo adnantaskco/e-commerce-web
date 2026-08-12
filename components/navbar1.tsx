@@ -1,7 +1,16 @@
 "use client";
+
 import React from "react";
 import "flag-icons/css/flag-icons.min.css";
+
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Navbar1Props {
   isLoading?: boolean;
@@ -14,12 +23,12 @@ function Navbar1({ isLoading = false }: Navbar1Props) {
       <section className="bg-foreground py-3 w-full overflow-hidden">
         <div className="container mx-auto px-4 md:px-20 lg:px-20">
           <div className="flex items-center justify-between gap-2 text-xs sm:text-sm">
-            {/* Left Side: Offer Banner Skeleton */}
+            {/* Left Side */}
             <div className="hidden md:block">
               <Skeleton className="h-4 w-80 bg-gray-700/50" />
             </div>
 
-            {/* Right Side: Quick Links & Dropdowns Skeleton */}
+            {/* Right Side */}
             <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-3 sm:gap-4">
               <Skeleton className="h-4 w-20 bg-gray-700/50" />
               <Skeleton className="h-4 w-20 bg-gray-700/50" />
@@ -37,54 +46,152 @@ function Navbar1({ isLoading = false }: Navbar1Props) {
       <div className="container mx-auto px-4 md:px-20 lg:px-20">
         <div className="flex items-center justify-between gap-2 text-xs sm:text-sm">
           
-          {/* Left Side: Offer Banner */}
+          {/* ================= LEFT SIDE ================= */}
           <div className="hidden md:block text-left truncate">
             <p className="text-text-secondary">
-              Tell a friend about Styleway Fashion & get 30% off your next order.
+              Tell a friend about Styleway Fashion & get 30% off your next
+              order.
             </p>
           </div>
 
-          {/* Right Side: Quick Links & Dropdowns */}
+          {/* ================= RIGHT SIDE ================= */}
           <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-1 sm:gap-2 whitespace-nowrap">
+
+            {/* Need Help */}
             <a
               href="/help"
-              className="border-r border-ring pr-2 sm:px-3 hover:text-primary transition"
+              className="border-r border-ring pr-2 sm:px-3 hover:text-primary transition-colors"
             >
               Need Help?
             </a>
 
+            {/* Track Order */}
             <a
               href="/track-order"
-              className="border-r border-ring pr-2 sm:px-3 hover:text-primary transition"
+              className="border-r border-ring pr-2 sm:px-3 hover:text-primary transition-colors"
             >
               Track Order
             </a>
 
-            {/* Language */}
-            <select
-              onChange={(e) => console.log(e.target.value)}
-              className=" bg-foreground text-text-secondary outline-none sm:text-sm text-xl cursor-pointer px-1 sm:px-2"
+            {/* ================= LANGUAGE ================= */}
+            <Select
               defaultValue="en"
+              onValueChange={(value) => {
+                console.log("Language:", value);
+              }}
             >
-              <option value="en">English</option>
-              <option value="fr">Français</option>
-              <option value="es">Español</option>
-              <option value="de">Deutsch</option>
-              <option value="it">Italiano</option>
-              <option value="pl">Polski</option>
-            </select>
+              <SelectTrigger
+                className="
+                  h-8
+                  w-auto
+                  min-w-[95px]
+                  border-0
+                  bg-transparent
+                  px-1
+                  sm:px-2
+                  text-text-secondary
+                  shadow-none
+                  focus:ring-0
+                  focus:ring-offset-0
+                  hover:text-primary
+                  transition-colors
+                "
+              >
+                <SelectValue placeholder="Language" />
+              </SelectTrigger>
 
-            {/* Currency */}
-            <select
-              onChange={(e) => console.log(e.target.value)}
-              className=" hidden md:flex bg-foreground text-text-secondary outline-none sm:text-sm text-xl cursor-pointer px-1 sm:px-2"
-              defaultValue="usd"
-            >
-              <option value="usd">$ USD</option>
-              <option value="eur">€ EUR</option>
-            </select>
+              <SelectContent className="bg-background border-border">
+                <SelectItem
+                  value="en"
+                  className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
+                >
+                  English
+                </SelectItem>
+
+                <SelectItem
+                  value="fr"
+                  className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
+                >
+                  Français
+                </SelectItem>
+
+                <SelectItem
+                  value="es"
+                  className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
+                >
+                  Español
+                </SelectItem>
+
+                <SelectItem
+                  value="de"
+                  className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
+                >
+                  Deutsch
+                </SelectItem>
+
+                <SelectItem
+                  value="it"
+                  className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
+                >
+                  Italiano
+                </SelectItem>
+
+                <SelectItem
+                  value="pl"
+                  className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
+                >
+                  Polski
+                </SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* ================= CURRENCY ================= */}
+            <div className="hidden md:block">
+              <Select
+                defaultValue="usd"
+                onValueChange={(value) => {
+                  console.log("Currency:", value);
+                }}
+              >
+                <SelectTrigger
+                  className="
+                    h-8
+                    w-auto
+                    min-w-[80px]
+                    border-0
+                    bg-transparent
+                    px-1
+                    sm:px-2
+                    text-text-secondary
+                    shadow-none
+                    focus:ring-0
+                    focus:ring-offset-0
+                    hover:text-primary
+                    transition-colors
+                  "
+                >
+                  <SelectValue placeholder="Currency" />
+                </SelectTrigger>
+
+                <SelectContent className="bg-background border-border">
+                  <SelectItem
+                    value="usd"
+                    className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
+                  >
+                    $ USD
+                  </SelectItem>
+
+                  <SelectItem
+                    value="eur"
+                    className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
+                  >
+                    € EUR
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
           </div>
-
         </div>
       </div>
     </section>

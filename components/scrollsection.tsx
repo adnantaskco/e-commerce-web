@@ -113,11 +113,14 @@ export default function CategorySection(props: CategorySectionProps) {
         }
       `}</style>
 
-      <div className="container mx-auto px-4 md:px-8 mb-6">
-        <h2 className="text-3xl md:text-5xl font-bold text-gray-900 text-center">
-          {props.sectionTitle || data?.title || "Featured Categories"}
-        </h2>
-      </div>
+        <div className="container mx-auto px-4 md:px-8 mb-6">
+          <h2 className="text-xl md:text-3xl font-bold text-text-primary text-center">
+            {props.sectionTitle || data?.title || "Featured Categories"}
+          </h2>
+
+          <div className="mx-auto mt-3 flex w-24 md:w-40 rounded-full border-t-4 border-primary" />
+        </div>
+      
 
       <div className="marquee-container flex flex-col ">
         {/* ROW 1 (Scrolls Left) */}
@@ -138,7 +141,7 @@ export default function CategorySection(props: CategorySectionProps) {
                   className="flex-shrink-0"
                 >
                   <Link href={`/category/${item.slug}`}>
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32   border-ring/20 border-r border-t flex items-center justify-center transition-transform duration-300 hover:scale-105">
+                    <div className="w-24 h-24 sm:w-16 sm:h-16 md:w-32 md:h-32   border-ring/20 border-r border-t flex items-center justify-center transition-transform duration-300 hover:scale-105">
                       <img
                         src={imgSrc}
                         alt={item.name}
@@ -200,11 +203,11 @@ export default function CategorySection(props: CategorySectionProps) {
           }}
           className="fixed z-50 animate-in fade-in zoom-in-95 duration-150"
         >
-          <div className="bg-white rounded-xl p-3 shadow-xl border border-gray-100 min-w-[140px] max-w-[280px] flex flex-col items-center gap-2">
+          <div className="bg-background rounded-xl p-3 shadow-xl border border-ring/10 min-w-[140px] max-w-[280px] flex flex-col items-center gap-2">
             {/* Category Name */}
             <Link
               href={`/category/${activeItem.category.slug}`}
-              className="text-xs font-bold text-gray-900 hover:text-blue-600 transition-colors text-center line-clamp-1"
+              className="text-xs font-bold text-ring hover:text-blue-600 transition-colors text-center line-clamp-1"
             >
               {activeItem.category.name}
             </Link>
@@ -212,14 +215,14 @@ export default function CategorySection(props: CategorySectionProps) {
             {/* Child Subcategories (If present) */}
             {activeItem.category.children &&
               activeItem.category.children.length > 0 && (
-                <div className="w-full border-t border-gray-100 pt-2 flex flex-wrap justify-center gap-2">
+                <div className="w-full border-t border-ring/10 pt-2 flex flex-wrap justify-center gap-2">
                   {activeItem.category.children.map((child) => (
                     <Link
                       key={child.id}
                       href={`/category/${child.slug}`}
-                      className="flex flex-col items-center  hover:bg-gray-50 rounded-lg transition-colors"
+                      className="flex flex-col items-center  hover:bg-ring/5 rounded-lg transition-colors"
                     >
-                      <div className="w-20 h-20 rounded-md border border-gray-100 flex items-center justify-center  overflow-hidden">
+                      <div className="w-20 h-20 rounded-md border border-ring/10 flex items-center justify-center  overflow-hidden">
                         <img
                           src={
                             child.image ||
@@ -231,7 +234,7 @@ export default function CategorySection(props: CategorySectionProps) {
                           className="max-h-full max-w-full object-contain"
                         />
                       </div>
-                      <span className="text-[10px] text-gray-600 font-medium text-center line-clamp-1 max-w-[60px]">
+                      <span className="text-sm text-ring font-medium text-center line-clamp-1 ">
                         {child.name}
                       </span>
                     </Link>

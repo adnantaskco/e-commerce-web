@@ -138,8 +138,8 @@ export default function ProductDetailsPage({ params }: { params: any }) {
   if (!routeParam || (!loading && !product)) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
-        <h2 className="text-xl font-bold text-gray-800">Product Not Found</h2>
-        <p className="text-gray-500 mt-1">No matching product found.</p>
+        <h2 className="text-xl font-bold text-ring">Product Not Found</h2>
+        <p className="text-ring/50 mt-1">No matching product found.</p>
       </div>
     );
   }
@@ -266,10 +266,10 @@ export default function ProductDetailsPage({ params }: { params: any }) {
 
               <div className="grid grid-cols-2 gap-2">
                 <button className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 px-4 rounded-md text-xs transition flex items-center justify-center gap-2">
-                  <MessageCircle size={14} /> Order on WhatsApp
+                  <Link  href="whatsapp://call?phone=8801812295539" className="flex items-center gap-2"> <MessageCircle size={14} /> Order on WhatsApp</Link>
                 </button>
                 <button className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-4 rounded-md text-xs transition flex items-center justify-center gap-2">
-                  <PhoneCall size={14} /> Call for Order
+                 <Link className="flex items-center gap-2"  href="tel:+8801812295539"> <PhoneCall size={14} /> Call for Order</Link>
                 </button>
               </div>
             </div>

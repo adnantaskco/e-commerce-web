@@ -1,9 +1,8 @@
-
+// lib/helpfetcher.ts
 export const fetcher = async (url: string) => {
   const res = await fetch(url);
   if (!res.ok) {
-    const error = new Error('An error occurred while fetching the data.');
-    throw error;
+    throw new Error(`HTTP error! Status: ${res.status}`);
   }
   return res.json();
 };

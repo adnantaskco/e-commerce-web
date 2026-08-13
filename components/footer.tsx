@@ -1,7 +1,18 @@
-"use client"
-import React, { useState, useEffect } from 'react';
+"use client";
 
-// 1. Define explicit types for your API response data
+import React, { useState, useEffect } from "react";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaTiktok,
+  FaYoutube,
+  FaLinkedinIn,
+  FaXTwitter,
+  FaWhatsapp,
+  FaGlobe,
+} from "react-icons/fa6";
+
+// 1. Types
 interface SocialIcon {
   name: string;
   link: string;
@@ -24,7 +35,7 @@ interface EcommerceSettings {
   footer_description?: string;
   address?: string;
   contact_number?: string;
-  whatsapp_number?: string; // Explicitly typed as string | undefined
+  whatsapp_number?: string;
   footer_email?: string;
   copy_right_text?: string;
   social_icons?: SocialIcon[];
@@ -35,14 +46,13 @@ interface EcommerceSettings {
 }
 
 const DynamicFooter: React.FC = () => {
-  // 2. Pass the interface to useState so TypeScript knows the exact type
   const [data, setData] = useState<EcommerceSettings | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     let isMounted = true;
 
-    fetch('https://demo.app.taskcocommerce.com/api/v1/ecommerce-settings')
+    fetch("https://demo.app.taskcocommerce.com/api/v1/ecommerce-settings")
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
@@ -56,7 +66,7 @@ const DynamicFooter: React.FC = () => {
         }
       })
       .catch((err) => {
-        console.error('Error fetching footer data:', err);
+        console.error("Error fetching footer data:", err);
         if (isMounted) setLoading(false);
       });
 
@@ -86,21 +96,36 @@ const DynamicFooter: React.FC = () => {
     social_icons,
     featured_categories,
     quick_links,
-    primary_color = '#008060',
-    secondary_color = '#f5a623',
+    primary_color = "#008060",
+    secondary_color = "#f5a623",
   } = data;
 
   const formatUrl = (url?: string): string => {
-    if (!url) return '#';
-    return url.startsWith('http://') || url.startsWith('https://')
+    if (!url) return "#";
+    return url.startsWith("http://") || url.startsWith("https://")
       ? url
       : `https://${url}`;
   };
 
-  // 3. Helper function ensures whatsapp_number is treated safely as a string
   const formatWhatsAppNumber = (num?: string): string => {
-    if (!num) return '';
-    return String(num).replace(/[^0-9]/g, '');
+    if (!num) return "";
+    return String(num).replace(/[^0-9]/g, "");
+  };
+
+  // Helper function to map string icon names to React Icon components
+  const renderSocialIcon = (name: string) => {
+    const iconMap: Record<string, React.ReactNode> = {
+      facebook: <FaFacebookF className="w-4 h-4" />,
+      instagram: <FaInstagram className="w-4 h-4" />,
+      tiktok: <FaTiktok className="w-4 h-4" />,
+      youtube: <FaYoutube className="w-4 h-4" />,
+      linkedin: <FaLinkedinIn className="w-4 h-4" />,
+      twitter: <FaXTwitter className="w-4 h-4" />,
+      x: <FaXTwitter className="w-4 h-4" />,
+      whatsapp: <FaWhatsapp className="w-4 h-4" />,
+    };
+
+    return iconMap[name.toLowerCase()] || <FaGlobe className="w-4 h-4" />;
   };
 
   return (
@@ -108,17 +133,17 @@ const DynamicFooter: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           
-          {/* Brand Info & Socials */}
+          {/* Brand Info & Social Icons */}
           <div className="space-y-4">
             {logo ? (
               <img
                 src={logo}
-                alt={store_name || 'Store Logo'}
+                alt={store_name || "Store Logo"}
                 className="h-12 object-contain"
               />
             ) : (
               <h2 className="text-xl font-bold text-white">
-                {store_name || 'Store'}
+                {store_name || "Store"}
               </h2>
             )}
 
@@ -128,6 +153,7 @@ const DynamicFooter: React.FC = () => {
               </p>
             )}
 
+            {/* Social Icons mapped visually */}
             {social_icons && social_icons.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-2">
                 {social_icons.map((icon, idx) => (
@@ -136,15 +162,18 @@ const DynamicFooter: React.FC = () => {
                     href={formatUrl(icon.link)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="capitalize text-xs px-3 py-1.5 rounded bg-gray-800 text-gray-200 transition-colors duration-200"
+                    title={icon.name}
+                    aria-label={icon.name}
+                    className="p-2.5 rounded-full bg-gray-800 text-gray-200 transition-all duration-200 flex items-center justify-center hover:text-white"
                     onMouseEnter={(e) => {
-                      if (primary_color) e.currentTarget.style.backgroundColor = primary_color;
+                      if (primary_color)
+                        e.currentTarget.style.backgroundColor = primary_color;
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '';
+                      e.currentTarget.style.backgroundColor = "";
                     }}
                   >
-                    {icon.name}
+                    {renderSocialIcon(icon.name)}
                   </a>
                 ))}
               </div>
@@ -164,10 +193,11 @@ const DynamicFooter: React.FC = () => {
                       href={`/${link.slug}`}
                       className="text-sm text-gray-400 hover:underline transition-colors"
                       onMouseEnter={(e) => {
-                        if (secondary_color) e.currentTarget.style.color = secondary_color;
+                        if (secondary_color)
+                          e.currentTarget.style.color = secondary_color;
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = '';
+                        e.currentTarget.style.color = "";
                       }}
                     >
                       {link.name}
@@ -191,10 +221,11 @@ const DynamicFooter: React.FC = () => {
                       href={`/category/${cat.slug}`}
                       className="text-sm text-gray-400 hover:underline transition-colors"
                       onMouseEnter={(e) => {
-                        if (secondary_color) e.currentTarget.style.color = secondary_color;
+                        if (secondary_color)
+                          e.currentTarget.style.color = secondary_color;
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.color = '';
+                        e.currentTarget.style.color = "";
                       }}
                     >
                       {cat.name}
@@ -253,8 +284,6 @@ const DynamicFooter: React.FC = () => {
           </div>
 
         </div>
-
-
       </div>
     </footer>
   );

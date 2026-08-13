@@ -151,7 +151,7 @@ export default function ProductSlider({
   const mobilePagesCount = Math.ceil(products.length / 2);
 
   return (
-    <section className="container mx-auto px-3 sm:px-4 md:px-10 lg:px-20 py-6 md:py-16 bg-background">
+    <section className="container mx-auto px-3 sm:px-4 md:px-10 lg:px-20 py-5 md:py-8 lg:py-5  bg-background">
       {/* Header Section */}
       {title && (
         <div className="text-center mb-6 md:mb-10">
@@ -186,13 +186,13 @@ export default function ProductSlider({
             >
               {/* Product Image Area */}
               <div className="relative aspect-square w-full flex items-center justify-center p-2 bg-background/10 overflow-hidden">
-                <Image
+                  <Image
                   src={item.image || "/placeholder.png"}
                   alt={item.name}
-                  width={180}
-                  height={180}
+                  width={500}
+                  height={500}
                   unoptimized
-                  className="object-contain max-h-full max-w-full transition-transform duration-500 group-hover/card:scale-105 pointer-events-none"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105 pointer-events-none"
                 />
 
                 {/* Discount Badge */}
@@ -234,21 +234,21 @@ export default function ProductSlider({
                     </span>
                   </button>
 
-                  <Link
+                  {/* <Link
                     href={`/products/${item.slug}`}
                     onClick={(e) => e.stopPropagation()}
                     title="Quick View"
                     className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
                   >
                     <FaEye className="text-xs" />
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
 
               {/* Product Details */}
               <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
                 <div>
-                  <h2 className="font-semibold text-text-primary text-[11px] sm:text-sm line-clamp-1 hover:text-primary transition">
+                  <h2 className="font-semibold text-text-primary text-sm sm:text-md md:text-xl lg:text-xl line-clamp-1 hover:text-primary transition">
                     {item.name}
                   </h2>
 
@@ -266,7 +266,7 @@ export default function ProductSlider({
                         {currency} {Number(item.retail_price).toFixed(0)}
                       </span>
                     )}
-                    <span className="font-bold text-destructive text-[11px] sm:text-sm">
+                    <span className="font-bold text-destructive text-md sm:text-md md: text-xl">
                       {currency} {item.sale_price}
                     </span>
                   </div>

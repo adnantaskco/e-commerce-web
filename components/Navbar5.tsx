@@ -2,12 +2,26 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import useSWR from "swr";
-import { FaBars, FaChevronLeft, FaChevronRight, FaShopify } from "react-icons/fa6";
+import { 
+  FaBars, 
+  FaChevronLeft, 
+  FaChevronRight, 
+  FaShopify 
+} from "react-icons/fa6";
 import { TiShoppingCart } from "react-icons/ti";
 import { MdAccountCircle } from "react-icons/md";
-import { GiShoppingCart } from "react-icons/gi";
+import { 
+  FiHome, 
+  FiShoppingCart, 
+  FiShoppingBag, 
+  FiTruck, 
+  FiMail, 
+  FiX, 
+  FiUser,
+  FiInfo,
+  FiMessageCircle
+} from "react-icons/fi";
 
 import fetcher from "@/lib/navfatcher";
 import MenuItem from "./MenuItem";
@@ -22,8 +36,6 @@ export default function Navbar() {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const { logo } = UseLogo();
- 
-  
 
   const { totalItems } = useCart();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -73,10 +85,7 @@ export default function Navbar() {
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-200 shadow-sm">
         <div className="container mx-auto px-1 md:px-16">
           <div className="h-16 flex items-center justify-between gap-4">
-            {/* Logo Skeleton */}
             <Skeleton className="h-10 w-24 rounded-full shrink-0" />
-
-            {/* Categories Skeleton (Desktop) */}
             <div className="hidden lg:flex flex-1 items-center justify-center gap-6 px-10 overflow-hidden">
               <Skeleton className="h-4 w-20 rounded-md" />
               <Skeleton className="h-4 w-24 rounded-md" />
@@ -85,8 +94,6 @@ export default function Navbar() {
               <Skeleton className="h-4 w-20 rounded-md" />
               <Skeleton className="h-4 w-24 rounded-md" />
             </div>
-
-            {/* Right Icons Skeleton */}
             <div className="flex items-center gap-2 shrink-0">
               <Skeleton className="h-10 w-10 rounded-full" />
               <Skeleton className="h-10 w-10 rounded-full" />
@@ -121,19 +128,18 @@ export default function Navbar() {
                 alt="Logo"
                 width={90}
                 height={40}
-                className="rounded-full"
+                className=""
               />
             </Link>
 
-            {/* Categories Horizontal Scroll with Dynamic Buttons */}
+            {/* Categories Horizontal Scroll (Desktop View) */}
             <div className="hidden lg:flex flex-1 items-center relative min-w-0 overflow-visible">
-              {/* Left Scroll Button */}
               {canScrollLeft && (
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => handleScroll("left")}
-                  className="absolute left-0 z-20 h-3 w-3    "
+                  className="absolute left-0 z-20 h-3 w-3"
                   aria-label="Scroll left"
                 >
                   <FaChevronLeft className="h-3 w-3" />
@@ -154,13 +160,12 @@ export default function Navbar() {
                 </ul>
               </div>
 
-              {/* Right Scroll Button */}
               {canScrollRight && (
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => handleScroll("right")}
-                  className="absolute right-0 z-20 h-3 w-3   "
+                  className="absolute right-0 z-20 h-3 w-3"
                   aria-label="Scroll right"
                 >
                   <FaChevronRight className="h-3 w-3" />
@@ -219,106 +224,174 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Sidebar */}
+      {/* Mobile Drawer Sidebar */}
       {open && (
         <>
+          {/* Backdrop Overlay */}
           <div
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-40 bg-black/5 lg:hidden transition-opacity"
             onClick={() => setOpen(false)}
           />
 
+          {/* Drawer Body: 85% width */}
           <div
-            className={`fixed top-0 left-0 z-50 h-screen w-80 bg-background shadow-2xl transition-transform duration-300 lg:hidden ${
+            className={`fixed top-0 left-0 z-50 h-screen w-[85%] max-w-xs bg-white shadow-xl transition-transform duration-300 ease-in-out lg:hidden flex flex-col ${
               open ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            <div className="relative bg-gradient-to-r from-primary via-primary to-primary/70 p-6 text-text-primary">
-              <Button
-                variant="ghost"
-                size="icon"
+            {/* Top Bar */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <Link href="/" onClick={() => setOpen(false)} className="flex items-center">
+                <img
+                  src={logo || "/logo.png"}
+                  alt="Logo"
+                  className="h-9 w-auto object-contain"
+                />
+              </Link>
+              <button
                 onClick={() => setOpen(false)}
-                className="absolute right-4 top-4 h-10 w-10 rounded-full bg-background/20 text-text-primary hover:bg-white/30 transition flex items-center justify-center"
+                className="p-1.5 text-ring/50 hover:text-ring0 rounded-full hover:bg-gray-100 transition"
+                aria-label="Close menu"
               >
-                ✕
-              </Button>
+                <FiX className="text-xl" />
+              </button>
+            </div>
 
-              <div className="flex items-center gap-4 mt-6">
-                <div>
-                  <h2 className="text-xl font-bold">Welcome</h2>
-                  <p className="text-sm text-text-secondary">
-                    Explore thousands of products
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-between rounded-2xl bg-background/15 p-3 backdrop-blur-md">
+            {/* Scrollable Area */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar py-2">
+              {/* Main Navigation Links */}
+              <nav className="space-y-1 px-3">
                 <Link
-                  href="/products"
+                  href="/"
                   onClick={() => setOpen(false)}
-                  className="flex flex-col items-center gap-1 hover:scale-105 transition"
+                  className="flex items-center gap-4 px-3 py-3 text-sm font-medium text-ring hover:text-primary transition-colors"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background text-primary ">
-                    <FaShopify className="text-2xl" />
-                  </div>
-                  <span className="text-xs">Products</span>
-                </Link>
-
-                <Link
-                  href="/login"
-                  onClick={() => setOpen(false)}
-                  className="flex flex-col items-center gap-1 hover:scale-105 transition"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-primary shadow">
-                    <MdAccountCircle className="text-2xl" />
-                  </div>
-                  <span className="text-xs">Account</span>
+                  <FiHome className="text-xl text-primary" />
+                  <span>Home</span>
                 </Link>
 
                 <Link
                   href="/cart"
                   onClick={() => setOpen(false)}
-                  className="relative flex flex-col items-center gap-1 hover:scale-105 transition"
+                  className="flex items-center gap-4 px-3 py-3 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background text-primary shadow">
-                    <TiShoppingCart className="text-2xl" />
-                  </div>
-
-                  <span className="absolute right-3 top-0 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-white">
-                    {totalItems}
-                  </span>
-
-                  <span className="text-xs">Cart</span>
+                  <FiShoppingCart className="text-xl text-primary" />
+                  <span>Cart</span>
                 </Link>
+
+                <Link
+                  href="/flash-sales"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-4 px-3 py-3 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+                >
+                  <FiShoppingBag className="text-xl text-primary" />
+                  <span>Flash Sales</span>
+                </Link>
+
+                <Link
+                  href="/special-offers"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-4 px-3 py-3 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+                >
+                  <FiShoppingCart className="text-xl text-primary" />
+                  <span>Special Offers</span>
+                </Link>
+
+                <Link
+                  href="/track-order"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-4 px-3 py-3 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+                >
+                  <FiTruck className="text-xl text-primary" />
+                  <span>Track Order</span>
+                </Link>
+
+                <Link
+                  href="/contact"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-4 px-3 py-3 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+                >
+                  <FiMail className="text-xl text-primary" />
+                  <span>Contact Us</span>
+                </Link>
+              </nav>
+
+              {/* Menu Section Header */}
+              <div className="mt-4 border-t border-gray-100 pt-4 px-5">
+                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  MENU
+                </span>
+              </div>
+
+              {/* Dynamic Categories */}
+              <div className="mt-2">
+                {data?.data.map((category) => (
+                  <MenuItem
+                    key={category.id}
+                    item={category}
+                    mobile
+                    onSelect={() => setOpen(false)}
+                  />
+                ))}
+              </div>
+
+              {/* MORE LINKS Section */}
+              <div className="mt-4 border-t border-gray-100 pt-4 px-5">
+                <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  MORE LINKS
+                </span>
+                <nav className="mt-3 space-y-1">
+                  <Link
+                    href="/terms-and-conditions"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3.5 py-2.5 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+                  >
+                    <FiInfo className="text-lg text-sky-400" />
+                    <span>Terms & Conditions</span>
+                  </Link>
+
+                  <Link
+                    href="/privacy-policy"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3.5 py-2.5 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+                  >
+                    <FiInfo className="text-lg text-primary" />
+                    <span>Privacy Policy</span>
+                  </Link>
+
+                  <Link
+                    href="/delivery-info"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3.5 py-2.5 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+                  >
+                    <FiInfo className="text-lg text-primary" />
+                    <span>Delivery</span>
+                  </Link>
+
+                  <a
+                    href="https://wa.me/8801939000500"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3.5 py-2.5 text-sm font-medium text-gray-700 hover:text-emerald-500 transition-colors"
+                  >
+                    <FiMessageCircle className="text-lg text-emerald-500" />
+                    <span>WhatsApp</span>
+                  </a>
+                </nav>
               </div>
             </div>
 
-            <div className="flex items-center justify-between border-b px-5 py-4">
-              <h3 className="flex items-center justify-center gap-2 text-lg font-bold text-ring">
-                <GiShoppingCart className="text-2xl font-bold" /> Categories
-              </h3>
-            </div>
-
-            <div className="h-[calc(100vh-270px)] overflow-y-auto custom-scrollbar">
-              <ul className="space-y-1 p-3">
-                {data?.data.map((category) => (
-                  <li
-                    key={category.id}
-                    className="overflow-hidden rounded-xl border border-ring/10 transition hover:border-primary/40 hover:bg-primary/10"
-                  >
-                    <MenuItem
-                      item={category}
-                      mobile
-                      onSelect={() => setOpen(false)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="absolute bottom-0 w-full border-t bg-ring/10 p-4">
-              <p className="text-center text-xs text-text-primary">
-                ❤️ Happy Shopping
-              </p>
+            {/* Bottom Action Area: Sign In / Register Button */}
+            <div className="p-4 border-t border-gray-100 bg-background">
+              <Link
+                href="/login"
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center gap-2.5 w-full py-3 bg-primary hover:bg-primary/50 text-white font-semibold text-base rounded-xl transition-colors shadow-sm"
+              >
+                <FiUser className="text-xl" />
+                <span>Sign In / Register</span>
+              </Link>
             </div>
           </div>
         </>

@@ -9,7 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { FaChevronDown } from "react-icons/fa6";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa6";
 
 interface MenuItemProps {
   item: Category;
@@ -21,39 +21,42 @@ export default function MenuItem({ item, mobile = false, onSelect }: MenuItemPro
   const [mobileSubOpen, setMobileSubOpen] = useState(false);
   const hasChildren = Boolean(item.children && item.children.length > 0);
 
-  // Mobile View Rendering
+  // Mobile Drawer Navigation Item
   if (mobile) {
     return (
-      <div className="w-full">
-        <div className="flex items-center justify-between px-4 py-3">
+      <div className="w-full border-b border-gray-100">
+        <div className="flex items-center justify-between px-5 py-3 hover:bg-gray-50/80 transition-colors">
           <Link
             href={`/category/${item.slug || item.id}`}
             onClick={onSelect}
-            className="text-sm font-medium text-gray-700 hover:text-primary transition-colors flex-1"
+            className="text-sm font-normal text-gray-700 hover:text-sky-500 transition-colors flex-1"
           >
             {item.name}
           </Link>
           {hasChildren && (
             <button
               onClick={() => setMobileSubOpen(!mobileSubOpen)}
-              className="p-1 text-gray-500 hover:text-primary transition-transform duration-200"
-              style={{ transform: mobileSubOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+              className="p-1 text-gray-400 hover:text-sky-500 transition-transform duration-200"
               aria-label="Toggle subcategories"
             >
-              <FaChevronDown className="h-3 w-3" />
+              <FaChevronRight
+                className={`h-3 w-3 transition-transform duration-200 ${
+                  mobileSubOpen ? "rotate-90 text-sky-500" : ""
+                }`}
+              />
             </button>
           )}
         </div>
 
-        {/* Mobile Nested Accordion Subcategories */}
+        {/* Mobile Accordion Subcategories */}
         {hasChildren && mobileSubOpen && (
-          <ul className="bg-orange-50/50 border-t border-orange-100 pl-6 pr-4 py-2 space-y-2">
+          <ul className="bg-gray-50/50 border-t border-gray-100 pl-8 pr-5 py-2 space-y-1">
             {item.children?.map((child) => (
               <li key={child.id}>
                 <Link
                   href={`/category/${child.slug || child.id}`}
                   onClick={onSelect}
-                  className="block text-xs font-normal text-gray-600 hover:text-primary py-1 transition-colors"
+                  className="block text-xs font-normal text-gray-600 hover:text-sky-500 py-1.5 transition-colors"
                 >
                   {child.name}
                 </Link>
@@ -70,13 +73,20 @@ export default function MenuItem({ item, mobile = false, onSelect }: MenuItemPro
     return (
       <li>
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-primary transition-colors outline-none cursor-pointer py-1">
+          <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-sky-500 transition-colors outline-none cursor-pointer py-1">
             <span>{item.name}</span>
-            <FaChevronDown className="h-2.5 w-2.5 text-gray-400 group-hover:text-primary transition-transform duration-200" />
+            <FaChevronDown className="h-2.5 w-2.5 text-gray-400 group-hover:text-sky-500 transition-transform duration-200" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48 bg-white/95 backdrop-blur-md shadow-lg rounded-xl border border-gray-100 p-1.5 z-50">
+          <DropdownMenuContent
+            align="start"
+            className="w-48 bg-white/95 backdrop-blur-md shadow-lg rounded-xl border border-gray-100 p-1.5 z-50"
+          >
             {item.children?.map((child) => (
-              <DropdownMenuItem key={child.id} asChild className="rounded-lg cursor-pointer focus:bg-orange-50 focus:text-primary">
+              <DropdownMenuItem
+                key={child.id}
+                asChild
+                className="rounded-lg cursor-pointer focus:bg-sky-50 focus:text-sky-500"
+              >
                 <Link
                   href={`/category/${child.slug || child.id}`}
                   className="w-full text-xs font-medium py-2 px-3 transition-colors"
@@ -96,7 +106,7 @@ export default function MenuItem({ item, mobile = false, onSelect }: MenuItemPro
     <li>
       <Link
         href={`/category/${item.slug || item.id}`}
-        className="text-sm font-medium text-gray-700 hover:text-primary transition-colors block py-1"
+        className="text-sm font-medium text-gray-700 hover:text-sky-500 transition-colors block py-1"
       >
         {item.name}
       </Link>

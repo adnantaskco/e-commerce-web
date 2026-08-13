@@ -55,22 +55,25 @@ const Dressandjumpsuits = ({
       </div>
 
       {/* Products Horizontal Snap-Scroll on Mobile / Grid on Desktop */}
-      <div className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-3 pb-2 md:pb-0 md:grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 md:gap-4">
+      <div className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-2 pb-2 md:pb-0 md:grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 md:gap-4">
         {products.slice(0, 6).map((item) => (
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}
             onMouseLeave={() => setHovered(null)}
             onClick={() => setHovered(hovered === item.id ? null : item.id)}
-            /* w-[calc(50%-6px)] forces exactly 2 full cards on mobile (accounting for gap-3) with snap snapping */
+           
             className="snap-start flex-shrink-0 w-[calc(50%-6px)] sm:w-[180px] md:w-auto bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
           >
             {/* IMAGE AREA WITH OVERLAID ACTION BUTTONS */}
-            <div className="relative aspect-square bg-background w-full flex items-center justify-center p-2 overflow-hidden">
-              <img
+            <div className="relative  bg-background w-full flex items-center justify-center p-2 overflow-hidden">
+              <Image
                 src={item.image || "/placeholder.png"}
                 alt={item.name}
-                className="max-h-full max-w-full object-contain pointer-events-none transition-transform duration-500 group-hover:scale-105"
+                width={500}
+                height={500}
+                unoptimized
+                className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105 pointer-events-none"
               />
 
               {/* Discount Badge */}
@@ -113,7 +116,7 @@ const Dressandjumpsuits = ({
                   </span>
                 </button>
 
-                {/* Quick View Button */}
+                {/* Quick View Button
                 <Link
                   href={`/products/${item.slug}`}
                   onClick={(e) => e.stopPropagation()}
@@ -121,16 +124,16 @@ const Dressandjumpsuits = ({
                   className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
                 >
                   <FaEye className="text-[10px] sm:text-xs" />
-                </Link>
+                </Link> */}
               </div>
             </div>
 
             {/* DETAILS AREA */}
             <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
               <div>
-                <p className="text-[10px] sm:text-xs text-ring">Taskco</p>
+                
 
-                <h2 className="text-[11px] sm:text-sm font-semibold truncate text-text-primary">
+                <h2 className="font-semibold text-text-primary text-sm sm:text-md md:text-xl lg:text-xl line-clamp-1 hover:text-primary transition">
                   {item.name}
                 </h2>
 
@@ -151,7 +154,7 @@ const Dressandjumpsuits = ({
                     </span>
                   )}
 
-                  <span className="font-bold text-destructive text-[11px] sm:text-sm">
+                  <span className="font-bold text-destructive text-md sm:text-md md: text-xl">
                     {currency} {Number(item.sale_price).toFixed(0)}
                   </span>
                 </div>

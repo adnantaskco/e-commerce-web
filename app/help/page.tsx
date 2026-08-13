@@ -3,8 +3,8 @@
 import { useState } from "react";
 import useSWR from "swr";
 import Link from "next/link";
-import Image from "next/image";
 import { fetcher } from "@/lib/helpfetcher";
+import NeedHelpSkeleton from "@/components/ui/skeletonhelppage"; 
 import { 
   FaChevronDown, 
   FaHeadset, 
@@ -138,7 +138,7 @@ export default function NeedHelpPage() {
     fetcher
   );
 
-  // 2. Fetch FAQs Data (Corrected URL endpoint to /help-center)
+  // 2. Fetch FAQs Data
   const { 
     data: helpRes, 
     error: helpError, 
@@ -153,6 +153,11 @@ export default function NeedHelpPage() {
       }
     }
   );
+
+  // Show full page skeleton loader while main data endpoints are loading
+  if (isSettingsLoading || isHelpLoading) {
+    return <NeedHelpSkeleton />;
+  }
 
   // Extract data with fallback options depending on response shape
   const settings = settingsRes?.data || settingsRes?.settings || (settingsRes as unknown as SettingsData);
@@ -229,11 +234,8 @@ export default function NeedHelpPage() {
         {/* HERO / BRAND HEADER SECTION */}
         <div className="text-center space-y-4">
           {/* Dynamic Brand Logo / Fallback Title */}
-          {isSettingsLoading ? (
-            <div className="h-12 w-48 bg-gray-200 animate-pulse rounded-md mx-auto" />
-          ) : settings?.logo ? (
+          {settings?.logo ? (
             <div className="flex justify-center mb-2">
-              {/* Using standard img element to avoid hostname un-configured errors in Next Image */}
               <img 
                 src={settings.logo} 
                 alt={settings.store_name || "Store Logo"} 
@@ -303,17 +305,13 @@ export default function NeedHelpPage() {
             </div>
             <div className="overflow-hidden">
               <h3 className="font-semibold text-gray-900 text-base">Call Us</h3>
-              {isSettingsLoading ? (
-                <div className="h-4 w-24 bg-gray-200 animate-pulse rounded mt-2" />
-              ) : (
-                <a 
-                  href={`tel:${settings?.contact_number}`} 
-                  className="font-medium text-xs sm:text-sm mt-1 block truncate hover:underline"
-                  style={{ color: primaryColor }}
-                >
-                  {settings?.contact_number || "Contact support"}
-                </a>
-              )}
+              <a 
+                href={`tel:${settings?.contact_number}`} 
+                className="font-medium text-xs sm:text-sm mt-1 block truncate hover:underline"
+                style={{ color: primaryColor }}
+              >
+                {settings?.contact_number || "Contact support"}
+              </a>
             </div>
           </div>
 
@@ -324,18 +322,14 @@ export default function NeedHelpPage() {
             </div>
             <div className="overflow-hidden">
               <h3 className="font-semibold text-gray-900 text-base">WhatsApp</h3>
-              {isSettingsLoading ? (
-                <div className="h-4 w-24 bg-gray-200 animate-pulse rounded mt-2" />
-              ) : (
-                <a 
-                  href={`https://wa.me/${settings?.whatsapp_number?.replace(/[^0-9]/g, "")}`} 
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-green-600 font-medium text-xs sm:text-sm mt-1 block truncate hover:underline"
-                >
-                  {settings?.whatsapp_number || "Chat with us"}
-                </a>
-              )}
+              <a 
+                href={`https://wa.me/${settings?.whatsapp_number?.replace(/[^0-9]/g, "")}`} 
+                target="_blank"
+                rel="noreferrer"
+                className="text-green-600 font-medium text-xs sm:text-sm mt-1 block truncate hover:underline"
+              >
+                {settings?.whatsapp_number || "Chat with us"}
+              </a>
             </div>
           </div>
 
@@ -349,17 +343,13 @@ export default function NeedHelpPage() {
             </div>
             <div className="overflow-hidden">
               <h3 className="font-semibold text-gray-900 text-base">Email Us</h3>
-              {isSettingsLoading ? (
-                <div className="h-4 w-28 bg-gray-200 animate-pulse rounded mt-2" />
-              ) : (
-                <a 
-                  href={`mailto:${settings?.footer_email}`} 
-                  className="font-medium text-xs sm:text-sm mt-1 block truncate hover:underline"
-                  style={{ color: primaryColor }}
-                >
-                  {settings?.footer_email || "Send an email"}
-                </a>
-              )}
+              <a 
+                href={`mailto:${settings?.footer_email}`} 
+                className="font-medium text-xs sm:text-sm mt-1 block truncate hover:underline"
+                style={{ color: primaryColor }}
+              >
+                {settings?.footer_email || "Send an email"}
+              </a>
             </div>
           </div>
 
@@ -373,13 +363,9 @@ export default function NeedHelpPage() {
             </div>
             <div className="overflow-hidden">
               <h3 className="font-semibold text-gray-900 text-base">Address</h3>
-              {isSettingsLoading ? (
-                <div className="h-4 w-28 bg-gray-200 animate-pulse rounded mt-2" />
-              ) : (
-                <p className="text-gray-500 text-xs sm:text-sm mt-1 line-clamp-2">
-                  {settings?.address || "Visit our office"}
-                </p>
-              )}
+              <p className="text-gray-500 text-xs sm:text-sm mt-1 line-clamp-2">
+                {settings?.address || "Visit our office"}
+              </p>
             </div>
           </div>
         </div>
@@ -461,37 +447,31 @@ export default function NeedHelpPage() {
             </div>
 
             {/* FAQ List */}
-            {isHelpLoading ? (
-              <div className="flex items-center justify-center py-12 text-gray-400">
-                <FaSpinner className="animate-spin text-2xl" />
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {filteredFaqs.map((faq) => (
-                  <div
-                    key={faq.id}
-                    className="border border-gray-100 rounded-xl overflow-hidden transition-all duration-200"
+            <div className="space-y-3">
+              {filteredFaqs.map((faq) => (
+                <div
+                  key={faq.id}
+                  className="border border-gray-100 rounded-xl overflow-hidden transition-all duration-200"
+                >
+                  <button
+                    onClick={() => toggleFaq(faq.id)}
+                    className="w-full text-left px-5 py-4 flex items-center justify-between font-medium text-gray-800 hover:bg-gray-50 transition-colors"
                   >
-                    <button
-                      onClick={() => toggleFaq(faq.id)}
-                      className="w-full text-left px-5 py-4 flex items-center justify-between font-medium text-gray-800 hover:bg-gray-50 transition-colors"
-                    >
-                      <span>{faq.question}</span>
-                      <FaChevronDown
-                        className={`text-xs text-gray-400 transition-transform duration-300 ${
-                          openFaq === faq.id ? "rotate-180" : ""
-                        }`}
-                      />
-                    </button>
-                    {openFaq === faq.id && (
-                      <div className="px-5 pb-4 pt-1 text-sm text-gray-600 bg-gray-50/50 border-t border-gray-100">
-                        {faq.answer}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+                    <span>{faq.question}</span>
+                    <FaChevronDown
+                      className={`text-xs text-gray-400 transition-transform duration-300 ${
+                        openFaq === faq.id ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {openFaq === faq.id && (
+                    <div className="px-5 pb-4 pt-1 text-sm text-gray-600 bg-gray-50/50 border-t border-gray-100">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* SUPPORT TICKET / CONTACT FORM */}

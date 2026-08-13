@@ -182,7 +182,7 @@ export default function ProductSlider({
                 className="flex-shrink-0 w-[45%] sm:w-[30%] md:w-[23%] lg:w-[18%] bg-background border rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative group/card flex flex-col"
               >
                 {/* Product Image Area */}
-                <div className="relative h-30 sm:h-35 w-full flex items-center justify-center p-2 bg-backgroung/10 overflow-hidden">
+                <div className="relative h-full w-full flex items-center justify-center p-2 bg-backgroung/10 overflow-hidden">
                   <Image
                     src={item.image || "/placeholder.png"}
                     alt={item.name}

@@ -31,23 +31,28 @@ export default function Home1() {
         </div>
 
         {/* 2. Category Scroll Section Skeleton */}
-        <div className="container mx-auto px-4 md:px-16">
-          <div className="flex justify-between items-center mb-6">
-            <Skeleton className="h-8 w-44 rounded-lg" />
-            <Skeleton className="h-5 w-20 rounded-md" />
-          </div>
-          <div className="flex gap-4 overflow-hidden py-2">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 w-[42%] sm:w-[28%] md:w-[20%] lg:w-[15%] bg-white rounded-2xl p-4 border border-gray-100 flex flex-col items-center gap-3"
-              >
-                <Skeleton className="w-20 h-20 md:w-24 md:h-24 rounded-full" />
-                <Skeleton className="h-4 w-3/4 rounded-md" />
-              </div>
-            ))}
-          </div>
+        <div className="container mx-auto px-4 md:px-16 space-y-6">
+       {/* Centered Title Skeleton */}
+        <div className="flex justify-center items-center">
+          <Skeleton className="h-8 w-56 rounded-lg" />
         </div>
+
+        {/* Scrollable / Multi-row Category Cards */}
+        <div className="grid grid-rows-2 grid-flow-col auto-cols-[minmax(140px,1fr)] sm:auto-cols-[minmax(160px,1fr)] gap-3 overflow-x-auto py-2 scrollbar-hide">
+          {Array.from({ length: 18 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl p-3 border border-gray-100 flex flex-col items-center gap-2.5 shadow-sm text-center"
+            >
+              {/* Square/Rounded Category Image Placeholder */}
+              <Skeleton className="w-full h-24 sm:h-28 rounded-lg" />
+              
+              {/* Category Label Placeholder */}
+              <Skeleton className="h-3.5 w-4/5 rounded-md" />
+            </div>
+          ))}
+        </div>
+      </div>
 
         {/* 3. Product Collection Grid Skeleton */}
         <div className="container mx-auto px-4 md:px-16">

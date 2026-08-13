@@ -65,7 +65,7 @@ const Dressandjumpsuits = ({
             className="flex-shrink-0 w-[160px] sm:w-[180px] md:w-auto bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
           >
             {/* IMAGE AREA WITH OVERLAID ACTION BUTTONS */}
-            <div className="relative bg-background h-32 sm:h-40 w-full flex items-center justify-center p-2 overflow-hidden">
+            <div className="relative bg-background h-full w-full flex items-center justify-center p-2 overflow-hidden">
               <img
                 src={item.image || "/placeholder.png"}
                 alt={item.name}

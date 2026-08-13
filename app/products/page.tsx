@@ -5,8 +5,8 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import { useCart } from '@/app/src/components/context/CartContext';
 import { FaChevronDown, FaChevronRight, FaSearch, FaRedo, FaShoppingCart, FaFilter, FaTimes } from 'react-icons/fa';
-import { FaEye, FaHeart, FaStar } from 'react-icons/fa6';
-import Image from 'next/image';
+import { FaEye, FaStar } from 'react-icons/fa6';
+import { UseCurrency } from '@/components/ui/currency';
 
 // Product & Category Interfaces
 interface ProductItem {
@@ -48,6 +48,7 @@ function AllProductsContent() {
   const [expandedCategories, setExpandedCategories] = useState<number[]>([]);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState<boolean>(false);
   const { addToCart } = useCart();
+  const { currency } = UseCurrency();
 
   // SWR API Calls
   const { data: productsData, isLoading: isProductsLoading } = useSWR(
@@ -492,111 +493,114 @@ function AllProductsContent() {
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                 {displayedProducts.map((item) => (
-                  <div
-                    key={item.id}
-                    onMouseEnter={() => setHovered(item.id)}
-                    onMouseLeave={() => setHovered(null)}
-                    onClick={() => setHovered(hovered === item.id ? null : item.id)}
-                    className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group flex flex-col"
-                  >
-                    {/* IMAGE */}
-                    <div className="relative bg-gray-50 h-[150px] sm:h-[220px] md:h-[250px] flex items-center justify-center p-2">
-                      <Image
-                        src={item.image || "/placeholder.png"}
-                        alt={item.name}
-                        width={260}
-                        height={300}
-                        unoptimized
-                        className="object-contain max-h-full pointer-events-none"
-                      />
+                <div
+                  key={item.id}
+                  onMouseEnter={() => setHovered(item.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => setHovered(hovered === item.id ? null : item.id)}
+                  className="w-full bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
+                >
+                  {/* IMAGE AREA WITH OVERLAID ACTION BUTTONS */}
+                  <div className="relative bg-background aspect-square w-full flex items-center justify-center p-2 overflow-hidden">
+                    <img
+                      src={item.image || "/placeholder.png"}
+                      alt={item.name}
+                      className="max-h-full max-w-full object-contain pointer-events-none transition-transform duration-500 group-hover:scale-105"
+                    />
 
-                      {/* Discount Badge */}
-                      {item.has_discount && (
-                        <div className="absolute top-2 left-2 bg-emerald-600 text-white text-[9px] sm:text-xs font-bold px-1.5 py-0.5 rounded">
-                          {item.discount_price}
-                        </div>
-                      )}
+                    {/* Discount Badge */}
+                    {item.has_discount && (
+                      <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-primary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
+                        {item.discount_price}
+                      </div>
+                    )}
 
-                      {/* Action Buttons */}
-                      <div
-                        className={`absolute top-2 right-2 flex flex-col gap-1.5 transition-all duration-300 ${
-                          hovered === item.id
-                            ? "opacity-100 translate-x-0"
-                            : "opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0"
-                        }`}
+                    {/* Overlaid Action Bar */}
+                    <div
+                      className={`absolute inset-x-0 bottom-0 p-1.5 sm:p-2 flex items-center justify-center gap-1.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 z-20 ${
+                        hovered === item.id
+                          ? "opacity-100 translate-y-0 pointer-events-auto"
+                          : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto"
+                      }`}
+                    >
+                      {/* Add to Cart Button */}
+                      <button
+                        type="button"
+                        title="Add to Cart"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addToCart({
+                            id: item.id,
+                            image: item.image || "/placeholder.png",
+                            brand: "Taskco",
+                            name: item.name,
+                            price: Number(item.sale_price),
+                          });
+                        }}
+                        className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
                       >
-                        <button className="w-7 h-7 sm:w-9 sm:h-9 bg-white text-gray-700 rounded-full flex items-center justify-center shadow hover:bg-emerald-600 hover:text-white transition text-xs sm:text-sm">
-                          <FaHeart />
-                        </button>
+                        <FaShoppingCart className="text-[10px] sm:text-xs" />
+                        <span className="hidden sm:inline">Add to Cart</span>
+                      </button>
 
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            addToCart({
-                              id: item.id,
-                              image: item.image || "/placeholder.png",
-                              brand: "Taskco",
-                              name: item.name,
-                              price: Number(item.sale_price),
-                            });
-                          }}
-                          className="w-7 h-7 sm:w-9 sm:h-9 bg-white text-gray-700 rounded-full flex items-center justify-center shadow hover:bg-black hover:text-white transition text-xs sm:text-sm"
-                        >
-                          <FaShoppingCart />
-                        </button>
+                      {/* Quick View Button */}
+                      <Link
+                        href={`/products/${item.slug}`}
+                        onClick={(e) => e.stopPropagation()}
+                        title="Quick View"
+                        className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
+                      >
+                        <FaEye className="text-[10px] sm:text-xs" />
+                      </Link>
+                    </div>
+                  </div>
 
-                        <button className="w-7 h-7 sm:w-9 sm:h-9 bg-white text-gray-700 rounded-full flex items-center justify-center shadow hover:bg-blue-500 hover:text-white transition text-xs sm:text-sm">
-                          <FaEye />
-                        </button>
+                  {/* DETAILS AREA */}
+                  <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
+                    <div>
+                      <p className="text-[10px] sm:text-xs text-ring">Taskco</p>
+
+                      <h2 className="text-xs sm:text-sm font-semibold truncate text-text-primary">
+                        {item.name}
+                      </h2>
+
+                      {/* Rating */}
+                      <div className="flex gap-0.5 text-yellow-400 text-[10px] sm:text-xs mt-1">
+                        {[...Array(5)].map((_, index) => (
+                          <FaStar key={index} />
+                        ))}
                       </div>
                     </div>
 
-                    {/* Product Details */}
-                    <Link href={`/products/${item.slug}`} className="flex-1 flex flex-col justify-between">
-                      <div className="p-2.5 sm:p-4 space-y-1">
-                        <p className="text-[10px] sm:text-xs text-gray-400 font-medium">
-                          Taskco
-                        </p>
-
-                        <h2 className="text-xs sm:text-sm font-semibold text-gray-800 line-clamp-2">
-                          {item.name}
-                        </h2>
-
-                        {/* Rating */}
-                        <div className="flex gap-0.5 text-yellow-400 text-[10px] sm:text-xs pt-1">
-                          {[...Array(5)].map((_, index) => (
-                            <FaStar key={index} />
-                          ))}
-                        </div>
-
-                        {/* Price */}
-                        <div className="flex items-center gap-1.5 pt-1">
-                          {item.has_discount && (
-                            <span className="line-through text-gray-400 text-xs">
-                              ৳{Number(item.retail_price).toFixed(0)}
-                            </span>
-                          )}
-
-                          <span className="font-bold text-red-500 text-xs sm:text-sm">
-                            ৳{Number(item.sale_price).toFixed(0)}
+                    <div className="mt-2">
+                      {/* Price */}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {item.has_discount && (
+                          <span className="line-through text-ring/70 text-[10px] sm:text-xs">
+                            {currency} {Number(item.retail_price).toFixed(0)}
                           </span>
-                        </div>
+                        )}
 
-                        {/* Stock */}
-                        <div className="pt-0.5">
-                          {item.in_stock ? (
-                            <span className="text-emerald-600 text-[10px] sm:text-xs font-medium">
-                              In Stock ({item.stock_qty})
-                            </span>
-                          ) : (
-                            <span className="text-red-500 text-[10px] sm:text-xs font-medium">
-                              Out of Stock
-                            </span>
-                          )}
-                        </div>
+                        <span className="font-bold text-destructive text-xs sm:text-sm">
+                          {currency} {Number(item.sale_price).toFixed(0)}
+                        </span>
                       </div>
-                    </Link>
-                  </div>
+
+                      {/* Stock Status */}
+                      <div className="mt-0.5">
+                        {item.in_stock ? (
+                          <span className="text-green-600 text-[10px] sm:text-xs font-medium">
+                            In Stock ({item.stock_qty})
+                          </span>
+                        ) : (
+                          <span className="text-destructive text-[10px] sm:text-xs font-medium">
+                            Out of Stock
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                </div>
                 ))}
               </div>
             )}

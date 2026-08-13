@@ -12,6 +12,7 @@ import {
   Plus,
   Minus,
 } from "lucide-react";
+import { FaShoppingCart, FaEye, FaStar } from "react-icons/fa";
 
 interface PriceObject {
   product_variant_id?: number;
@@ -40,6 +41,12 @@ interface ProductItem {
   currency: string;
   in_stock: boolean;
   images: string[];
+  image?: string;
+  has_discount?: boolean;
+  discount_price?: string;
+  retail_price?: number;
+  sale_price?: number;
+  stock_qty?: number;
   specifications?: Record<string, any> | Array<{ key: string; value: any }>;
   reviews?: Array<{
     id: number;
@@ -71,6 +78,7 @@ export default function ProductDetailsPage({ params }: { params: any }) {
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [activeTab, setActiveTab] = useState<string>("descriptions");
+  const [hovered, setHovered] = useState<number | null>(null);
 
   useEffect(() => {
     if (!routeParam) return;
@@ -184,7 +192,7 @@ export default function ProductDetailsPage({ params }: { params: any }) {
           <div className="lg:col-span-5 flex flex-col gap-4">
             <div className="w-full aspect-[4/3] bg-gray-50 border border-gray-100 rounded-lg overflow-hidden flex items-center justify-center p-6">
               <img
-                src={selectedImage || product?.images?.[0]}
+                src={selectedImage || product?.images?.[0] || product?.image}
                 alt={product?.name}
                 className="max-h-full max-w-full object-contain"
               />
@@ -266,10 +274,14 @@ export default function ProductDetailsPage({ params }: { params: any }) {
 
               <div className="grid grid-cols-2 gap-2">
                 <button className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2.5 px-4 rounded-md text-xs transition flex items-center justify-center gap-2">
-                  <Link  href="whatsapp://call?phone=8801812295539" className="flex items-center gap-2"> <MessageCircle size={14} /> Order on WhatsApp</Link>
+                  <Link href="whatsapp://call?phone=8801812295539" className="flex items-center gap-2">
+                    <MessageCircle size={14} /> Order on WhatsApp
+                  </Link>
                 </button>
                 <button className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-4 rounded-md text-xs transition flex items-center justify-center gap-2">
-                 <Link className="flex items-center gap-2"  href="tel:+8801812295539"> <PhoneCall size={14} /> Call for Order</Link>
+                  <Link className="flex items-center gap-2" href="tel:+8801812295539">
+                    <PhoneCall size={14} /> Call for Order
+                  </Link>
                 </button>
               </div>
             </div>
@@ -310,7 +322,7 @@ export default function ProductDetailsPage({ params }: { params: any }) {
               
               <div className="flex gap-3 pb-3 border-b border-gray-200/60">
                 <img
-                  src={selectedImage || product?.images?.[0]}
+                  src={selectedImage || product?.images?.[0] || product?.image}
                   alt=""
                   className="w-10 h-10 object-contain bg-white rounded border p-1"
                 />
@@ -337,27 +349,120 @@ export default function ProductDetailsPage({ params }: { params: any }) {
             {suggestedProducts.length > 0 && (
               <div className="bg-gray-50/80 p-4 rounded-md border border-gray-100">
                 <h3 className="text-xs font-bold text-gray-700 mb-3">Suggestions</h3>
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                   {suggestedProducts.map((item) => {
                     const suggPrice = getNumericPrice(item.price);
+                    const itemImage = item.image || item.images?.[0] || "/placeholder.png";
+
                     return (
-                      <Link
-                        key={item.id}
-                        href={`/products/${item.slug || item.id}`}
-                        className="flex items-center gap-3 p-2 bg-white rounded border border-gray-100 hover:border-teal-500 transition"
-                      >
+                    <div
+                      key={item.id}
+                      onMouseEnter={() => setHovered(item.id)}
+                      onMouseLeave={() => setHovered(null)}
+                      onClick={() => setHovered(hovered === item.id ? null : item.id)}
+                      className="flex-shrink-0 w-[160px] sm:w-[180px] md:w-auto bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
+                    >
+                      {/* IMAGE AREA WITH OVERLAID ACTION BUTTONS */}
+                      <div className="relative bg-background h-full w-full flex items-center justify-center p-2 overflow-hidden">
                         <img
-                          src={item.images?.[0]}
+                          src={item.image || "/placeholder.png"}
                           alt={item.name}
-                          className="w-10 h-10 object-contain"
+                          className="max-h-full max-w-full object-contain pointer-events-none transition-transform duration-500 group-hover:scale-105"
                         />
-                        <div className="text-xs">
-                          <div className="font-semibold text-gray-800 line-clamp-1">{item.name}</div>
-                          <div className="font-bold text-gray-900 mt-0.5">
-                            {suggPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+
+                        {/* Discount Badge */}
+                        {item.has_discount && (
+                          <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-primary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
+                            {item.discount_price}
+                          </div>
+                        )}
+
+                        {/* Overlaid Action Bar */}
+                        <div
+                          className={`absolute inset-x-0 bottom-0 p-1.5 sm:p-2 flex items-center justify-center gap-1.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 z-20 ${
+                            hovered === item.id
+                              ? "opacity-100 translate-y-0 pointer-events-auto"
+                              : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto"
+                          }`}
+                        >
+                          {/* Add to Cart Button */}
+                          <button
+                            type="button"
+                            title="Add to Cart"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              addToCart({
+                                id: item.id,
+                                image: item.image || "/placeholder.png",
+                                brand: "Taskco",
+                                name: item.name,
+                                price: Number(item.sale_price),
+                              });
+                            }}
+                            className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
+                          >
+                            <FaShoppingCart className="text-[10px] sm:text-xs" />
+                            <span className="hidden sm:inline">Add to Cart</span>
+                          </button>
+
+                          {/* Quick View Button */}
+                          <Link
+                            href={`/products/${item.slug}`}
+                            onClick={(e) => e.stopPropagation()}
+                            title="Quick View"
+                            className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
+                          >
+                            <FaEye className="text-[10px] sm:text-xs" />
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* DETAILS AREA */}
+                      <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
+                        <div>
+                          <p className="text-[10px] sm:text-xs text-ring">Taskco</p>
+
+                          <h2 className="text-xs sm:text-sm font-semibold truncate text-text-primary">
+                            {item.name}
+                          </h2>
+
+                          {/* Rating */}
+                          <div className="flex gap-0.5 text-yellow-400 text-[10px] sm:text-xs mt-1">
+                            {[...Array(5)].map((_, index) => (
+                              <FaStar key={index} />
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="mt-2">
+                          {/* Price */}
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            {item.has_discount && (
+                              <span className="line-through text-ring/70 text-[10px] sm:text-xs">
+                                {currency} {Number(item.retail_price).toFixed(0)}
+                              </span>
+                            )}
+
+                            <span className="font-bold text-destructive text-xs sm:text-sm">
+                              {currency} {Number(item.sale_price).toFixed(0)}
+                            </span>
+                          </div>
+
+                          {/* Stock Status */}
+                          <div className="mt-0.5">
+                            {item.in_stock ? (
+                              <span className="text-green-600 text-[10px] sm:text-xs font-medium">
+                                In Stock ({item.stock_qty})
+                              </span>
+                            ) : (
+                              <span className="text-destructive text-[10px] sm:text-xs font-medium">
+                                Out of Stock
+                              </span>
+                            )}
                           </div>
                         </div>
                       </Link>
+                    </div>
                     );
                   })}
                 </div>
@@ -430,35 +535,124 @@ export default function ProductDetailsPage({ params }: { params: any }) {
         {relatedProducts.length > 0 && (
           <div className="mt-8 border-t border-gray-100 pt-8">
             <h2 className="text-lg font-bold text-gray-800 mb-6">Related Products</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {relatedProducts.map((item) => {
+            <div className="flex overflow-x-auto no-scrollbar scroll-smooth gap-3 pb-2 md:pb-0 md:grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 md:gap-4">
+              {relatedProducts.slice(0, 6).map((item) => {
                 const relPrice = getNumericPrice(item.price);
+                const itemImage = item.image || item.images?.[0] || "/placeholder.png";
+
                 return (
                   <div
                     key={item.id}
-                    className="bg-white border border-gray-100 rounded-md p-3 flex flex-col justify-between hover:shadow-sm transition"
+                    onMouseEnter={() => setHovered(item.id)}
+                    onMouseLeave={() => setHovered(null)}
+                    onClick={() => setHovered(hovered === item.id ? null : item.id)}
+                    className="flex-shrink-0 w-[160px] sm:w-[180px] md:w-auto bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
                   >
-                    <Link href={`/products/${item.slug || item.id}`}>
-                      <div className="aspect-square bg-gray-50 rounded p-2 mb-2 flex items-center justify-center">
-                        <img
-                          src={item.images?.[0]}
-                          alt=""
-                          className="max-h-full max-w-full object-contain"
-                        />
+                    {/* IMAGE AREA WITH OVERLAID ACTION BUTTONS */}
+                    <div className="relative bg-background h-44 w-full flex items-center justify-center p-2 overflow-hidden">
+                      <img
+                        src={itemImage}
+                        alt={item.name}
+                        className="max-h-full max-w-full object-contain pointer-events-none transition-transform duration-500 group-hover:scale-105"
+                      />
+
+                      {/* Discount Badge */}
+                      {item.has_discount && (
+                        <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-primary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
+                          {item.discount_price}
+                        </div>
+                      )}
+
+                      {/* Overlaid Action Bar */}
+                      <div
+                        className={`absolute inset-x-0 bottom-0 p-1.5 sm:p-2 flex items-center justify-center gap-1.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 z-20 ${
+                          hovered === item.id
+                            ? "opacity-100 translate-y-0 pointer-events-auto"
+                            : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto"
+                        }`}
+                      >
+                        {/* Add to Cart Button */}
+                        <button
+                          type="button"
+                          title="Add to Cart"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            addToCart({
+                              id: item.id,
+                              image: itemImage,
+                              brand: item.brand || "Taskco",
+                              name: item.name,
+                              price: relPrice,
+                            } as any);
+                          }}
+                          className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
+                        >
+                          <FaShoppingCart className="text-[10px] sm:text-xs" />
+                          <span className="hidden sm:inline">Add to Cart</span>
+                        </button>
+
+                        {/* Quick View Button */}
+                        <Link
+                          href={`/products/${item.slug || item.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          title="Quick View"
+                          className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
+                        >
+                          <FaEye className="text-[10px] sm:text-xs" />
+                        </Link>
                       </div>
-                      <h3 className="text-xs font-semibold text-gray-800 line-clamp-1">
-                        {item.name}
-                      </h3>
-                      <div className="text-xs font-bold text-gray-900 mt-1">
-                        {relPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                    </div>
+
+                    {/* DETAILS AREA */}
+                    <Link
+                      href={`/products/${item.slug || item.id}`}
+                      className="p-2 sm:p-3 flex-1 flex flex-col justify-between"
+                    >
+                      <div>
+                        <p className="text-[10px] sm:text-xs text-ring">
+                          {item.brand || "Taskco"}
+                        </p>
+
+                        <h2 className="text-xs sm:text-sm font-semibold truncate text-text-primary">
+                          {item.name}
+                        </h2>
+
+                        {/* Rating */}
+                        <div className="flex gap-0.5 text-yellow-400 text-[10px] sm:text-xs mt-1">
+                          {[...Array(5)].map((_, index) => (
+                            <FaStar key={index} />
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mt-2">
+                        {/* Price */}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {item.has_discount && item.retail_price && (
+                            <span className="line-through text-ring/70 text-[10px] sm:text-xs">
+                              {product?.currency || "BDT"} {Number(item.retail_price).toFixed(0)}
+                            </span>
+                          )}
+
+                          <span className="font-bold text-destructive text-xs sm:text-sm">
+                            {product?.currency || "BDT"} {relPrice.toFixed(0)}
+                          </span>
+                        </div>
+
+                        {/* Stock Status */}
+                        <div className="mt-0.5">
+                          {item.in_stock !== false ? (
+                            <span className="text-green-600 text-[10px] sm:text-xs font-medium">
+                              In Stock {item.stock_qty ? `(${item.stock_qty})` : ""}
+                            </span>
+                          ) : (
+                            <span className="text-destructive text-[10px] sm:text-xs font-medium">
+                              Out of Stock
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </Link>
-                    <button
-                      onClick={() => addToCart({ ...item, price: relPrice, quantity: 1 } as any)}
-                      className="mt-3 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-1.5 rounded text-[11px] transition"
-                    >
-                      Add To Cart
-                    </button>
                   </div>
                 );
               })}

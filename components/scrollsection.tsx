@@ -26,7 +26,7 @@ interface CategorySectionProps {
   apiUrl?: string;
 }
 
-const DEFAULT_API_URL = "https://demo.app.taskcocommerce.com/api/v1/categories";
+const DEFAULT_API_URL = "https://demo.app.taskcocommerce.com/api/v1/categories?is_top=true";
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function CategorySection(props: CategorySectionProps) {
@@ -179,6 +179,7 @@ export default function CategorySection(props: CategorySectionProps) {
                         alt={item.name}
                         className="max-h-full max-w-full object-contain  pointer-events-none"
                       />
+                      
                     </div>
                   </Link>
                 </div>

@@ -36,7 +36,7 @@ export default function ProductSlider({
   products = [],
 }: ProductSliderProps) {
   const [hovered, setHovered] = useState<number | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activePageIndex, setActivePageIndex] = useState(0);
   const { addToCart } = useCart();
 
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -47,35 +47,46 @@ export default function ProductSlider({
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
-  // Dynamic Scroll Distance based on Card Width
-  const getScrollAmount = () => {
+  // Calculates full page scroll distance (2 cards width + gap on mobile)
+  const getPageScrollAmount = () => {
     const container = sliderRef.current;
     if (!container) return 320;
+
+    const gap = 16; // Corresponds to gap-4
+    const isMobile = window.innerWidth < 640;
+
+    if (isMobile) {
+      // Full inner width of 2 cards plus 1 gap
+      const containerWidth = container.clientWidth;
+      return containerWidth + gap;
+    }
+
     const card = container.firstElementChild as HTMLElement;
-    return card ? card.offsetWidth + 24 : 320;
+    return card ? card.offsetWidth + gap : 320;
   };
 
-  // Track active slide on scroll
+  // Tracks active page index when scrolled
   const handleScroll = () => {
     const container = sliderRef.current;
     if (!container) return;
-    const scrollAmount = getScrollAmount();
-    const index = Math.round(container.scrollLeft / scrollAmount);
-    setActiveIndex(index);
+
+    const pageAmount = getPageScrollAmount();
+    const page = Math.round(container.scrollLeft / pageAmount);
+    setActivePageIndex(page);
   };
 
-  // Scroll to Specific Dot/Slide Index
-  const scrollToIndex = (index: number) => {
+  // Scrolls to specific page index
+  const scrollToPage = (pageIndex: number) => {
     const container = sliderRef.current;
     if (!container) return;
 
     container.scrollTo({
-      left: index * getScrollAmount(),
+      left: pageIndex * getPageScrollAmount(),
       behavior: "smooth",
     });
   };
 
-  // Auto Slide Logic
+  // Auto Slide Logic (advances 2 cards at a time on mobile)
   const startAutoSlide = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -88,12 +99,12 @@ export default function ProductSlider({
       if (container.scrollLeft >= maxScroll - 10) {
         container.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        container.scrollBy({ left: getScrollAmount(), behavior: "smooth" });
+        container.scrollBy({ left: getPageScrollAmount(), behavior: "smooth" });
       }
-    }, 3000);
+    }, 3500);
   };
 
-  // Mouse Drag to Scroll Handlers
+  // Mouse Drag Handlers
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     const slider = sliderRef.current;
     if (!slider) return;
@@ -136,174 +147,153 @@ export default function ProductSlider({
     };
   }, [products.length]);
 
+  // Group items into 2-card pages for mobile dots
+  const mobilePagesCount = Math.ceil(products.length / 2);
+
   return (
-    <section className="container mx-auto px-4 md:px-10 lg:px-20 py-6 md:py-16 bg-background">
+    <section className="container mx-auto px-3 sm:px-4 md:px-10 lg:px-20 py-6 md:py-16 bg-background">
       {/* Header Section */}
-      <div className="text-center mb-10">
-        {subtitle && (
-          <span className="uppercase tracking-[5px] text-primary font-semibold text-sm">
-            {subtitle}
-          </span>
-        )}
-
-        {title && (
-          <h1 className="text-xl md:text-3xl text-text-primary font-bold mt-2 capitalize">
+      {title && (
+        <div className="text-center mb-6 md:mb-10">
+          <h2 className="text-xl md:text-3xl text-text-primary font-bold mt-2 capitalize ">
             {title}
-          </h1>
-        )}
-
-        {(title || subtitle) && (
-          <div className="flex justify-center pt-4">
-            <div className="border-t-4 border-primary w-24 md:w-40 rounded-full"></div>
-          </div>
-        )}
-      </div>
+          </h2>
+        </div>
+      )}
 
       {/* Slider Area */}
-        <div className="relative group">
-          {/* Product Cards Container */}
-          <div
-            ref={sliderRef}
-            onScroll={handleScroll}
-            onMouseEnter={() =>
-              intervalRef.current && clearInterval(intervalRef.current)
-            }
-            onMouseLeave={stopDragging}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={stopDragging}
-            className="flex gap-2 sm:gap-4 overflow-x-auto scroll-smooth no-scrollbar cursor-grab select-none py-2"
-          >
-            {products.map((item) => (
-              <div
-                key={item.id}
-                onMouseEnter={() => setHovered(item.id)}
-                onMouseLeave={() => setHovered(null)}
-                className="flex-shrink-0 w-[45%] sm:w-[30%] md:w-[23%] lg:w-[18%] bg-background border rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative group/card flex flex-col"
-              >
-                {/* Product Image Area */}
-                <div className="relative h-full w-full flex items-center justify-center p-2 bg-backgroung/10 overflow-hidden">
-                  <Image
-                    src={item.image || "/placeholder.png"}
-                    alt={item.name}
-                    width={180}
-                    height={180}
-                    unoptimized
-                    className="object-contain max-h-full max-w-full transition-transform duration-500 group-hover/card:scale-105 pointer-events-none"
-                  />
+      <div className="relative group">
+        {/* Product Cards Container with Snap Scroll */}
+        <div
+          ref={sliderRef}
+          onScroll={handleScroll}
+          onMouseEnter={() =>
+            intervalRef.current && clearInterval(intervalRef.current)
+          }
+          onMouseLeave={stopDragging}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={stopDragging}
+          className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar cursor-grab select-none py-2"
+        >
+          {products.map((item) => (
+            <div
+              key={item.id}
+              onMouseEnter={() => setHovered(item.id)}
+              onMouseLeave={() => setHovered(null)}
+              /* Exactly 2 cards per view (w-[calc(50%-8px)]) with mandatory snap alignment */
+              className="snap-start flex-shrink-0 w-[calc(50%-8px)] sm:w-[30%] md:w-[23%] lg:w-[18%] bg-background border rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative group/card flex flex-col"
+            >
+              {/* Product Image Area */}
+              <div className="relative aspect-square w-full flex items-center justify-center p-2 bg-background/10 overflow-hidden">
+                <Image
+                  src={item.image || "/placeholder.png"}
+                  alt={item.name}
+                  width={180}
+                  height={180}
+                  unoptimized
+                  className="object-contain max-h-full max-w-full transition-transform duration-500 group-hover/card:scale-105 pointer-events-none"
+                />
 
-                  {/* Discount Badge */}
-                  {item.has_discount && (
-                    <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-secondary text-sm sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
-                      {item.discount_price}
-                    </div>
-                  )}
+                {/* Discount Badge */}
+                {item.has_discount && (
+                  <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-secondary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
+                    {item.discount_price}
+                  </div>
+                )}
 
-                  {/* Overlaid Bottom Action Bar */}
-                  <div
-                    className={`absolute bottom-0 inset-x-0 p-1.5 sm:p-2 flex items-center justify-center gap-1.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 z-20 ${
-                      hovered === item.id
-                        ? "opacity-100 translate-y-0 pointer-events-auto"
-                        : "opacity-0 translate-y-2 pointer-events-none group-hover/card:opacity-100 group-hover/card:translate-y-0 group-hover/card:pointer-events-auto"
-                    }`}
+                {/* Action Bar */}
+                <div
+                  className={`absolute bottom-0 inset-x-0 p-1.5 sm:p-2 flex items-center justify-center gap-1.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 z-20 ${
+                    hovered === item.id
+                      ? "opacity-100 translate-y-0 pointer-events-auto"
+                      : "opacity-0 translate-y-2 pointer-events-none group-hover/card:opacity-100 group-hover/card:translate-y-0 group-hover/card:pointer-events-auto"
+                  }`}
+                >
+                  <button
+                    type="button"
+                    disabled={!item.in_stock || item.stock_qty <= 0}
+                    title="Add to Cart"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart({
+                        id: item.id,
+                        image: item.image || "/placeholder.png",
+                        brand: "Taskco",
+                        name: item.name,
+                        price: Number(item.sale_price),
+                      });
+                    }}
+                    className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[10px] sm:text-xs font-medium py-1.5 px-1 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all disabled:opacity-50"
                   >
-                    {/* Add to Cart Button */}
-                    <button
-                      type="button"
-                      title="Add to Cart"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        addToCart({
-                          id: item.id,
-                          image: item.image || "/placeholder.png",
-                          brand: "Taskco",
-                          name: item.name,
-                          price: Number(item.sale_price),
-                        });
-                      }}
-                      className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
-                    >
-                      <FaShoppingCart className="text-sm sm:text-xs" />
-                      <span className="hidden sm:inline">Add to Cart</span>
-                    </button>
+                    <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
+                    <span className="truncate">
+                      {!item.in_stock || item.stock_qty <= 0
+                        ? "Out of stock"
+                        : "Add to Cart"}
+                    </span>
+                  </button>
 
-                    {/* Quick View Button */}
-                    <Link
-                      href={`/products/${item.slug}`}
-                      onClick={(e) => e.stopPropagation()}
-                      title="Quick View"
-                      className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
-                    >
-                      <FaEye className="text-sm sm:text-xs" />
-                    </Link>
+                  <Link
+                    href={`/products/${item.slug}`}
+                    onClick={(e) => e.stopPropagation()}
+                    title="Quick View"
+                    className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
+                  >
+                    <FaEye className="text-xs" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Product Details */}
+              <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
+                <div>
+                  <h2 className="font-semibold text-text-primary text-[11px] sm:text-sm line-clamp-1 hover:text-primary transition">
+                    {item.name}
+                  </h2>
+
+                  <div className="flex text-yellow-500 text-[9px] sm:text-xs gap-0.5 mt-1">
+                    {[...Array(5)].map((_, i) => (
+                      <FaStar key={i} />
+                    ))}
                   </div>
                 </div>
 
-                {/* Product Details */}
-                <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h2 className="font-semibold text-text-primary text-xs sm:text-sm line-clamp-1 hover:text-primary transition">
-                      {item.name}
-                    </h2>
-
-                    {/* Rating Stars */}
-                    <div className="flex text-yellow-500 text-[10px] sm:text-xs gap-0.5 mt-1">
-                      {[...Array(5)].map((_, i) => (
-                        <FaStar key={i} />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mt-2">
-                    {/* Price */}
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      {item.has_discount && (
-                        <span className="line-through text-ring text-sm sm:text-xs">
-                          {currency} {Number(item.retail_price).toFixed(0)}
-                        </span>
-                      )}
-                      <span className="font-bold text-destructive text-xs sm:text-sm">
-                        {currency} {item.sale_price}
+                <div className="mt-2">
+                  <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+                    {item.has_discount && (
+                      <span className="line-through text-ring text-[10px] sm:text-xs">
+                        {currency} {Number(item.retail_price).toFixed(0)}
                       </span>
-                    </div>
-
-                    {/* Stock */}
-                    <div className="mt-0.5">
-                      {item.in_stock ? (
-                        <span className="text-green-600 text-sm sm:text-xs font-medium">
-                          In Stock ({item.stock_qty})
-                        </span>
-                      ) : (
-                        <span className="text-destructive text-sm sm:text-xs font-medium">
-                          Out of Stock
-                        </span>
-                      )}
-                    </div>
+                    )}
+                    <span className="font-bold text-destructive text-[11px] sm:text-sm">
+                      {currency} {item.sale_price}
+                    </span>
                   </div>
-                </Link>
-              </div>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        {/* Carousel Indicators (Dots) */}
+        {products.length > 0 && (
+          <div className="flex justify-center items-center gap-1.5 pt-4">
+            {Array.from({ length: mobilePagesCount }).map((_, pageIdx) => (
+              <button
+                key={pageIdx}
+                onClick={() => scrollToPage(pageIdx)}
+                aria-label={`Go to page ${pageIdx + 1}`}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  activePageIndex === pageIdx
+                    ? "w-6 bg-primary"
+                    : "w-2 bg-ring/70 hover:bg-ring/60"
+                }`}
+              />
             ))}
           </div>
-
-          {/* Carousel Indicators (Dots) */}
-          {products.length > 0 && (
-            <div className="flex justify-center items-center gap-2 pt-4">
-              {products.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => scrollToIndex(idx)}
-                  aria-label={`Go to slide ${idx + 1}`}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    activeIndex === idx
-                      ? "w-6 bg-primary"
-                      : "w-2 bg-ring/70 hover:bg-ring/60"
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        )}
+      </div>
     </section>
   );
 }

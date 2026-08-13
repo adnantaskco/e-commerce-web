@@ -39,33 +39,34 @@ const Dressandjumpsuits = ({
   const { currency } = UseCurrency();
 
   return (
-    <section className="container mx-auto px-4 md:px-16 py-6 bg-background">
+    <section className="container mx-auto px-3 sm:px-4 md:px-16 py-6 bg-background">
       {/* Section Title */}
-      <div className="flex items-end justify-between mb-6">
-        <h2 className="text-xl md:text-3xl lg:text-4xl text-text-primary font-bold capitalize">
+      <div className="flex items-end justify-between mb-4 md:mb-6">
+        <h2 className="text-xl md:text-3xl text-text-primary font-bold capitalize ">
           {title}
         </h2>
 
         <button
           type="button"
-          className="text-sm md:text-base font-medium text-text-blue hover:text-primary hover:underline underline-offset-4 transition-colors duration-200"
+          className="text-xs md:text-base font-medium text-text-blue hover:text-primary hover:underline underline-offset-4 transition-colors duration-200"
         >
           See All
         </button>
       </div>
 
-      {/* Products X-Axis Horizontal Scroll on Mobile / Grid on Desktop */}
-      <div className="flex overflow-x-auto no-scrollbar scroll-smooth gap-3 pb-2 md:pb-0 md:grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 md:gap-4">
+      {/* Products Horizontal Snap-Scroll on Mobile / Grid on Desktop */}
+      <div className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-3 pb-2 md:pb-0 md:grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 md:gap-4">
         {products.slice(0, 6).map((item) => (
           <div
             key={item.id}
             onMouseEnter={() => setHovered(item.id)}
             onMouseLeave={() => setHovered(null)}
             onClick={() => setHovered(hovered === item.id ? null : item.id)}
-            className="flex-shrink-0 w-[160px] sm:w-[180px] md:w-auto bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
+            /* w-[calc(50%-6px)] forces exactly 2 full cards on mobile (accounting for gap-3) with snap snapping */
+            className="snap-start flex-shrink-0 w-[calc(50%-6px)] sm:w-[180px] md:w-auto bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
           >
             {/* IMAGE AREA WITH OVERLAID ACTION BUTTONS */}
-            <div className="relative bg-background h-full w-full flex items-center justify-center p-2 overflow-hidden">
+            <div className="relative aspect-square bg-background w-full flex items-center justify-center p-2 overflow-hidden">
               <img
                 src={item.image || "/placeholder.png"}
                 alt={item.name}
@@ -74,14 +75,14 @@ const Dressandjumpsuits = ({
 
               {/* Discount Badge */}
               {item.has_discount && (
-                <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-primary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
+                <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-secondary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
                   {item.discount_price}
                 </div>
               )}
 
               {/* Overlaid Action Bar */}
               <div
-                className={`absolute inset-x-0 bottom-0 p-1.5 sm:p-2 flex items-center justify-center gap-1.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 z-20 ${
+                className={`absolute inset-x-0 bottom-0 p-1.5 sm:p-2 flex items-center justify-center gap-1 sm:gap-1.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 z-20 ${
                   hovered === item.id
                     ? "opacity-100 translate-y-0 pointer-events-auto"
                     : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto"
@@ -90,6 +91,7 @@ const Dressandjumpsuits = ({
                 {/* Add to Cart Button */}
                 <button
                   type="button"
+                  disabled={!item.in_stock || item.stock_qty <= 0}
                   title="Add to Cart"
                   onClick={(e) => {
                     e.stopPropagation();
@@ -101,10 +103,14 @@ const Dressandjumpsuits = ({
                       price: Number(item.sale_price),
                     });
                   }}
-                  className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
+                  className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[10px] sm:text-xs font-medium py-1.5 px-1 sm:px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all disabled:opacity-50"
                 >
-                  <FaShoppingCart className="text-[10px] sm:text-xs" />
-                  <span className="hidden sm:inline">Add to Cart</span>
+                  <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
+                  <span className="truncate">
+                    {!item.in_stock || item.stock_qty <= 0
+                      ? "Out of stock"
+                      : "Add to Cart"}
+                  </span>
                 </button>
 
                 {/* Quick View Button */}
@@ -124,12 +130,12 @@ const Dressandjumpsuits = ({
               <div>
                 <p className="text-[10px] sm:text-xs text-ring">Taskco</p>
 
-                <h2 className="text-xs sm:text-sm font-semibold truncate text-text-primary">
+                <h2 className="text-[11px] sm:text-sm font-semibold truncate text-text-primary">
                   {item.name}
                 </h2>
 
                 {/* Rating */}
-                <div className="flex gap-0.5 text-yellow-400 text-[10px] sm:text-xs mt-1">
+                <div className="flex gap-0.5 text-yellow-400 text-[9px] sm:text-xs mt-1">
                   {[...Array(5)].map((_, index) => (
                     <FaStar key={index} />
                   ))}
@@ -138,29 +144,16 @@ const Dressandjumpsuits = ({
 
               <div className="mt-2">
                 {/* Price */}
-                <div className="flex items-center gap-1.5 flex-wrap">
+                <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
                   {item.has_discount && (
                     <span className="line-through text-ring/70 text-[10px] sm:text-xs">
                       {currency} {Number(item.retail_price).toFixed(0)}
                     </span>
                   )}
 
-                  <span className="font-bold text-destructive text-xs sm:text-sm">
+                  <span className="font-bold text-destructive text-[11px] sm:text-sm">
                     {currency} {Number(item.sale_price).toFixed(0)}
                   </span>
-                </div>
-
-                {/* Stock Status */}
-                <div className="mt-0.5">
-                  {item.in_stock ? (
-                    <span className="text-green-600 text-[10px] sm:text-xs font-medium">
-                      In Stock ({item.stock_qty})
-                    </span>
-                  ) : (
-                    <span className="text-destructive text-[10px] sm:text-xs font-medium">
-                      Out of Stock
-                    </span>
-                  )}
                 </div>
               </div>
             </Link>
@@ -168,12 +161,12 @@ const Dressandjumpsuits = ({
         ))}
       </div>
 
-      {/* Mobile Only Drag Helper */}
-      <div className="flex md:hidden items-center justify-center gap-2 text-xs text-muted-foreground mt-3 text-center">
+      {/* Mobile Drag Helper */}
+      {/* <div className="flex md:hidden items-center justify-center gap-2 text-[11px] text-muted-foreground mt-2 text-center">
         <span>←</span>
-        <span>Drag to explore</span>
+        <span>Swipe to explore</span>
         <span>→</span>
-      </div>
+      </div> */}
     </section>
   );
 };

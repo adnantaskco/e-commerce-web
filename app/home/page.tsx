@@ -38,11 +38,11 @@ export default function Home1() {
         </div>
 
         {/* Scrollable / Multi-row Category Cards */}
-        <div className="grid grid-rows-2 grid-flow-col auto-cols-[minmax(140px,1fr)] sm:auto-cols-[minmax(160px,1fr)] gap-3 overflow-x-auto py-2 scrollbar-hide">
+        <div className="grid grid-rows-2 grid-flow-col auto-cols-[minmax(140px,1fr)] sm:auto-cols-[minmax(160px,1fr)] gap-3 overflow-x-auto py-2 no-scrollbar">
           {Array.from({ length: 18 }).map((_, i) => (
             <div
               key={i}
-              className="bg-white rounded-xl p-3 border border-gray-100 flex flex-col items-center gap-2.5 shadow-sm text-center"
+              className="bg-background rounded-xl p-3 border border-gray-100 flex flex-col items-center gap-2.5 shadow-sm text-center"
             >
               {/* Square/Rounded Category Image Placeholder */}
               <Skeleton className="w-full h-24 sm:h-28 rounded-lg" />
@@ -62,7 +62,7 @@ export default function Home1() {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {Array.from({ length: 10 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl p-3 border border-gray-100 space-y-3">
+              <div key={i} className="bg-background rounded-2xl p-3 border border-gray-100 space-y-3">
                 <Skeleton className="w-full h-44 rounded-xl" />
                 <Skeleton className="h-4 w-5/6 rounded-md" />
                 <Skeleton className="h-4 w-1/2 rounded-md" />
@@ -93,7 +93,7 @@ export default function Home1() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="p-6 border border-gray-100 rounded-2xl space-y-4 bg-white">
+              <div key={i} className="p-6 border border-gray-100 rounded-2xl space-y-4 bg-background">
                 <div className="flex items-center gap-4">
                   <Skeleton className="w-12 h-12 rounded-full" />
                   <div className="space-y-2">
@@ -120,7 +120,7 @@ export default function Home1() {
     );
   }
 
-  if (error) return <div className="text-center py-20 text-red-500 font-medium">Failed to load content.</div>;
+  if (error) return <div className="text-center py-20 text-destructive font-medium">Failed to load content.</div>;
 
   const sections = data?.data ?? [];
 

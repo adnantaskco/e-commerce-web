@@ -524,24 +524,28 @@ function AllProductsContent() {
                       }`}
                     >
                       {/* Add to Cart Button */}
-                      <button
-                        type="button"
-                        title="Add to Cart"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addToCart({
-                            id: item.id,
-                            image: item.image || "/placeholder.png",
-                            brand: "Taskco",
-                            name: item.name,
-                            price: Number(item.sale_price),
-                          });
-                        }}
-                        className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
-                      >
-                        <FaShoppingCart className="text-[10px] sm:text-xs" />
-                        <span className="hidden sm:inline">Add to Cart</span>
-                      </button>
+                     <button
+                  type="button"
+                  disabled={!item.in_stock || item.stock_qty <= 0}
+                  title="Add to Cart"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart({
+                      id: item.id,
+                      image: item.image || "/placeholder.png",
+                      brand: "Taskco",
+                      name: item.name,
+                      price: Number(item.sale_price),
+                    });
+                  }}
+                  className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
+                >
+                  <FaShoppingCart className="text-[10px] sm:text-xs" />
+                   {!item.in_stock || item.stock_qty <= 0
+                      ? "Out of Stock"
+                      : "Add to Cart"}
+                </button>
+
 
                       {/* Quick View Button */}
                       <Link

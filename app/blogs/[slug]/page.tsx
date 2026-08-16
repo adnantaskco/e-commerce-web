@@ -1,139 +1,202 @@
-import React from "react";
-import Link from "next/link";
-import { ArrowLeft, Calendar, User, Clock, Share2 } from "lucide-react";
-import { notFound } from "next/navigation";
+'use client';
 
-interface BlogDetail {
-  slug: string;
+import React, { use } from 'react';
+import useSWR from 'swr';
+import Image from 'next/image';
+import Link from 'next/link';
+import { 
+  ArrowLeft, 
+  Calendar, 
+  Clock, 
+  Loader2, 
+  AlertCircle 
+} from 'lucide-react';
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaLink } from 'react-icons/fa';
+
+interface RawBlogPost {
+  id?: number | string;
   title: string;
-  media_url: string;
-  created_at: string;
-  short_description: string;
-  description?: string;
-  created_by: string | null;
+  slug: string;
+  content?: string;
+  short_description?: string;
+  excerpt?: string;
+  media_url?: string;
+  image?: string;
+  created_at?: string;
+  read_time?: string;
+  created_by?: string | null;
 }
 
-interface ApiResponse {
-  data: BlogDetail;
+interface BlogPost {
+  id?: number | string;
+  title: string;
+  slug: string;
+  content: string;
+  short_description?: string;
+  excerpt?: string;
+  image?: string;
+  created_at?: string;
+  read_time?: string;
 }
 
-// Fetch single post by slug
-async function getBlogPost(slug: string): Promise<BlogDetail | null> {
-  try {
-    const res = await fetch(
-      `https://demo.app.taskcocommerce.com/api/v1/blogs/${slug}`,
-      { cache: "no-store" }
-    );
-
-    if (!res.ok) return null;
-
-    const result: ApiResponse = await res.json();
-    return result.data;
-  } catch (error) {
-    return null;
-  }
-}
-
-export default async function BlogDetailPage({
-  params,
-}: {
+interface BlogDetailsPageProps {
   params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const post = await getBlogPost(slug);
+}
 
-  if (!post) {
-    notFound();
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch: ${res.status}`);
+  }
+  return res.json();
+};
+
+export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
+  const resolvedParams = use(params);
+  const slug = resolvedParams?.slug;
+
+  // Endpoint to fetch blog list or single post
+  const apiUrl = slug 
+    ? `https://demo.app.taskcocommerce.com/api/v1/blogs/limit/home` 
+    : null;
+
+  const { data: rawData, error, isLoading } = useSWR(apiUrl, fetcher);
+
+  // Extract payload array/object safely
+  const responseData = rawData?.data || rawData;
+
+  // Find the exact blog matching the URL slug if response is an Array
+  let targetBlog: RawBlogPost | null = null;
+  if (Array.isArray(responseData)) {
+    targetBlog = responseData.find((item: RawBlogPost) => item.slug === slug) || null;
+  } else if (responseData && typeof responseData === 'object') {
+    targetBlog = responseData;
   }
 
-  // Calculate estimated reading time
-  const wordCount = (post.description || post.short_description || "").replace(
-    /<[^>]+>/g,
-    ""
-  ).split(/\s+/).length;
-  const readTime = Math.max(1, Math.ceil(wordCount / 200));
+  // Normalize final blog structure for rendering
+  const blog: BlogPost | null = targetBlog
+    ? {
+        ...targetBlog,
+        image: targetBlog.media_url || targetBlog.image || undefined,
+        content: targetBlog.content || targetBlog.short_description || '',
+      }
+    : null;
+
+  const copyToClipboard = () => {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(window.location.href);
+      alert('Link copied to clipboard!');
+    }
+  };
 
   return (
-    <article className="min-h-screen py-10 md:py-16 bg-background text-text-primary">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-        {/* Navigation Bar */}
-        <div className="flex items-center justify-between mb-8">
-          <Link
-            href="/blogs"
-            className="group inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors"
+    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans py-6 sm:py-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        
+        {/* Navigation & Back Button */}
+        <div className="mb-6">
+          <Link 
+            href="/blogs" 
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-full border border-emerald-200 transition-colors"
           >
-            <span className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 group-hover:-translate-x-1 transition-transform">
-              <ArrowLeft size={16} />
-            </span>
-            Back to Articles
+            <ArrowLeft className="w-4 h-4" />
+            Back To Blog
           </Link>
         </div>
 
-        {/* Article Header */}
-        <header className="space-y-6">
-          {/* Metadata Badges */}
-          <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500 font-medium">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-              <Calendar size={14} className="text-primary" />
-              {new Date(post.created_at).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </span>
-
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-              <User size={14} className="text-primary" />
-              {post.created_by || "Admin"}
-            </span>
-
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-              <Clock size={14} className="text-primary" />
-              {readTime} min read
-            </span>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="bg-white border border-gray-200 rounded-2xl p-12 min-h-[400px] flex flex-col items-center justify-center text-center shadow-sm">
+            <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mb-3" />
+            <p className="text-sm font-medium text-gray-500">Loading blog details...</p>
           </div>
+        )}
 
-          {/* Title */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.2] text-gray-900 dark:text-white">
-            {post.title}
-          </h1>
-
-          {/* Short Summary Callout */}
-          {post.short_description && (
-            <p className="text-lg sm:text-xl font-medium text-gray-600 dark:text-gray-300 leading-relaxed border-l-4 border-primary pl-4 py-1 italic bg-primary/5 rounded-r-lg">
-              {post.short_description}
+        {/* Error / Not Found State */}
+        {(!isLoading && (error || !blog)) && (
+          <div className="bg-white border border-red-200 rounded-2xl p-12 min-h-[400px] flex flex-col items-center justify-center text-center shadow-sm">
+            <AlertCircle className="w-10 h-10 text-red-500 mb-3" />
+            <h2 className="text-base sm:text-lg font-bold text-red-600">Failed to load article</h2>
+            <p className="text-xs sm:text-sm text-gray-400 mt-1">
+              The requested blog post could not be found or fetched.
             </p>
-          )}
-        </header>
+          </div>
+        )}
 
-        {/* Featured Banner Image */}
-        <div className="my-8 sm:my-10 relative h-[280px] sm:h-[400px] md:h-[480px] w-full rounded-2xl overflow-hidden shadow-xl border border-gray-100 dark:border-gray-800 bg-gray-100">
-          <img
-            src={post.media_url || "/placeholder.png"}
-            alt={post.title}
-            className="w-full h-full object-cover"
-          />
-        </div>
+        {/* Blog Post Content */}
+        {!isLoading && !error && blog && (
+          <article className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm p-6 sm:p-10 space-y-6">
+            
+            {/* Title Section */}
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
+              {blog.title}
+            </h1>
 
-        {/* Article Main Body Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none leading-relaxed prose-headings:font-bold prose-a:text-primary hover:prose-a:underline prose-img:rounded-xl">
-          {post.description ? (
-            <div dangerouslySetInnerHTML={{ __html: post.description }} />
-          ) : (
-            <p>{post.short_description}</p>
-          )}
-        </div>
+            {/* Subtitle / Excerpt */}
+            {(blog.excerpt || blog.short_description) && (
+              <p className="text-sm sm:text-base text-gray-500 font-medium leading-relaxed">
+                {blog.excerpt || blog.short_description}
+              </p>
+            )}
 
-        {/* Footer Divider & Actions */}
-        <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
-          <Link
-            href="/blogs"
-            className="text-sm font-semibold text-primary hover:underline"
-          >
-            ← View all blog posts
-          </Link>
-        </div>
+            {/* Article Metadata Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-4 py-3 border-y border-gray-100 text-xs sm:text-sm text-gray-500">
+              <div className="flex items-center gap-4">
+                {blog.created_at && (
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="w-4 h-4 text-emerald-500" />
+                    {new Date(blog.created_at).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </span>
+                )}
+                <span className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-emerald-500" />
+                  {blog.read_time || '2 min read'}
+                </span>
+              </div>
+
+              {/* Share Actions */}
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-gray-400 text-xs mr-1 hidden sm:inline">Share:</span>
+                <button type="button" className="p-2 rounded-full bg-gray-50 hover:bg-emerald-50 hover:text-emerald-600 text-gray-500 transition-colors">
+                  <FaFacebookF className="w-3.5 h-3.5" />
+                </button>
+                <button type="button" className="p-2 rounded-full bg-gray-50 hover:bg-emerald-50 hover:text-emerald-600 text-gray-500 transition-colors">
+                  <FaTwitter className="w-3.5 h-3.5" />
+                </button>
+                <button type="button" className="p-2 rounded-full bg-gray-50 hover:bg-emerald-50 hover:text-emerald-600 text-gray-500 transition-colors">
+                  <FaLinkedinIn className="w-3.5 h-3.5" />
+                </button>
+                <button type="button" onClick={copyToClipboard} className="p-2 rounded-full bg-gray-50 hover:bg-emerald-50 hover:text-emerald-600 text-gray-500 transition-colors">
+                  <FaLink className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Featured Image */}
+            {blog.image && (
+              <div className="relative w-full h-[220px] sm:h-[400px] rounded-xl overflow-hidden bg-gray-100">
+                <Image
+                  src={blog.image}
+                  alt={blog.title}
+                  fill
+                  unoptimized
+                  className="object-cover"
+                />
+              </div>
+            )}
+
+            {/* Main Article Body */}
+            <div 
+              className="prose max-w-none text-gray-700 text-sm sm:text-base leading-relaxed space-y-4 pt-2"
+              dangerouslySetInnerHTML={{ __html: blog.content }}
+            />
+          </article>
+        )}
       </div>
-    </article>
+    </div>
   );
 }

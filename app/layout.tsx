@@ -117,7 +117,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <Providers>
           <CartProvider>
-            <Navbar1 />
+            {/* <Navbar1 /> */}
             <Navbar />
 
             {children}

@@ -35,19 +35,15 @@ export default function GallerySlider() {
 
   const gallery = data?.data || [];
 
-  // Step calculation configured dynamically based on responsive layout
+  // Calculates exact page scroll amount based on container width and gaps
   const getStep = () => {
     const container = sliderRef.current;
     if (!container) return 300;
 
-    // Detect screen width to calculate item step matching CSS grid/flex widths
-    if (window.innerWidth >= 1024) {
-      return container.clientWidth / 4; // 4 cards on lg
-    } else if (window.innerWidth >= 768) {
-      return container.clientWidth / 3; // 3 cards on md
-    } else {
-      return container.clientWidth / 2; // 2 cards on mobile/sm
-    }
+    const isMobile = window.innerWidth < 768;
+    const gap = isMobile ? 12 : 24; // gap-3 (12px) on mobile, gap-6 (24px) on md/lg
+
+    return container.clientWidth + gap;
   };
 
   const scroll = (direction: "left" | "right") => {
@@ -141,7 +137,7 @@ export default function GallerySlider() {
           ref={sliderRef}
           onMouseEnter={() => intervalRef.current && clearInterval(intervalRef.current)}
           onMouseLeave={startAutoSlide}
-          className="flex gap-3 sm:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar"
+          className="flex gap-3 md:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar"
         >
           {isLoading && (
             <div className="w-full text-center py-10 text-primary">
@@ -158,7 +154,12 @@ export default function GallerySlider() {
           {gallery.map((item) => (
             <div
               key={item.slug}
-              className="flex-shrink-0 w-1/2 md:w-1/3 lg:w-1/4 snap-start"
+              /* 
+                Mobile (<768px): 2 cards per view -> calc(50% - 6px) [1 gap of 12px]
+                Tablet (768px-1023px): 3 cards per view -> calc(33.333% - 16px) [2 gaps of 24px]
+                Desktop (>=1024px): 4 cards per view -> calc(25% - 18px) [3 gaps of 24px]
+              */
+              className="flex-shrink-0 w-[calc(50%-6px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] snap-start"
             >
               <div className="rounded-2xl overflow-hidden bg-background/5 border border-background/10 shadow-xl hover:-translate-y-2 transition h-full flex flex-col justify-between">
                 <div>

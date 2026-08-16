@@ -42,7 +42,7 @@ function Navbar1({ isLoading = false }: Navbar1Props) {
   }
 
   return (
-    <section className="bg-foreground text-text-secondary py-3 w-full overflow-hidden">
+    <section className="relative bg-foreground text-text-secondary py-3 w-full overflow-hidden">
       <div className="container mx-auto px-4 md:px-20 lg:px-20">
         <div className="flex items-center justify-between gap-2 text-xs sm:text-sm">
           

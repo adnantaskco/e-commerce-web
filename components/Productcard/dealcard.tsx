@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
-import { FaShoppingCart, FaStar, FaEye } from "react-icons/fa";
+import { FaShoppingCart, FaStar } from "react-icons/fa";
 import { useCart } from "../../app/src/components/context/CartContext";
 import { UseCurrency } from "../ui/currency";
 
@@ -36,7 +36,8 @@ export default function ProductSlider({
   products = [],
 }: ProductSliderProps) {
   const [hovered, setHovered] = useState<number | null>(null);
-  const [activePageIndex, setActivePageIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(2);
   const { addToCart } = useCart();
 
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -47,46 +48,58 @@ export default function ProductSlider({
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
-  // Calculates full page scroll distance (2 cards width + gap on mobile)
-  const getPageScrollAmount = () => {
+  // Update items visible per breakpoint
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) {
+        setItemsPerPage(6);
+      } else if (width >= 768) {
+        setItemsPerPage(3);
+      } else {
+        setItemsPerPage(2);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Calculates the scroll distance for exactly ONE card (card width + 16px gap)
+  const getSingleCardScrollAmount = () => {
     const container = sliderRef.current;
-    if (!container) return 320;
+    if (!container || !container.firstElementChild) return 200;
 
-    const gap = 16; // Corresponds to gap-4
-    const isMobile = window.innerWidth < 640;
-
-    if (isMobile) {
-      // Full inner width of 2 cards plus 1 gap
-      const containerWidth = container.clientWidth;
-      return containerWidth + gap;
-    }
-
-    const card = container.firstElementChild as HTMLElement;
-    return card ? card.offsetWidth + gap : 320;
+    const firstCard = container.firstElementChild as HTMLElement;
+    const gap = 16; // gap-4 (16px)
+    return firstCard.offsetWidth + gap;
   };
 
-  // Tracks active page index when scrolled
+  // Tracks active card index based on single card scroll distance
   const handleScroll = () => {
     const container = sliderRef.current;
     if (!container) return;
 
-    const pageAmount = getPageScrollAmount();
-    const page = Math.round(container.scrollLeft / pageAmount);
-    setActivePageIndex(page);
+    const cardAmount = getSingleCardScrollAmount();
+    if (cardAmount === 0) return;
+
+    const index = Math.round(container.scrollLeft / cardAmount);
+    setActiveIndex(index);
   };
 
-  // Scrolls to specific page index
-  const scrollToPage = (pageIndex: number) => {
+  // Scrolls to a specific card index
+  const scrollToCard = (index: number) => {
     const container = sliderRef.current;
     if (!container) return;
 
     container.scrollTo({
-      left: pageIndex * getPageScrollAmount(),
+      left: index * getSingleCardScrollAmount(),
       behavior: "smooth",
     });
   };
 
-  // Auto Slide Logic (advances 2 cards at a time on mobile)
+  // Auto Slide Logic: advances 1 card at a time
   const startAutoSlide = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -99,7 +112,10 @@ export default function ProductSlider({
       if (container.scrollLeft >= maxScroll - 10) {
         container.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        container.scrollBy({ left: getPageScrollAmount(), behavior: "smooth" });
+        container.scrollBy({
+          left: getSingleCardScrollAmount(),
+          behavior: "smooth",
+        });
       }
     }, 3500);
   };
@@ -145,17 +161,17 @@ export default function ProductSlider({
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [products.length]);
+  }, [products.length, itemsPerPage]);
 
-  // Group items into 2-card pages for mobile dots
-  const mobilePagesCount = Math.ceil(products.length / 2);
+  // Dots indicator count (total steps available to scroll one by one)
+  const totalSteps = Math.max(1, products.length - itemsPerPage + 1);
 
   return (
-    <section className="container mx-auto px-3 sm:px-4 md:px-10 lg:px-20 py-5 md:py-8 lg:py-5  bg-background">
+    <section className="container mx-auto px-3 sm:px-4 md:px-10 lg:px-20 py-5 md:py-8 lg:py-5 bg-background">
       {/* Header Section */}
       {title && (
         <div className="text-center mb-6 md:mb-10">
-          <h2 className="text-xl md:text-3xl text-text-primary font-bold mt-2 capitalize ">
+          <h2 className="text-xl md:text-3xl text-text-primary font-bold mt-2 capitalize">
             {title}
           </h2>
         </div>
@@ -163,7 +179,7 @@ export default function ProductSlider({
 
       {/* Slider Area */}
       <div className="relative group">
-        {/* Product Cards Container with Snap Scroll */}
+        {/* Product Cards Container */}
         <div
           ref={sliderRef}
           onScroll={handleScroll}
@@ -181,12 +197,11 @@ export default function ProductSlider({
               key={item.id}
               onMouseEnter={() => setHovered(item.id)}
               onMouseLeave={() => setHovered(null)}
-              /* Exactly 2 cards per view (w-[calc(50%-8px)]) with mandatory snap alignment */
-              className="snap-start flex-shrink-0 w-[calc(50%-8px)] sm:w-[30%] md:w-[23%] lg:w-[18%] bg-background border rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative group/card flex flex-col"
+              className="snap-start flex-shrink-0 w-[calc(50%-8px)] md:w-[calc(33.333%-10.666px)] lg:w-[calc(16.666%-13.333px)] bg-background border rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative group/card flex flex-col"
             >
               {/* Product Image Area */}
               <div className="relative aspect-square w-full flex items-center justify-center p-2 bg-background/10 overflow-hidden">
-                  <Image
+                <Image
                   src={item.image || "/placeholder.png"}
                   alt={item.name}
                   width={500}
@@ -233,22 +248,16 @@ export default function ProductSlider({
                         : "Add to Cart"}
                     </span>
                   </button>
-
-                  {/* <Link
-                    href={`/products/${item.slug}`}
-                    onClick={(e) => e.stopPropagation()}
-                    title="Quick View"
-                    className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
-                  >
-                    <FaEye className="text-xs" />
-                  </Link> */}
                 </div>
               </div>
 
               {/* Product Details */}
-              <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
+              <Link
+                href={`/products/${item.slug}`}
+                className="p-2 sm:p-3 flex-1 flex flex-col justify-between"
+              >
                 <div>
-                  <h2 className="font-semibold text-text-primary text-sm sm:text-md md:text-xl lg:text-xl line-clamp-1 hover:text-primary transition">
+                  <h2 className="font-semibold text-text-primary text-xs sm:text-sm md:text-base line-clamp-1 hover:text-primary transition">
                     {item.name}
                   </h2>
 
@@ -266,7 +275,7 @@ export default function ProductSlider({
                         {currency} {Number(item.retail_price).toFixed(0)}
                       </span>
                     )}
-                    <span className="font-bold text-destructive text-md sm:text-md md: text-xl">
+                    <span className="font-bold text-destructive text-sm sm:text-base md:text-lg">
                       {currency} {item.sale_price}
                     </span>
                   </div>
@@ -277,15 +286,15 @@ export default function ProductSlider({
         </div>
 
         {/* Carousel Indicators (Dots) */}
-        {products.length > 0 && (
+        {products.length > itemsPerPage && (
           <div className="flex justify-center items-center gap-1.5 pt-4">
-            {Array.from({ length: mobilePagesCount }).map((_, pageIdx) => (
+            {Array.from({ length: totalSteps }).map((_, idx) => (
               <button
-                key={pageIdx}
-                onClick={() => scrollToPage(pageIdx)}
-                aria-label={`Go to page ${pageIdx + 1}`}
+                key={idx}
+                onClick={() => scrollToCard(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  activePageIndex === pageIdx
+                  activeIndex === idx
                     ? "w-6 bg-primary"
                     : "w-2 bg-ring/70 hover:bg-ring/60"
                 }`}

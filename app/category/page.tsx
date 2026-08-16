@@ -8,7 +8,7 @@ import { useCart } from '@/app/src/components/context/CartContext';
 import { FaHeart, FaEye, FaStar, FaMagnifyingGlass, FaSliders, FaXmark } from 'react-icons/fa6';
 import { FaShoppingCart } from 'react-icons/fa';
 
-// 1. Fully typed interface mapped precisely to your API key specification
+// 1. Updated interface including potential category string from API
 interface ProductItem {
   id: number;
   name: string;
@@ -25,9 +25,9 @@ interface ProductItem {
   in_stock: boolean;
   stock_availability: boolean;
   weight: number;
+  category?: string;
 }
 
-// SWR fetcher utility function
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 function ProductsContent() {
@@ -35,17 +35,7 @@ function ProductsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Mobile Filter Drawer Toggle State
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-
-  // Dynamic API Fetching Implementation using SWR
-  const { data, error, isLoading } = useSWR(
-    "https://demo.app.taskcocommerce.com/api/v1/products",
-    fetcher
-  );
-
-  // Safely capture payload array matching backend pattern
-  const products: ProductItem[] = data?.data || data || [];
 
   // Extract initial parameters from URL query string
   const urlSearch = searchParams.get('search') || '';
@@ -55,13 +45,28 @@ function ProductsContent() {
   // Component UI State Systems
   const [searchQuery, setSearchQuery] = useState<string>(urlSearch);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
-  const [priceRange, setPriceRange] = useState<number>(urlMaxPrice || 2000);
+  const [priceRange, setPriceRange] = useState<number>(urlMaxPrice || 50000);
   const [hovered, setHovered] = useState<number | null>(null);
 
-  // 2. Extract Data Dimensions Dynamically based on the API data values
+  // Dynamic API Endpoint Construction
+  const apiUrl = useMemo(() => {
+    const params = new URLSearchParams();
+    if (selectedCategory) params.set('category', selectedCategory);
+    if (searchQuery.trim()) params.set('search', searchQuery.trim());
+    
+    const queryString = params.toString();
+    return `https://demo.app.taskcocommerce.com/api/v1/products/${queryString ? `?${queryString}` : ''}`;
+  }, [selectedCategory, searchQuery]);
+
+  const { data, error, isLoading } = useSWR(apiUrl, fetcher);
+
+  // Safely capture payload array matching backend pattern
+  const products: ProductItem[] = data?.data || (Array.isArray(data) ? data : []);
+
+  // Extract Data Dimensions & Dynamic Categories
   const { categoriesList, minPrice, maxPrice } = useMemo(() => {
     if (!Array.isArray(products) || products.length === 0) {
-      return { categoriesList: [], minPrice: 0, maxPrice: 2000 };
+      return { categoriesList: [], minPrice: 0, maxPrice: 50000 };
     }
 
     const categories = new Set<string>();
@@ -73,32 +78,43 @@ function ProductsContent() {
       if (currentPrice > highestPrice) highestPrice = currentPrice;
       if (currentPrice < lowestPrice) lowestPrice = currentPrice;
 
-      const nameLower = p.name ? p.name.toLowerCase() : '';
-      if (nameLower.includes('hoodie') || nameLower.includes('hudi')) categories.add('Hoodies');
-      else if (nameLower.includes('jacket') || nameLower.includes('coat') || nameLower.includes('blazer')) categories.add('Jackets');
-      else if (nameLower.includes('t-shirt') || nameLower.includes('tee')) categories.add('T-Shirts');
-      else if (nameLower.includes('shirt')) categories.add('Shirts');
-      else if (nameLower.includes('pants') || nameLower.includes('chino') || nameLower.includes('jeans') || nameLower.includes('trouser')) categories.add('Pants & Trousers');
-      else if (nameLower.includes('dress') || nameLower.includes('frock') || nameLower.includes('romper') || nameLower.includes('sleepsuit')) categories.add('Dresses & Outfits');
-      else if (nameLower.includes('top')) categories.add('Tops');
-      else categories.add('Casual Essentials');
+      // Primary: Use backend category field if available
+      if (p.category) {
+        categories.add(p.category);
+      } else {
+        // Fallback: Multi-domain Keyword Classification
+        const nameLower = p.name ? p.name.toLowerCase() : '';
+        if (nameLower.includes('watch') || nameLower.includes('headphone') || nameLower.includes('laptop') || nameLower.includes('phone')) {
+          categories.add('Electronics');
+        } else if (nameLower.includes('hoodie') || nameLower.includes('hudi')) {
+          categories.add('Hoodies');
+        } else if (nameLower.includes('jacket') || nameLower.includes('coat')) {
+          categories.add('Jackets');
+        } else if (nameLower.includes('shirt') || nameLower.includes('tee')) {
+          categories.add('T-Shirts & Shirts');
+        } else if (nameLower.includes('pants') || nameLower.includes('jeans')) {
+          categories.add('Pants & Trousers');
+        } else {
+          categories.add('General Essentials');
+        }
+      }
     });
 
     return {
       categoriesList: Array.from(categories).sort(),
       minPrice: lowestPrice === Infinity ? 0 : Math.floor(lowestPrice),
-      maxPrice: highestPrice === 0 ? 2000 : Math.ceil(highestPrice),
+      maxPrice: highestPrice === 0 ? 50000 : Math.ceil(highestPrice),
     };
   }, [products]);
 
-  // Adjust current filter roof context dynamically when live data loads
+  // Adjust current price range ceiling when data updates
   useEffect(() => {
     if (maxPrice && !urlMaxPrice) {
       setPriceRange(maxPrice);
     }
   }, [maxPrice, urlMaxPrice]);
 
-  // 3. Sync State back into URL Router Search Params Matrix
+  // Sync state back into URL Search Params
   useEffect(() => {
     const params = new URLSearchParams();
     if (searchQuery.trim()) params.set('search', searchQuery);
@@ -114,7 +130,7 @@ function ProductsContent() {
     setPriceRange(maxPrice);
   };
 
-  // 4. Filtering Engine working with the API model parameters
+  // Local Client Filtering Engine
   const filteredProducts = useMemo(() => {
     if (!Array.isArray(products)) return [];
 
@@ -122,33 +138,15 @@ function ProductsContent() {
       const productName = product.name || '';
       const productPrice = Number(product.sale_price) || 0;
 
-      if (searchQuery.trim() !== '') {
-        const query = searchQuery.toLowerCase();
-        if (!productName.toLowerCase().includes(query)) return false;
+      if (searchQuery.trim() !== '' && !apiUrl.includes('search=')) {
+        if (!productName.toLowerCase().includes(searchQuery.toLowerCase())) return false;
       }
 
-      if (productPrice > priceRange) {
-        return false;
-      }
-      
-      if (selectedCategory) {
-        const nameLower = productName.toLowerCase();
-        let currentItemCategory = 'Casual Essentials';
-
-        if (nameLower.includes('hoodie') || nameLower.includes('hudi')) currentItemCategory = 'Hoodies';
-        else if (nameLower.includes('jacket') || nameLower.includes('coat') || nameLower.includes('blazer')) currentItemCategory = 'Jackets';
-        else if (nameLower.includes('t-shirt') || nameLower.includes('tee')) currentItemCategory = 'T-Shirts';
-        else if (nameLower.includes('shirt')) currentItemCategory = 'Shirts';
-        else if (nameLower.includes('pants') || nameLower.includes('chino') || nameLower.includes('jeans') || nameLower.includes('trouser')) currentItemCategory = 'Pants & Trousers';
-        else if (nameLower.includes('dress') || nameLower.includes('frock') || nameLower.includes('romper') || nameLower.includes('sleepsuit')) currentItemCategory = 'Dresses & Outfits';
-        else if (nameLower.includes('top')) currentItemCategory = 'Tops';
-
-        if (currentItemCategory !== selectedCategory) return false;
-      }
+      if (productPrice > priceRange) return false;
 
       return true;
     });
-  }, [products, searchQuery, selectedCategory, priceRange]);
+  }, [products, searchQuery, priceRange, apiUrl]);
 
   if (isLoading) {
     return (
@@ -167,7 +165,6 @@ function ProductsContent() {
     );
   }
 
-  // Shared Filters Layout Component
   const FilterControls = () => (
     <>
       <div className="flex items-center justify-between px-1">
@@ -184,7 +181,7 @@ function ProductsContent() {
 
       {/* Categories */}
       <div className="bg-background rounded-xl p-5 border border-ring/10 shadow-sm">
-        <h3 className="text-xs font-black uppercase tracking-wider ext-ring mb-3">Categories</h3>
+        <h3 className="text-xs font-black uppercase tracking-wider text-ring mb-3">Categories</h3>
         <div className="flex flex-col gap-1">
           {categoriesList.map((cat) => (
             <button
@@ -220,7 +217,7 @@ function ProductsContent() {
           <span>Min: ${minPrice}</span>
           <span>Max: ${maxPrice}</span>
         </div>
-      </div>t
+      </div>
     </>
   );
 
@@ -229,12 +226,10 @@ function ProductsContent() {
       <div className="max-w-7xl mx-auto px-4 py-6 sm:py-10">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           
-          {/* ================= DESKTOP SIDEBAR ================= */}
           <aside className="hidden lg:block w-full lg:w-64 shrink-0 space-y-6 lg:sticky lg:top-28 z-20">
             <FilterControls />
           </aside>
 
-          {/* ================= MOBILE FILTER DRAWER ================= */}
           {isMobileFilterOpen && (
             <div className="fixed inset-0 bg-foreground z-50 lg:hidden backdrop-blur-sm transition-opacity duration-300">
               <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-ring/10 p-6 shadow-2xl overflow-y-auto space-y-6 flex flex-col animate-slide-in">
@@ -253,10 +248,7 @@ function ProductsContent() {
             </div>
           )}
 
-          {/* ================= MAIN DISPLAY GRID ================= */}
           <main className="flex-1 w-full space-y-4 sm:space-y-6">
-            
-            {/* SEARCH AND FEEDBACK HEADER BLOCK */}
             <div className="bg-background p-4 rounded-xl border border-ring/10 shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center">
               <div className="flex items-center gap-3 w-full sm:max-w-xs">
                 <button 
@@ -315,14 +307,12 @@ function ProductsContent() {
                         <div className="text-[10px] text-ring/30 font-bold uppercase tracking-widest">[ No Image ]</div>
                       )}
 
-                      {/* Dynamic Badge parsing via has_discount & discount_price keys */}
                       {item.has_discount && item.discount_price && (
                         <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 bg-primary text-text-secondary text-[9px] sm:text-xs font-medium sm:font-bold px-1.5 sm:px-3 py-0.5 sm:py-1 rounded">
                           {item.discount_price}
                         </div>
                       )}
 
-                      {/* ACTION BUTTONS */}
                       <div
                         className={`
                           absolute top-2 right-2 sm:top-5 sm:right-4 flex flex-col gap-2 z-10 transition-all duration-300
@@ -340,7 +330,7 @@ function ProductsContent() {
                             addToCart({
                               id: item.id,
                               image: item.image || '',
-                              brand: 'Apparel',
+                              brand: 'Store',
                               name: item.name,
                               price: Number(item.sale_price),
                             });
@@ -367,14 +357,12 @@ function ProductsContent() {
                           {item.name}
                         </h2>
                         
-                        {/* Dynamic Review rendering with fallbacks */}
                         <div className="flex gap-0.5 text-yellow-400 text-[9px] sm:text-sm">
                           {[...Array(item.review ? Math.round(item.review) : 5)].map((_, i) => (
                             <FaStar key={i} />
                           ))}
                         </div>
 
-                        {/* Updated Dynamic Pricing Context */}
                         <div className="flex items-center gap-1.5 sm:gap-2 pt-0.5">
                           {item.has_discount && Number(item.retail_price) > Number(item.sale_price) && (
                             <span className="line-through text-ring text-[10px] sm:text-sm">${item.retail_price}</span>

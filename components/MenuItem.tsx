@@ -1,15 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
-import { Category } from "@/app/types/category";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa6";
+import { Category } from "@/app/types/category";
 
 interface MenuItemProps {
   item: Category;
@@ -17,99 +11,140 @@ interface MenuItemProps {
   onSelect?: () => void;
 }
 
-export default function MenuItem({ item, mobile = false, onSelect }: MenuItemProps) {
-  const [mobileSubOpen, setMobileSubOpen] = useState(false);
+export default function MenuItem({ item, mobile, onSelect }: MenuItemProps) {
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [dropdownPos, setDropdownPos] = useState<{ top: number; left: number } | null>(null);
+  const itemRef = useRef<HTMLLIElement>(null);
+  
   const hasChildren = Boolean(item.children && item.children.length > 0);
 
-  // Mobile Drawer Navigation Item
+  // Mobile Drawer Logic
   if (mobile) {
     return (
-      <div className="w-full border-b border-gray-100">
-        <div className="flex items-center justify-between px-5 py-3 hover:bg-gray-50/80 transition-colors">
+      <div className="w-full">
+        <div className="flex items-center justify-between px-3 py-2 text-sm font-medium text-ring hover:text-primary transition-colors">
           <Link
             href={`/category/${item.slug || item.id}`}
             onClick={onSelect}
-            className="text-sm font-normal text-gray-700 hover:text-sky-500 transition-colors flex-1"
+            className="flex-1"
           >
             {item.name}
           </Link>
+
           {hasChildren && (
             <button
-              onClick={() => setMobileSubOpen(!mobileSubOpen)}
-              className="p-1 text-gray-400 hover:text-sky-500 transition-transform duration-200"
-              aria-label="Toggle subcategories"
+              onClick={() => setIsMobileOpen(!isMobileOpen)}
+              className="p-1 focus:outline-none"
+              aria-label="Toggle Submenu"
             >
-              <FaChevronRight
-                className={`h-3 w-3 transition-transform duration-200 ${
-                  mobileSubOpen ? "rotate-90 text-sky-500" : ""
+              <FaChevronDown
+                className={`w-3 h-3 text-ring/60 transition-transform duration-200 ${
+                  isMobileOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
           )}
         </div>
 
-        {/* Mobile Accordion Subcategories */}
-        {hasChildren && mobileSubOpen && (
-          <ul className="bg-gray-50/50 border-t border-gray-100 pl-8 pr-5 py-2 space-y-1">
+        {hasChildren && isMobileOpen && (
+          <div className="pl-4 space-y-1 border-l-2 border-ring/10 ml-3">
             {item.children?.map((child) => (
-              <li key={child.id}>
-                <Link
-                  href={`/category/${child.slug || child.id}`}
-                  onClick={onSelect}
-                  className="block text-xs font-normal text-gray-600 hover:text-sky-500 py-1.5 transition-colors"
-                >
-                  {child.name}
-                </Link>
-              </li>
+              <MenuItem
+                key={child.id}
+                item={child}
+                mobile
+                onSelect={onSelect}
+              />
             ))}
-          </ul>
+          </div>
         )}
       </div>
     );
   }
 
-  // Desktop View with Shadcn DropdownMenu
-  if (hasChildren) {
-    return (
-      <li>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-sky-500 transition-colors outline-none cursor-pointer py-1">
-            <span>{item.name}</span>
-            <FaChevronDown className="h-2.5 w-2.5 text-gray-400 group-hover:text-sky-500 transition-transform duration-200" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="start"
-            className="w-48 bg-white/95 backdrop-blur-md shadow-lg rounded-xl border border-gray-100 p-1.5 z-50"
-          >
-            {item.children?.map((child) => (
-              <DropdownMenuItem
-                key={child.id}
-                asChild
-                className="rounded-lg cursor-pointer focus:bg-sky-50 focus:text-sky-500"
-              >
-                <Link
-                  href={`/category/${child.slug || child.id}`}
-                  className="w-full text-xs font-medium py-2 px-3 transition-colors"
-                >
-                  {child.name}
-                </Link>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </li>
-    );
-  }
+  // Handle Desktop Mouse Enter to calculate position
+  const handleMouseEnter = () => {
+    if (itemRef.current) {
+      const rect = itemRef.current.getBoundingClientRect();
+      setDropdownPos({
+        top: rect.bottom,
+        left: rect.left,
+      });
+    }
+  };
 
-  // Standard Link without Subcategories
   return (
-    <li>
+    <li
+      ref={itemRef}
+      onMouseEnter={handleMouseEnter}
+      className="relative group/menu flex items-center h-full"
+    >
       <Link
         href={`/category/${item.slug || item.id}`}
-        className="text-sm font-medium text-gray-700 hover:text-sky-500 transition-colors block py-1"
+        className="flex items-center gap-1.5 py-2  text-sm font-medium text-ring hover:text-primary transition-colors whitespace-nowrap rounded-md hover:bg-gray-50"
       >
-        {item.name}
+        <span>{item.name}</span>
+        {hasChildren && (
+          <FaChevronDown className="w-2.5 h-2.5 text-ring/50 group-hover/menu:rotate-180 transition-transform duration-200 shrink-0" />
+        )}
       </Link>
+
+      {/* 1st Level Dropdown with Fixed Position */}
+      {hasChildren && dropdownPos && (
+        <div
+          style={{
+            position: "fixed",
+            top: `${dropdownPos.top}px`,
+            left: `${dropdownPos.left}px`,
+          }}
+          className="hidden group-hover/menu:block pt-1 z-[9999]"
+        >
+          <ul className="w-56 bg-background border border-ring/10 rounded-lg shadow-xl py-2 text-left">
+            {item.children?.map((child) => {
+              const hasSubChildren = Boolean(
+                child.children && child.children.length > 0
+              );
+
+              return (
+                <li
+                  key={child.id}
+                  className="relative group/nested px-4 py-2 hover:bg-ring/10 flex items-center justify-between text-sm text-ring hover:text-primary cursor-pointer transition-colors"
+                >
+                  <Link
+                    href={`/category/${child.slug || child.id}`}
+                    className="w-full flex items-center justify-between gap-2"
+                  >
+                    <span className="truncate">{child.name}</span>
+                    {hasSubChildren && (
+                      <FaChevronRight className="w-2.5 h-2.5 text-ring/50 shrink-0" />
+                    )}
+                  </Link>
+
+                  {/* 2nd Level Nested Submenu */}
+                  {hasSubChildren && (
+                    <div className="absolute top-0 left-full hidden group-hover/nested:block pl-1 z-[9999]">
+                      <ul className="w-56 bg-backround border border-ring/10 rounded-lg shadow-xl py-2 text-left">
+                        {child.children?.map((nestedChild) => (
+                          <li key={nestedChild.id}>
+                            <Link
+                              href={`/category/${
+                                nestedChild.slug || nestedChild.id
+                              }`}
+                              className="block px-4 py-2 text-sm text-ring hover:bg-ring/10 hover:text-primary transition-colors truncate"
+                            >
+                              {nestedChild.name}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </li>
   );
 }

@@ -415,7 +415,7 @@ export default function CheckoutPage() {
               <h2 className="font-semibold text-lg border-l-4 text-text-primary border-primary pl-3 mb-4">
                 Special notes <span className="text-sm text-ring ml-2">(Optional)</span>
               </h2>
-              {/* [পরিবর্তিত] textarea event handling */}
+
               <textarea
                 rows={4}
                 maxLength={90}

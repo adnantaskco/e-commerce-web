@@ -32,7 +32,7 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [couponOpen, setCouponOpen] = useState(false);
 
-  // [নতুন] Context থেকে setLastOrder ও clearCart নিয়ে আসা
+  
   const {
     cartItems,
     totalItems,
@@ -41,7 +41,7 @@ export default function CheckoutPage() {
     decreaseQuantity,
     totalPrice,
     setLastOrder, // 
-    clearCart,    // [নতুন]
+    clearCart,    
   } = useCart();
 
   const deliveryCharge =
@@ -71,7 +71,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    // ১. Invoice ID এবং Order Date তৈরি
+   
     const invoiceNo = "INV-" + Math.floor(100000 + Math.random() * 900000);
     const orderDate = new Date().toLocaleDateString("en-US", {
       year: "numeric",
@@ -81,7 +81,7 @@ export default function CheckoutPage() {
       minute: "2-digit",
     });
 
-    // ২. Order Object তৈরি
+   
     const orderDetails = {
       invoiceNo,
       orderDate,
@@ -94,7 +94,7 @@ export default function CheckoutPage() {
       notes,
     };
 
-    // ৩. Context-এ ডাটা সেভ
+    
     setLastOrder(orderDetails);
 
   
@@ -428,7 +428,7 @@ export default function CheckoutPage() {
 
             {/* Terms */}
             <label className="flex items-start gap-3 text-sm text-text-primary">
-              {/* [পরিবর্তিত] Controlled checkbox */}
+             
               <input
                 type="checkbox"
                 checked={agreedToTerms}

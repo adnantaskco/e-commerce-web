@@ -167,7 +167,7 @@ export default function ProductSlider({
   const totalSteps = Math.max(1, products.length - itemsPerPage + 1);
 
   return (
-    <section className="container mx-auto px-3 sm:px-4 md:px-10 lg:px-20 py-5 md:py-8 lg:py-5 bg-background">
+    <section className="container mx-auto px-3 sm:px-4 md:px-10 lg:px-20 sm:py-5 md:py-4 lg:py-5 bg-background">
       {/* Header Section */}
       {title && (
         <div className="text-center mb-6 md:mb-10">
@@ -200,13 +200,13 @@ export default function ProductSlider({
               className="snap-start flex-shrink-0 w-[calc(50%-8px)] md:w-[calc(33.333%-10.666px)] lg:w-[calc(16.666%-13.333px)] bg-background border rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative group/card flex flex-col"
             >
               {/* Product Image Area */}
-              <div className="relative aspect-square w-full flex items-center justify-center p-2 bg-background/10 overflow-hidden">
-                <Image
+              <div className="relative snap-start aspect-square w-full flex items-center justify-center p-2 bg-background/10 overflow-hidden">
+                <img
                   src={item.image || "/placeholder.png"}
                   alt={item.name}
                   width={500}
                   height={500}
-                  unoptimized
+                
                   className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105 pointer-events-none"
                 />
 

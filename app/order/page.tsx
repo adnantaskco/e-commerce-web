@@ -16,9 +16,40 @@ import {
   FaExclamationTriangle,
   FaInbox
 } from "react-icons/fa";
-import { useCart } from "../src/components/context/CartContext";
 
-// Interfaces
+// API Response Interfaces based on actual response structure
+interface ApiProduct {
+  id: number;
+  name: string;
+  image_url: string | null;
+}
+
+interface ApiOrderItem {
+  id: number;
+  quantity: number;
+  unit_price: number;
+  line_total: number;
+  product?: ApiProduct;
+}
+
+interface ApiPayment {
+  status: string;
+  provider: string;
+}
+
+interface ApiOrder {
+  id: number;
+  order_number: string;
+  status: string;
+  status_label?: string;
+  created_at: string;
+  grand_total: number | string;
+  items?: ApiOrderItem[];
+  payments?: ApiPayment[];
+  payment_status?: string;
+}
+
+// Internal Interface
 interface Order {
   id: string;
   orderNumber: string;
@@ -30,27 +61,85 @@ interface Order {
   total: number;
 }
 
-// SWR Fetcher
-const fetcher = async (url: string) => {
+// Normalizes API status to UI Status
+const normalizeStatus = (statusStr: string): Order["status"] => {
+  const status = (statusStr || "").toLowerCase();
+  if (status.includes("deliver")) return "Delivered";
+  if (status.includes("complete")) return "Completed";
+  if (status.includes("ship")) return "Shipped";
+  if (status.includes("process")) return "Processed";
+  return "Pending";
+};
+
+// Robust SWR Fetcher handling single order objects, lists, and deep nesting
+const fetcher = async (url: string): Promise<Order[]> => {
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error("Failed to fetch orders");
   }
-  return res.json();
+  const json = await res.json();
+
+  // Extract raw list whether the API returns an array or wrapped object
+  let rawList: ApiOrder[] = [];
+  if (Array.isArray(json)) {
+    rawList = json;
+  } else if (Array.isArray(json.data)) {
+    rawList = json.data;
+  } else if (json.data?.orders && Array.isArray(json.data.orders)) {
+    rawList = json.data.orders;
+  } else if (json.data?.order) {
+    // Single order response fallback
+    rawList = [json.data.order];
+  }
+
+  return rawList.map((item) => {
+    // Parse created_at safely
+    const dateObj = item.created_at ? new Date(item.created_at.replace(" ", "T")) : new Date();
+    const formattedDate = dateObj.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    const formattedTime = dateObj.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    // Total quantity calculation
+    const itemsCount = Array.isArray(item.items)
+      ? item.items.reduce((acc, curr) => acc + (curr.quantity || 1), 0)
+      : 0;
+
+    // Payment Status detection
+    const paymentStatusRaw =
+      item.payment_status ||
+      (item.payments && item.payments[0]?.status) ||
+      "unpaid";
+    const isPaid = paymentStatusRaw.toLowerCase() === "paid";
+
+    return {
+      id: String(item.id),
+      orderNumber: item.order_number || `#${item.id}`,
+      date: formattedDate,
+      time: formattedTime,
+      status: normalizeStatus(item.status_label || item.status),
+      itemsCount,
+      paymentStatus: isPaid ? "Paid" : "Unpaid",
+      total: Math.abs(Number(item.grand_total) || 0),
+    };
+  });
 };
 
 export default function MyOrdersPage() {
-   
   const { data: orders = [], error, isLoading, mutate } = useSWR<Order[]>(
-    "/api/orders",
+    "https://demo.app.taskcocommerce.com/api/v1/orders",
     fetcher,
     {
       revalidateOnFocus: true,
-      refreshInterval: 15000, //
+      refreshInterval: 15000,
     }
   );
 
-  // ডায়নামিক ফিল্টারিং ও কাউন্ট (ডাটা না থাকলে বা লোডিং চলাকালীন ০ দেখাবে)
   const totalCount = orders.length;
   const processedCount = orders.filter((o) => o.status === "Processed").length;
   const pendingCount = orders.filter((o) => o.status === "Pending").length;
@@ -58,7 +147,6 @@ export default function MyOrdersPage() {
   const shippedCount = orders.filter((o) => o.status === "Shipped").length;
   const completedCount = orders.filter((o) => o.status === "Completed").length;
 
-  // Status Badge Styling Helper
   const getStatusBadgeClass = (status: Order["status"]) => {
     switch (status) {
       case "Delivered":
@@ -85,9 +173,8 @@ export default function MyOrdersPage() {
           <h1 className="text-2xl font-bold text-gray-900">My Orders</h1>
         </div>
 
-        {/* Order Metrics Bar - লোডিং বা খালি থাকলেও '0' কাউন্ট দেখাবে */}
+        {/* Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {/* All Orders */}
           <div className="bg-white p-4 rounded-xl border border-emerald-500 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-400 font-medium">All Orders</p>
@@ -98,7 +185,6 @@ export default function MyOrdersPage() {
             </div>
           </div>
 
-          {/* Processed */}
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-400 font-medium">Processed</p>
@@ -109,7 +195,6 @@ export default function MyOrdersPage() {
             </div>
           </div>
 
-          {/* Pending */}
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-400 font-medium">Pending</p>
@@ -120,7 +205,6 @@ export default function MyOrdersPage() {
             </div>
           </div>
 
-          {/* Delivered */}
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-400 font-medium">Delivered</p>
@@ -131,7 +215,6 @@ export default function MyOrdersPage() {
             </div>
           </div>
 
-          {/* Shipped */}
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-400 font-medium">Shipped</p>
@@ -142,7 +225,6 @@ export default function MyOrdersPage() {
             </div>
           </div>
 
-          {/* Completed */}
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-400 font-medium">Completed</p>
@@ -154,7 +236,7 @@ export default function MyOrdersPage() {
           </div>
         </div>
 
-        {/* Order History Container */}
+        {/* History Container */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg font-bold text-gray-900">Order History</h2>
@@ -163,14 +245,12 @@ export default function MyOrdersPage() {
             </p>
           </div>
 
-          {/* 1. Loading State */}
           {isLoading ? (
             <div className="py-16 text-center text-emerald-600 flex flex-col items-center justify-center gap-2">
               <FaSpinner className="animate-spin text-3xl" />
               <p className="text-xs text-gray-400 font-medium mt-2">Loading orders...</p>
             </div>
           ) : error ? (
-            /* 2. Error State */
             <div className="py-12 text-center text-gray-500">
               <FaExclamationTriangle className="text-amber-500 text-3xl mx-auto mb-2" />
               <p className="text-sm font-semibold text-gray-800">Failed to load orders</p>
@@ -182,7 +262,6 @@ export default function MyOrdersPage() {
               </button>
             </div>
           ) : orders.length === 0 ? (
-            /* 3. Empty State (কোনো অর্ডার না থাকলে) */
             <div className="py-16 text-center">
               <FaInbox className="text-gray-300 text-5xl mx-auto mb-3" />
               <h3 className="text-base font-semibold text-gray-800">No orders placed yet</h3>
@@ -197,7 +276,6 @@ export default function MyOrdersPage() {
               </Link>
             </div>
           ) : (
-            /* 4. Table View (অর্ডার থাকলে) */
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -267,7 +345,7 @@ export default function MyOrdersPage() {
                           </Link>
 
                           <a
-                            href={`/api/invoice/${order.orderNumber}`}
+                            href={`https://demo.app.taskcocommerce.com/api/v1/orders/${order.orderNumber}/invoice`}
                             title="Download Invoice"
                             className="w-8 h-8 border border-gray-200 rounded-lg flex items-center justify-center text-gray-500 hover:bg-emerald-50 hover:border-emerald-500 hover:text-emerald-600 transition"
                           >

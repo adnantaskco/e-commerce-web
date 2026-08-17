@@ -32,10 +32,10 @@ export default function AboutPage() {
 
           {/* IMAGE */}
           <div className="relative w-full h-80 md:h-96 rounded-xl overflow-hidden shadow-lg">
-            <Image
+            <img
               src="https://img.magnific.com/free-photo/empty-boutique-shopping-centre_482257-78792.jpg?semt=ais_hybrid&w=740&q=80"
               alt="About Us"
-              fill
+             
               className="object-cover"
             />
           </div>

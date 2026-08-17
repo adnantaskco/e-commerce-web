@@ -71,11 +71,11 @@
   --foreground: oklch(0.13 0.028 261.692);
    --primary: #E38B75;
   --primary-foreground: oklch(0.98 0.02 201);
-  --secondary: oklch(0.967 0.001 286.375);
+  --secondary: #007A55;
   --secondary-foreground: oklch(0.21 0.006 285.885);
   --muted: oklch(0.967 0.003 264.542);
   --muted-foreground: oklch(0.551 0.027 264.364);
-  --accent: ;
+  --accent:#101828 ;
   --accent-foreground: oklch(0.98 0.02 201);
   --destructive: oklch(0.577 0.245 27.325);
 

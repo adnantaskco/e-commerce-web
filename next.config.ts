@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
        "taskco-space-live.blr1.digitaloceanspaces.com",
        "img.magnific.com",
        "https://demo.app.taskcocommerce.com/api/v1/:path*",
+       "img.magnific.com",
        
     ],
   },

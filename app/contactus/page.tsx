@@ -1,13 +1,12 @@
-// app/flash-sales/page.tsx
 import { Metadata } from 'next';
-import CartPage from './cartpage';
 
 
+import DynamicContactUs from './contact';
 
 export const metadata: Metadata = {
-  title: 'My Cart ',
+  title: 'Contact',
 };
 
 export default function FlashSalesPage() {
-  return <CartPage/> ;
+  return <DynamicContactUs/> ;
 }

@@ -5,10 +5,9 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useSWR from 'swr';
 import { useCart } from '@/app/src/components/context/CartContext';
-import { FaHeart, FaEye, FaStar, FaMagnifyingGlass, FaSliders, FaXmark } from 'react-icons/fa6';
+import { FaHeart, FaEye, FaStar, FaMagnifyingGlass, FaSliders, FaXmark, FaChevronDown } from 'react-icons/fa6';
 import { FaShoppingCart } from 'react-icons/fa';
 
-// 1. Updated interface including potential category string from API
 interface ProductItem {
   id: number;
   name: string;
@@ -37,18 +36,20 @@ function ProductsContent() {
 
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-  // Extract initial parameters from URL query string
+  // Extract initial parameters from URL
   const urlSearch = searchParams.get('search') || '';
   const urlCategory = searchParams.get('category') || null;
-  const urlMaxPrice = searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : null;
+  const urlSort = searchParams.get('sort') || 'default';
+  const urlLimit = searchParams.get('limit') ? Number(searchParams.get('limit')) : 20;
 
-  // Component UI State Systems
+  // UI State Systems
   const [searchQuery, setSearchQuery] = useState<string>(urlSearch);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
-  const [priceRange, setPriceRange] = useState<number>(urlMaxPrice || 50000);
+  const [sortBy, setSortBy] = useState<string>(urlSort);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(urlLimit);
   const [hovered, setHovered] = useState<number | null>(null);
 
-  // Dynamic API Endpoint Construction
+  // Dynamic API Endpoint
   const apiUrl = useMemo(() => {
     const params = new URLSearchParams();
     if (selectedCategory) params.set('category', selectedCategory);
@@ -61,92 +62,88 @@ function ProductsContent() {
   const { data, error, isLoading } = useSWR(apiUrl, fetcher);
 
   // Safely capture payload array matching backend pattern
-  const products: ProductItem[] = data?.data || (Array.isArray(data) ? data : []);
+  const rawProducts: ProductItem[] = data?.data || (Array.isArray(data) ? data : []);
 
-  // Extract Data Dimensions & Dynamic Categories
-  const { categoriesList, minPrice, maxPrice } = useMemo(() => {
-    if (!Array.isArray(products) || products.length === 0) {
-      return { categoriesList: [], minPrice: 0, maxPrice: 50000 };
+  // Categorize product items & build category list
+  const { productsWithCategory, categoriesList } = useMemo(() => {
+    if (!Array.isArray(rawProducts) || rawProducts.length === 0) {
+      return { productsWithCategory: [], categoriesList: [] };
     }
 
     const categories = new Set<string>();
-    let highestPrice = 0;
-    let lowestPrice = Infinity;
 
-    products.forEach((p) => {
-      const currentPrice = Number(p.sale_price) || 0;
-      if (currentPrice > highestPrice) highestPrice = currentPrice;
-      if (currentPrice < lowestPrice) lowestPrice = currentPrice;
+    const processed = rawProducts.map((p) => {
+      let categoryName = p.category;
 
-      // Primary: Use backend category field if available
-      if (p.category) {
-        categories.add(p.category);
-      } else {
-        // Fallback: Multi-domain Keyword Classification
+      if (!categoryName) {
         const nameLower = p.name ? p.name.toLowerCase() : '';
         if (nameLower.includes('watch') || nameLower.includes('headphone') || nameLower.includes('laptop') || nameLower.includes('phone')) {
-          categories.add('Electronics');
+          categoryName = 'Electronics';
         } else if (nameLower.includes('hoodie') || nameLower.includes('hudi')) {
-          categories.add('Hoodies');
+          categoryName = 'Hoodies';
         } else if (nameLower.includes('jacket') || nameLower.includes('coat')) {
-          categories.add('Jackets');
+          categoryName = 'Jackets';
         } else if (nameLower.includes('shirt') || nameLower.includes('tee')) {
-          categories.add('T-Shirts & Shirts');
+          categoryName = 'T-Shirts & Shirts';
         } else if (nameLower.includes('pants') || nameLower.includes('jeans')) {
-          categories.add('Pants & Trousers');
+          categoryName = 'Pants & Trousers';
         } else {
-          categories.add('General Essentials');
+          categoryName = 'General Essentials';
         }
       }
+
+      categories.add(categoryName);
+      return { ...p, category: categoryName };
     });
 
     return {
+      productsWithCategory: processed,
       categoriesList: Array.from(categories).sort(),
-      minPrice: lowestPrice === Infinity ? 0 : Math.floor(lowestPrice),
-      maxPrice: highestPrice === 0 ? 50000 : Math.ceil(highestPrice),
     };
-  }, [products]);
+  }, [rawProducts]);
 
-  // Adjust current price range ceiling when data updates
-  useEffect(() => {
-    if (maxPrice && !urlMaxPrice) {
-      setPriceRange(maxPrice);
-    }
-  }, [maxPrice, urlMaxPrice]);
-
-  // Sync state back into URL Search Params
+  // Sync state into URL Search Params
   useEffect(() => {
     const params = new URLSearchParams();
     if (searchQuery.trim()) params.set('search', searchQuery);
     if (selectedCategory) params.set('category', selectedCategory);
-    if (priceRange !== maxPrice) params.set('maxPrice', priceRange.toString());
+    if (sortBy !== 'default') params.set('sort', sortBy);
+    if (itemsPerPage !== 20) params.set('limit', itemsPerPage.toString());
 
     router.push(`/products?${params.toString()}`, { scroll: false });
-  }, [searchQuery, selectedCategory, priceRange, maxPrice, router]);
+  }, [searchQuery, selectedCategory, sortBy, itemsPerPage, router]);
 
   const resetFilters = () => {
     setSearchQuery('');
     setSelectedCategory(null);
-    setPriceRange(maxPrice);
+    setSortBy('default');
+    setItemsPerPage(20);
   };
 
-  // Local Client Filtering Engine
+  // Filter & Sort Engine
   const filteredProducts = useMemo(() => {
-    if (!Array.isArray(products)) return [];
-
-    return products.filter((product) => {
-      const productName = product.name || '';
-      const productPrice = Number(product.sale_price) || 0;
-
-      if (searchQuery.trim() !== '' && !apiUrl.includes('search=')) {
-        if (!productName.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    let result = productsWithCategory.filter((product) => {
+      // Category Filter
+      if (selectedCategory && product.category?.toLowerCase() !== selectedCategory.toLowerCase()) {
+        return false;
       }
-
-      if (productPrice > priceRange) return false;
-
+      // Search Filter
+      if (searchQuery.trim() !== '' && !apiUrl.includes('search=')) {
+        if (!product.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      }
       return true;
     });
-  }, [products, searchQuery, priceRange, apiUrl]);
+
+    // Sorting Logic
+    if (sortBy === 'price-low-high') {
+      result.sort((a, b) => Number(a.sale_price) - Number(b.sale_price));
+    } else if (sortBy === 'price-high-low') {
+      result.sort((a, b) => Number(b.sale_price) - Number(a.sale_price));
+    }
+
+    // Pagination / Display Limit
+    return result.slice(0, itemsPerPage);
+  }, [productsWithCategory, selectedCategory, searchQuery, sortBy, itemsPerPage, apiUrl]);
 
   if (isLoading) {
     return (
@@ -168,8 +165,8 @@ function ProductsContent() {
   const FilterControls = () => (
     <>
       <div className="flex items-center justify-between px-1">
-        <h2 className="text-sm font-black uppercase tracking-wider text-ring">Filters</h2>
-        {(selectedCategory || priceRange < maxPrice || searchQuery !== '') && (
+        <h2 className="text-sm font-black uppercase tracking-wider text-ring">Categories</h2>
+        {(selectedCategory || searchQuery !== '') && (
           <button 
             onClick={resetFilters} 
             className="text-xs text-destructive font-bold hover:underline transition-all"
@@ -179,10 +176,18 @@ function ProductsContent() {
         )}
       </div>
 
-      {/* Categories */}
-      <div className="bg-background rounded-xl p-5 border border-ring/10 shadow-sm">
-        <h3 className="text-xs font-black uppercase tracking-wider text-ring mb-3">Categories</h3>
+      <div className="bg-background rounded-xl p-4 border border-ring/10 shadow-sm">
         <div className="flex flex-col gap-1">
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+              selectedCategory === null
+                ? 'bg-foreground text-text-secondary shadow-sm'
+                : 'text-ring hover:bg-ring/10 hover:text-ring'
+            }`}
+          >
+            All Categories
+          </button>
           {categoriesList.map((cat) => (
             <button
               key={cat}
@@ -198,26 +203,6 @@ function ProductsContent() {
           ))}
         </div>
       </div>
-
-      {/* Price Range */}
-      <div className="bg-background rounded-xl p-5 border border-ring/10 shadow-sm">
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-xs font-black uppercase tracking-wider text-ring">Max Price</h3>
-          <span className="text-sm font-black text-text-primary">${priceRange}</span>
-        </div>
-        <input
-          type="range"
-          min={minPrice}
-          max={maxPrice}
-          value={priceRange}
-          onChange={(e) => setPriceRange(Number(e.target.value))}
-          className="w-full h-1.5 bg-ring/10 rounded-lg appearance-none cursor-pointer accent-text-primary"
-        />
-        <div className="flex justify-between text-[10px] font-bold text-ring mt-2">
-          <span>Min: ${minPrice}</span>
-          <span>Max: ${maxPrice}</span>
-        </div>
-      </div>
     </>
   );
 
@@ -226,14 +211,17 @@ function ProductsContent() {
       <div className="max-w-7xl mx-auto px-4 py-6 sm:py-10">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           
+          {/* Sidebar */}
           <aside className="hidden lg:block w-full lg:w-64 shrink-0 space-y-6 lg:sticky lg:top-28 z-20">
             <FilterControls />
           </aside>
 
+          {/* Mobile Drawer */}
           {isMobileFilterOpen && (
-            <div className="fixed inset-0 bg-foreground z-50 lg:hidden backdrop-blur-sm transition-opacity duration-300">
-              <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-ring/10 p-6 shadow-2xl overflow-y-auto space-y-6 flex flex-col animate-slide-in">
-                <div className="flex justify-end items-center border-b border-ring/10 pb-3">
+            <div className="fixed inset-0 bg-foreground/40 z-50 lg:hidden backdrop-blur-sm transition-opacity duration-300">
+              <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-background p-6 shadow-2xl overflow-y-auto space-y-6 flex flex-col">
+                <div className="flex justify-between items-center border-b border-ring/10 pb-3">
+                  <span className="text-sm font-black uppercase tracking-wider">Filters</span>
                   <button 
                     onClick={() => setIsMobileFilterOpen(false)}
                     className="p-1 rounded-full bg-background border border-ring/10 text-ring shadow-sm"
@@ -248,8 +236,12 @@ function ProductsContent() {
             </div>
           )}
 
+          {/* Main Area */}
           <main className="flex-1 w-full space-y-4 sm:space-y-6">
+            
+            {/* Top Toolbar Navigation with Shadcn-style dropdown selects */}
             <div className="bg-background p-4 rounded-xl border border-ring/10 shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center">
+              
               <div className="flex items-center gap-3 w-full sm:max-w-xs">
                 <button 
                   onClick={() => setIsMobileFilterOpen(true)}
@@ -272,16 +264,45 @@ function ProductsContent() {
                   />
                 </div>
               </div>
-              <p className="text-xs font-black text-ring uppercase tracking-widest shrink-0 self-start sm:self-center">
-                Showing {filteredProducts.length} items
-              </p>
+
+              {/* Shadcn UI Style Select Filters (Sort & Items Per Page) */}
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+                {/* Sort By Select */}
+                <div className="relative">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="h-9 w-[150px] appearance-none rounded-md border border-ring/20 bg-background px-3 py-1.5 text-xs font-medium text-ring shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring cursor-pointer"
+                  >
+                    <option value="default">Default Sort</option>
+                    <option value="price-low-high">Price: Low to High</option>
+                    <option value="price-high-low">Price: High to Low</option>
+                  </select>
+                  <FaChevronDown className="absolute right-2.5 top-3 h-3 w-3 text-ring/50 pointer-events-none" />
+                </div>
+
+                {/* Items Per Page Select */}
+                <div className="relative">
+                  <select
+                    value={itemsPerPage}
+                    onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                    className="h-9 w-[110px] appearance-none rounded-md border border-ring/20 bg-background px-3 py-1.5 text-xs font-medium text-ring shadow-sm transition-colors focus:outline-none focus:ring-1 focus:ring-ring cursor-pointer"
+                  >
+                    <option value={20}>20 Items</option>
+                    <option value={40}>40 Items</option>
+                    <option value={60}>60 Items</option>
+                  </select>
+                  <FaChevronDown className="absolute right-2.5 top-3 h-3 w-3 text-ring/50 pointer-events-none" />
+                </div>
+              </div>
             </div>
 
+            {/* Product Display Grid */}
             {filteredProducts.length === 0 ? (
               <div className="bg-background rounded-2xl border border-ring/10 p-10 sm:p-16 text-center shadow-sm">
-                <h3 className="text-base sm:text-lg font-black text-ring tracking-tight">No Products Match Your Criteria</h3>
+                <h3 className="text-base sm:text-lg font-black text-ring tracking-tight">No Products Found</h3>
                 <p className="text-xs sm:text-sm text-ring mt-2 max-w-sm mx-auto">
-                  Try adjusting your search keywords or resetting option parameters.
+                  Try selecting a different category or clearing search filters.
                 </p>
               </div>
             ) : (

@@ -129,7 +129,7 @@ const DynamicFooter: React.FC = () => {
   };
 
   return (
-    <footer className="bg-gray-900 text-gray-300 pt-12 pb-6 border-t border-gray-800">
+    <footer className="bg-accent text-text-secondary pt-12 pb-6 border-t border-ring">
       <div className="container mx-auto px-4 sm:px-6 lg:px-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
           
@@ -142,13 +142,13 @@ const DynamicFooter: React.FC = () => {
                 className="h-12 object-contain"
               />
             ) : (
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-xl font-bold text-text-secondary">
                 {store_name || "Store"}
               </h2>
             )}
 
             {footer_description && (
-              <p className="text-sm text-gray-400 leading-relaxed">
+              <p className="text-sm text-text-secondary leading-relaxed">
                 {footer_description}
               </p>
             )}
@@ -164,7 +164,7 @@ const DynamicFooter: React.FC = () => {
                     rel="noopener noreferrer"
                     title={icon.name}
                     aria-label={icon.name}
-                    className="p-2.5 rounded-full bg-gray-800 text-gray-200 transition-all duration-200 flex items-center justify-center hover:text-white"
+                    className="p-2.5 rounded-full bg-ring text-text-secondary transition-all duration-200 flex items-center justify-center hover:text-text-secondary"
                     onMouseEnter={(e) => {
                       if (primary_color)
                         e.currentTarget.style.backgroundColor = primary_color;
@@ -183,7 +183,7 @@ const DynamicFooter: React.FC = () => {
           {/* Quick Links */}
           {quick_links && quick_links.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-white">
+              <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-text-secondary">
                 Quick Links
               </h3>
               <ul className="space-y-2">
@@ -191,7 +191,7 @@ const DynamicFooter: React.FC = () => {
                   <li key={idx}>
                     <a
                       href={`/${link.slug}`}
-                      className="text-sm text-gray-400 hover:underline transition-colors"
+                      className="text-sm text-text-secondary hover:underline transition-colors"
                       onMouseEnter={(e) => {
                         if (secondary_color)
                           e.currentTarget.style.color = secondary_color;
@@ -211,7 +211,7 @@ const DynamicFooter: React.FC = () => {
           {/* Featured Categories */}
           {featured_categories && featured_categories.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-white">
+              <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-text-secondary">
                 Categories
               </h3>
               <ul className="space-y-2">
@@ -219,7 +219,7 @@ const DynamicFooter: React.FC = () => {
                   <li key={cat.id}>
                     <a
                       href={`/category/${cat.slug}`}
-                      className="text-sm text-gray-400 hover:underline transition-colors"
+                      className="text-sm text-text-secondary hover:underline transition-colors"
                       onMouseEnter={(e) => {
                         if (secondary_color)
                           e.currentTarget.style.color = secondary_color;
@@ -238,19 +238,19 @@ const DynamicFooter: React.FC = () => {
 
           {/* Contact Details */}
           <div>
-            <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-white">
+            <h3 className="text-sm font-semibold tracking-wider uppercase mb-4 text-text-secondary">
               Contact Us
             </h3>
             <ul className="space-y-3 text-sm">
               {address && (
-                <li className="text-gray-400 leading-snug">{address}</li>
+                <li className="text-text-secondary leading-snug">{address}</li>
               )}
               {contact_number && (
                 <li>
-                  <span className="text-gray-400">Phone: </span>
+                  <span className="text-text-secondary">Phone: </span>
                   <a
                     href={`tel:${contact_number}`}
-                    className="text-gray-300 hover:underline"
+                    className="text-text-secondary hover:underline"
                   >
                     {contact_number}
                   </a>
@@ -258,12 +258,12 @@ const DynamicFooter: React.FC = () => {
               )}
               {whatsapp_number && (
                 <li>
-                  <span className="text-gray-400">WhatsApp: </span>
+                  <span className="text-text-secondary">WhatsApp: </span>
                   <a
                     href={`https://wa.me/${formatWhatsAppNumber(whatsapp_number)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-300 hover:underline"
+                    className="text-text-secondary hover:underline"
                   >
                     {whatsapp_number}
                   </a>
@@ -271,10 +271,10 @@ const DynamicFooter: React.FC = () => {
               )}
               {footer_email && (
                 <li>
-                  <span className="text-gray-400">Email: </span>
+                  <span className="text-text-secondary">Email: </span>
                   <a
                     href={`mailto:${footer_email}`}
-                    className="text-gray-300 hover:underline"
+                    className="text-text-secondary hover:underline"
                   >
                     {footer_email}
                   </a>

@@ -1,13 +1,12 @@
 // app/flash-sales/page.tsx
 import { Metadata } from 'next';
-import CartPage from './cartpage';
 
-
+import OffersPage from './FlashSalesClient';
 
 export const metadata: Metadata = {
-  title: 'My Cart ',
+  title: 'Flash-Offers',
 };
 
 export default function FlashSalesPage() {
-  return <CartPage/> ;
+  return <OffersPage></OffersPage> ;
 }

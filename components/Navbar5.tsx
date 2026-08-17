@@ -131,7 +131,7 @@ export default function Navbar() {
   }
 
   return (
-    <main className="sticky top-0 z-50 bg-background/90 backdrop-blur-lg border-b border-ring/10 shadow-sm ">
+    <main className="sticky top-0 z-50 bg-background/90 backdrop-blur-lg border-b border-ring/10">
       
       <nav className="bg-background/90 backdrop-blur-lg border-t border-ring/10 shadow-sm">
         <div className="container mx-auto px-1 md:px-16">
@@ -155,7 +155,7 @@ export default function Navbar() {
                   variant="outline"
                   size="icon"
                   onClick={() => handleScroll("left")}
-                  className="absolute left-0 top-1.5/2  z-20 h-5 w-5 rounded-full bg-background/90  "
+                  className="absolute -left-2 top-1.5/2  z-20 h-5 w-5 rounded-full bg-background/90  "
                   aria-label="Scroll left"
                 >
                   <FaChevronLeft className="h-2.5 w-2.5" />
@@ -179,7 +179,7 @@ export default function Navbar() {
                   variant="outline"
                   size="icon"
                   onClick={() => handleScroll("right")}
-                  className="absolute right-0 top-1.5/2  z-20 h-5 w-5 rounded-full bg-background/90 "
+                  className="absolute -right-5 top-1.5/2  z-20 h-5 w-5 rounded-full bg-background/90 "
                   aria-label="Scroll right"
                 >
                   <FaChevronRight className="h-2.5 w-2.5" />
@@ -231,14 +231,7 @@ export default function Navbar() {
                         <span>Special Offers</span>
                       </Link>
 
-                      <Link
-                        href="/locations"
-                        onClick={() => setIsMoreOpen(false)}
-                        className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ring hover:bg-primary/10 hover:text-primary transition-colors"
-                      >
-                        <MapPin className="h-4 w-4 text-primary" />
-                        <span>Store Locations</span>
-                      </Link>
+                      
 
                       <a
                         href="https://wa.me/8801812295539"
@@ -252,7 +245,7 @@ export default function Navbar() {
                       </a>
 
                       <Link
-                        href="/contact"
+                        href="/contactus"
                         onClick={() => setIsMoreOpen(false)}
                         className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-ring hover:bg-primary/10 hover:text-primary transition-colors"
                       >
@@ -384,7 +377,7 @@ export default function Navbar() {
                 </Link>
 
                 <Link
-                  href="/contact"
+                  href="/contactus"
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-4 px-3 py-3 text-sm font-medium text-ring hover:text-primary transition-colors"
                 >

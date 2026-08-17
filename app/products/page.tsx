@@ -5,8 +5,17 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import { useCart } from '@/app/src/components/context/CartContext';
 import { FaChevronDown, FaChevronRight, FaSearch, FaRedo, FaShoppingCart, FaFilter, FaTimes } from 'react-icons/fa';
-import { FaEye, FaStar } from 'react-icons/fa6';
+import { FaStar } from 'react-icons/fa6';
 import { UseCurrency } from '@/components/ui/currency';
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from 'lucide-react';
 
 // Product & Category Interfaces
 interface ProductItem {
@@ -205,15 +214,15 @@ function AllProductsContent() {
     return (
       <div className="space-y-1">
         <div 
-          className="flex items-center justify-between py-1.5 px-1 rounded hover:bg-gray-50 transition"
+          className="flex items-center justify-between py-1.5 px-1 rounded hover:bg-background transition"
           style={{ paddingLeft: `${level * 12 + 4}px` }}
         >
-          <label className="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer hover:text-emerald-600 transition flex-1">
+          <label className="flex items-center gap-2 text-xs font-medium text-ring cursor-pointer hover:text-secoundary transition flex-1">
             <input
               type="checkbox"
               checked={isChecked}
               onChange={() => toggleCategory(category)}
-              className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+              className="w-4 h-4 rounded border-gray-300 text-secondary focus:ring-secondary/90"
             />
             <span className="truncate">{category.name}</span>
           </label>
@@ -222,12 +231,12 @@ function AllProductsContent() {
             <button
               type="button"
               onClick={() => toggleCategoryExpand(category.id)}
-              className="p-1 text-gray-400 hover:text-emerald-600 focus:outline-none"
+              className="p-1 text-gray-400 hover:text-primary focus:outline-none"
             >
               {isExpanded ? (
-                <FaChevronDown className="w-3 h-3" />
+                <FaChevronDown className="w-3 h-3"/>
               ) : (
-                <FaChevronRight className="w-3 h-3" />
+                <FaChevronRight className="w-3 h-3"/>
               )}
             </button>
           )}
@@ -235,9 +244,9 @@ function AllProductsContent() {
 
         {/* Child Dropdown */}
         {hasChildren && isExpanded && (
-          <div className="space-y-1 border-l border-gray-100 ml-2">
+          <div className="space-y-1 border-l ml-2">
             {category.children!.map((child) => (
-              <CategoryTreeItem key={child.id} category={child} level={level + 1} />
+              <CategoryTreeItem category={child} key={child.id} level={level + 1} />
             ))}
           </div>
         )}
@@ -249,22 +258,21 @@ function AllProductsContent() {
   const FilterSidebarContent = () => (
     <div className="space-y-6">
       {/* Header & Reset Button */}
-      <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-        <h2 className="text-base font-bold text-gray-900">Filters</h2>
+      <div className="flex justify-between items-center pb-3 border-b ">
+        <h2 className="text-base font-bold text-ring">Filters</h2>
         <button
           onClick={handleResetFilters}
-          className="flex items-center gap-1.5 text-xs text-emerald-600 hover:text-emerald-700 font-medium transition"
+          className="flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 font-medium transition"
         >
-          <FaRedo className="w-3 h-3" />
+          <FaRedo className="w-3 h-3"/>
           <span>Reset All</span>
         </button>
       </div>
 
       {/* 1. Filter By Name */}
       <div>
-        <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
-          <h3 className="text-sm font-semibold text-gray-900">Filter By Name</h3>
-          <FaChevronDown className="w-3 h-3 text-gray-400" />
+        <div className="flex justify-between items-center pb-2 border-b  mb-3">
+          <h3 className="text-sm font-semibold text-text-primary">Filter By Name</h3>
         </div>
         <div className="relative">
           <input
@@ -272,29 +280,28 @@ function AllProductsContent() {
             placeholder="Search product name..."
             value={nameSearch}
             onChange={(e) => setNameSearch(e.target.value)}
-            className="w-full text-xs bg-gray-50 border border-gray-200 rounded px-3 py-2.5 pr-8 focus:outline-none focus:border-emerald-500"
+            className="w-full text-xs bg-background border rounded px-3 py-2.5 pr-8 focus:outline-none focus:border-priimary"
           />
-          <FaSearch className="absolute right-2.5 top-3 w-3 h-3 text-gray-400" />
+          <FaSearch className="absolute right-2.5 top-3 w-3 h-3 text-ring"/>
         </div>
       </div>
 
       {/* 2. Category Filter */}
       <div>
-        <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
-          <h3 className="text-sm font-semibold text-gray-900">Filter By Category</h3>
-          <FaChevronDown className="w-3 h-3 text-gray-400" />
+        <div className="flex justify-between items-center pb-2 border-b  mb-3">
+          <h3 className="text-sm font-semibold text-ring">Filter By Category</h3>
         </div>
 
         {isCategoriesLoading ? (
           <div className="space-y-2 py-2">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-5 bg-gray-100 animate-pulse rounded" />
+              <div key={i} className="h-5 bg-background animate-pulse rounded" />
             ))}
           </div>
         ) : (
           <div className="space-y-1 max-h-60 lg:max-h-72 overflow-y-auto pr-1">
             {categories.map((cat) => (
-              <CategoryTreeItem key={cat.id} category={cat} />
+              <CategoryTreeItem category={cat} key={cat.id} />
             ))}
           </div>
         )}
@@ -302,9 +309,8 @@ function AllProductsContent() {
 
       {/* 3. Brand Filter */}
       <div>
-        <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
-          <h3 className="text-sm font-semibold text-gray-900">Filter By Brand</h3>
-          <FaChevronDown className="w-3 h-3 text-gray-400" />
+        <div className="flex justify-between items-center pb-2 border-b  mb-3">
+          <h3 className="text-sm font-semibold text-ring">Filter By Brand</h3>
         </div>
 
         <div className="relative mb-3">
@@ -313,7 +319,7 @@ function AllProductsContent() {
             placeholder="Search brands..."
             value={brandSearch}
             onChange={(e) => setBrandSearch(e.target.value)}
-            className="w-full text-xs bg-gray-50 border border-gray-200 rounded px-3 py-2.5 focus:outline-none focus:border-emerald-500"
+            className="w-full text-xs bg-background border rounded px-3 py-2.5 focus:outline-none focus:border-primary"
           />
         </div>
 
@@ -321,12 +327,12 @@ function AllProductsContent() {
           {filteredBrandList.map((brand) => {
             const isChecked = selectedBrands.includes(brand);
             return (
-              <label key={brand} className="flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer hover:text-emerald-600 transition">
+              <label key={brand} className="flex items-center gap-2 text-xs font-medium text-ring cursor-pointer hover:text-primary transition">
                 <input
                   type="checkbox"
                   checked={isChecked}
                   onChange={() => toggleBrand(brand)}
-                  className="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                  className="w-4 h-4 rounded text-primary focus:ring-primary/80"
                 />
                 <span>{brand}</span>
               </label>
@@ -337,9 +343,9 @@ function AllProductsContent() {
 
       {/* 4. Price Range Filter */}
       <div>
-        <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
-          <h3 className="text-sm font-semibold text-gray-900">Price Range</h3>
-          <FaChevronDown className="w-3 h-3 text-gray-400" />
+        <div className="flex justify-between items-center pb-2 border-b  mb-3">
+          <h3 className="text-sm font-semibold text-ring">Price Range</h3>
+          <FaChevronDown className="w-3 h-3 text-ring/60"/>
         </div>
 
         <div className="flex items-center gap-2 mb-2">
@@ -347,20 +353,20 @@ function AllProductsContent() {
             type="number"
             value={minPriceInput}
             onChange={(e) => setMinPriceInput(Number(e.target.value))}
-            className="w-full text-xs border border-gray-200 rounded px-2 py-2 focus:outline-none focus:border-emerald-500"
+            className="w-full text-xs border rounded px-2 py-2 focus:outline-none focus:border-primary"
             placeholder="0"
           />
-          <span className="text-gray-400 text-xs">-</span>
+          <span className="text-ring/60 text-xs">-</span>
           <input
             type="number"
             value={maxPriceInput}
             onChange={(e) => setMaxPriceInput(Number(e.target.value))}
-            className="w-full text-xs border border-gray-200 rounded px-2 py-2 focus:outline-none focus:border-emerald-500"
+            className="w-full text-xs border rounded px-2 py-2 focus:outline-none focus:border-primary"
             placeholder="250000"
           />
         </div>
 
-        <p className="text-[11px] text-gray-500">
+        <p className="text-[11px] text-ring">
           Min: {minPriceInput.toFixed(2)} Max: {maxPriceInput.toFixed(2)}
         </p>
       </div>
@@ -368,18 +374,18 @@ function AllProductsContent() {
   );
 
   return (
-    <div className="bg-[#f8f9fa] min-h-screen py-4 sm:py-6 px-3 sm:px-6 md:px-8 font-sans text-gray-800">
-      <div className="max-w-[1400px] mx-auto">
+    <div className="bg-background min-h-screen py-4 sm:py-6 px-3 sm:px-6 md:px-8 font-sans text-text-primary">
+      <div className="max-w-350 mx-auto">
         
         {/* Page Title & Mobile Filter Trigger */}
         <div className="flex items-center justify-between mb-4 sm:mb-6">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">All Products</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-ring">All Products</h1>
 
           <button
             onClick={() => setIsMobileFilterOpen(true)}
-            className="lg:hidden flex items-center gap-2 bg-emerald-600 text-white px-3 py-2 rounded-md text-xs font-medium shadow-sm hover:bg-emerald-700 transition"
+            className="lg:hidden flex items-center gap-2 bg-primary text-text-secondary px-3 py-2 rounded-md text-xs font-medium shadow-sm hover:bg-primary/50 transition"
           >
-            <FaFilter className="w-3 h-3" />
+            <FaFilter className="w-3 h-3"/>
             <span>Filter Products</span>
           </button>
         </div>
@@ -387,37 +393,37 @@ function AllProductsContent() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 xl:gap-8 items-start">
           
           {/* ================= DESKTOP SIDEBAR FILTERS ================= */}
-          <aside className="hidden lg:block bg-white rounded-md border border-gray-200 p-5">
-            <FilterSidebarContent />
+          <aside className="hidden lg:block bg-background rounded-md border p-5">
+            <FilterSidebarContent/>
           </aside>
 
           {/* ================= MOBILE SLIDE-OVER FILTER DRAWER ================= */}
           {isMobileFilterOpen && (
             <div className="fixed inset-0 z-50 lg:hidden flex">
               <div 
-                className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+                className="fixed inset-0 bg-foreground/40 backdrop-blur-xs transition-opacity"
                 onClick={() => setIsMobileFilterOpen(false)}
               />
 
-              <div className="relative ml-auto w-full max-w-xs bg-white h-full shadow-2xl flex flex-col z-10 overflow-hidden">
-                <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+              <div className="relative ml-auto w-full max-w-xs bg-background h-full shadow-2xl flex flex-col z-10 overflow-hidden">
+                <div className="p-4 border-b  flex justify-between items-center bg-background">
                   <span className="font-bold text-sm text-gray-800">Filter Products</span>
                   <button
                     onClick={() => setIsMobileFilterOpen(false)}
-                    className="p-1.5 text-gray-500 hover:text-gray-800 rounded-full hover:bg-gray-200 transition"
+                    className="p-1.5 text-ring hover:text-ring/80 rounded-full hover:bg-ring/5 transition"
                   >
-                    <FaTimes className="w-4 h-4" />
+                    <FaTimes className="w-4 h-4"/>
                   </button>
                 </div>
 
                 <div className="p-4 overflow-y-auto flex-1">
-                  <FilterSidebarContent />
+                  <FilterSidebarContent/>
                 </div>
 
-                <div className="p-4 border-t border-gray-200 bg-gray-50">
+                <div className="p-4 border-t  bg-background">
                   <button
                     onClick={() => setIsMobileFilterOpen(false)}
-                    className="w-full bg-emerald-600 text-white py-2.5 rounded-md text-xs font-semibold hover:bg-emerald-700 transition"
+                    className="w-full bg-primary text-text-text-secondary py-2.5 rounded-md text-xs font-semibold hover:bg-primary/50 transition"
                   >
                     Apply Filters
                   </button>
@@ -430,37 +436,72 @@ function AllProductsContent() {
           <main className="lg:col-span-3 space-y-4">
             
             {/* Top Toolbar */}
-            <div className="bg-white rounded-md border border-gray-200 p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="bg-background rounded-md border  p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-3 sm:gap-6">
                 
                 {/* Sort dropdown */}
                 <div className="flex items-center gap-2 text-xs flex-1 sm:flex-none">
                   <span className="text-gray-500 font-medium whitespace-nowrap">Sort by:</span>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full sm:w-auto border border-gray-200 rounded px-2 py-1.5 text-xs bg-white text-gray-700 focus:outline-none focus:border-emerald-500"
-                  >
-                    <option value="default">Default</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="name-az">Name: A to Z</option>
-                  </select>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full sm:w-auto h-9 text-xs justify-between gap-2 border-gray-200 bg-white font-normal text-gray-700 hover:bg-gray-50 focus:border-emerald-500"
+                      >
+                        <span>
+                          {sortBy === 'price-low'
+                            ? 'Price: Low to High'
+                            : sortBy === 'price-high'
+                            ? 'Price: High to Low'
+                            : sortBy === 'name-az'
+                            ? 'Name: A to Z'
+                            : 'Default'}
+                        </span>
+                        <ChevronDown className="w-3.5 h-3.5 opacity-50" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-44 bg-white border">
+                      <DropdownMenuRadioGroup value={sortBy} onValueChange={(val) => setSortBy(val)}>
+                        <DropdownMenuRadioItem className="cursor-pointer text-xs" value="default">
+                          Default
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem className="cursor-pointer text-xs" value="price-low">
+                          Price: Low to High
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem className="cursor-pointer text-xs" value="price-high">
+                          Price: High to Low
+                        </DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem className="cursor-pointer text-xs" value="name-az">
+                          Name: A to Z
+                        </DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
 
                 {/* Show items count selector */}
-                <div className="flex items-center gap-2 text-xs flex-1 sm:flex-none">
-                  <span className="text-gray-500 font-medium whitespace-nowrap">Show:</span>
-                  <select
-                    value={itemsPerPage}
-                    onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                    className="w-full sm:w-auto border border-gray-200 rounded px-2 py-1.5 text-xs bg-white text-gray-700 focus:outline-none focus:border-emerald-500"
-                  >
-                    <option value={20}>20 Products</option>
-                    <option value={40}>40 Products</option>
-                    <option value={60}>60 Products</option>
-                  </select>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="w-1/2 sm:w-auto text-xs sm:text-sm font-normal text-ring flex items-center justify-between gap-2 h-9" size="sm" variant="outline">
+                      <span>{itemsPerPage} Items</span>
+                      <ChevronDown className="w-4 h-4 opacity-50"/>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-32 bg-background border">
+                    <DropdownMenuRadioGroup value={String(itemsPerPage)} onValueChange={(val) => setItemsPerPage(Number(val))}>
+                      <DropdownMenuRadioItem className="cursor-pointer text-xs sm:text-sm" value="20">
+                        20 Items
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem className="cursor-pointer text-xs sm:text-sm" value="40">
+                        40 Items
+                      </DropdownMenuRadioItem>
+                      <DropdownMenuRadioItem className="cursor-pointer text-xs sm:text-sm" value="60">
+                        60 Items
+                      </DropdownMenuRadioItem>
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
 
               <div className="text-xs text-gray-500 font-medium text-right sm:text-left">
@@ -472,20 +513,20 @@ function AllProductsContent() {
             {isProductsLoading ? (
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                 {[...Array(8)].map((_, i) => (
-                  <div key={i} className="bg-white rounded-md border border-gray-200 p-3 sm:p-4 space-y-3 animate-pulse">
-                    <div className="h-32 sm:h-40 bg-gray-100 rounded" />
-                    <div className="h-4 bg-gray-100 rounded w-3/4" />
-                    <div className="h-4 bg-gray-100 rounded w-1/2" />
-                    <div className="h-8 bg-gray-100 rounded" />
+                  <div key={i} className="bg-background rounded-md border  p-3 sm:p-4 space-y-3 animate-pulse">
+                    <div className="h-32 sm:h-40 bg-ring/5 rounded" />
+                    <div className="h-4 bg-ring/5 rounded w-3/4" />
+                    <div className="h-4 bg-ring/5 rounded w-1/2" />
+                    <div className="h-8 bg-ring/5 rounded" />
                   </div>
                 ))}
               </div>
             ) : displayedProducts.length === 0 ? (
-              <div className="bg-white rounded-md border border-gray-200 p-8 sm:p-12 text-center">
-                <p className="text-xs sm:text-sm text-gray-500 mb-3">No products found matching your filter criteria.</p>
+              <div className="bg-background rounded-md border  p-8 sm:p-12 text-center">
+                <p className="text-xs sm:text-sm text-ring mb-3">No products found matching your filter criteria.</p>
                 <button
                   onClick={handleResetFilters}
-                  className="px-4 py-2 bg-emerald-600 text-white rounded text-xs font-medium hover:bg-emerald-700 transition"
+                  className="px-4 py-2 bg-primary text-text-secondary rounded text-xs font-medium hover:bg-primary/50 transition"
                 >
                   Reset All Filters
                 </button>
@@ -510,7 +551,7 @@ function AllProductsContent() {
 
                     {/* Discount Badge */}
                     {item.has_discount && (
-                      <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-primary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
+                      <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-secondary text-sm sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
                         {item.discount_price}
                       </div>
                     )}
@@ -524,46 +565,33 @@ function AllProductsContent() {
                       }`}
                     >
                       {/* Add to Cart Button */}
-                     <button
-                  type="button"
-                  disabled={!item.in_stock || item.stock_qty <= 0}
-                  title="Add to Cart"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    addToCart({
-                      id: item.id,
-                      image: item.image || "/placeholder.png",
-                      brand: "Taskco",
-                      name: item.name,
-                      price: Number(item.sale_price),
-                    });
-                  }}
-                  className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
-                >
-                  <FaShoppingCart className="text-[10px] sm:text-xs" />
-                   {!item.in_stock || item.stock_qty <= 0
-                      ? "Out of Stock"
-                      : "Add to Cart"}
-                </button>
-
-
-                      {/* Quick View Button */}
-                      <Link
-                        href={`/products/${item.slug}`}
-                        onClick={(e) => e.stopPropagation()}
-                        title="Quick View"
-                        className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
+                      <button
+                        type="button"
+                        disabled={!item.in_stock || item.stock_qty <= 0}
+                        title="Add to Cart"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addToCart({
+                            id: item.id,
+                            image: item.image || "/placeholder.png",
+                            brand: "Taskco",
+                            name: item.name,
+                            price: Number(item.sale_price),
+                          });
+                        }}
+                        className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[11px] sm:text-xs font-medium py-1.5 px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all"
                       >
-                        <FaEye className="text-[10px] sm:text-xs" />
-                      </Link>
+                        <FaShoppingCart className="text-[10px] sm:text-xs"/>
+                        {!item.in_stock || item.stock_qty <= 0
+                          ? "Out of Stock"
+                          : "Add to Cart"}
+                      </button>
                     </div>
                   </div>
 
                   {/* DETAILS AREA */}
-                  <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
+                  <Link className="p-2 sm:p-3 flex-1 flex flex-col justify-between" href={`/products/${item.slug}`}>
                     <div>
-                      <p className="text-[10px] sm:text-xs text-ring">Taskco</p>
-
                       <h2 className="text-xs sm:text-sm font-semibold truncate text-text-primary">
                         {item.name}
                       </h2>
@@ -571,7 +599,7 @@ function AllProductsContent() {
                       {/* Rating */}
                       <div className="flex gap-0.5 text-yellow-400 text-[10px] sm:text-xs mt-1">
                         {[...Array(5)].map((_, index) => (
-                          <FaStar key={index} />
+                          <FaStar key={index}/>
                         ))}
                       </div>
                     </div>
@@ -589,19 +617,6 @@ function AllProductsContent() {
                           {currency} {Number(item.sale_price).toFixed(0)}
                         </span>
                       </div>
-
-                      {/* Stock Status */}
-                      <div className="mt-0.5">
-                        {item.in_stock ? (
-                          <span className="text-green-600 text-[10px] sm:text-xs font-medium">
-                            In Stock ({item.stock_qty})
-                          </span>
-                        ) : (
-                          <span className="text-destructive text-[10px] sm:text-xs font-medium">
-                            Out of Stock
-                          </span>
-                        )}
-                      </div>
                     </div>
                   </Link>
                 </div>
@@ -618,7 +633,7 @@ function AllProductsContent() {
 export default function AllProductsPage() {
   return (
     <Suspense fallback={<div className="p-10 text-center text-xs">Loading collection...</div>}>
-      <AllProductsContent />
+      <AllProductsContent/>
     </Suspense>
   );
 }

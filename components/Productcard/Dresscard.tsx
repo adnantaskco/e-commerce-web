@@ -39,7 +39,7 @@ const Dressandjumpsuits = ({
   const { currency } = UseCurrency();
 
   return (
-    <section className="container mx-auto px-3 sm:px-4 md:px-16 py-6 bg-background">
+    <section className="container mx-auto px-3 sm:px-4 md:px-16 sm:py-5 md:py-4 lg:py-5 bg-background">
       {/* Section Title */}
       <div className="flex items-end justify-between mb-4 md:mb-6">
         <h2 className="text-xl md:text-3xl text-text-primary font-bold capitalize ">
@@ -164,12 +164,6 @@ const Dressandjumpsuits = ({
         ))}
       </div>
 
-      {/* Mobile Drag Helper */}
-      {/* <div className="flex md:hidden items-center justify-center gap-2 text-[11px] text-muted-foreground mt-2 text-center">
-        <span>←</span>
-        <span>Swipe to explore</span>
-        <span>→</span>
-      </div> */}
     </section>
   );
 };

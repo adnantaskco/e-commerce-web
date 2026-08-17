@@ -215,9 +215,15 @@ export default function OffersPage() {
           </section>
         ))
       ) : (
-        <div className="text-center  text-ring font-medium">
-          <img src="https://demo.web.taskcocommerce.com/assets/flash1.png" alt="" />
-          No active offers available at this time.
+        <div className="container mx-auto px-2 md:px-16 ">
+          <div className='text-center  text-ring font-medium'>
+            <img src="https://demo.web.taskcocommerce.com/assets/flash1.png"
+             alt=""
+             className='w-full ' />
+            <h1> No active offers available at this time.</h1>
+          </div>
+          
+         
         </div>
       )}
     </div>

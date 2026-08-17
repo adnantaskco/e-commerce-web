@@ -1,76 +1,70 @@
-// "use client"
+"use client";
 
-// import * as React from "react"
-// import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-// import ProductCard1 from "./Productcard/Dresscard"
-// import Sheos from "./Productcard/Babydresscard"
-// import Jackets from "./Productcard/jacketcard"
+import useSWR from "swr";
+import { useState } from "react";
+import DressandjumpsuitsTab from "./Productcard/Tabcard";
 
-// export default function TrendingProductsTabs() {
-//   return (
-//     <section className="w-full mx-auto  ">
-//         <div className="container mx-auto px- md:px-20">
-//              {/* TITLE */}
-//          <div className="text-center md:py-10 py-4">
-//            <span className="uppercase tracking-[5px] text-primary font-semibold">
-//             Treanding
-//           </span>
-//             <h1 className="text-3xl md:text-5xl font-bold sm:font-semibold mt-4">Trending Products</h1>
-//             <div className="flex justify-center mt-6">
-//                 <div className="border-t-4  border-primary w-60"></div>
-//             </div>
-//             </div>
+// SWR Fetcher function
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-     
+export default function TrendingProductsTabs() {
+  const { data, error, isLoading } = useSWR(
+    "https://demo.app.taskcocommerce.com/api/v1/home-sections/",
+    fetcher
+  );
 
-//       {/* TABS WRAPPER */}
-//       <Tabs defaultValue="dresses" className="w-full">
+  // Filter only items containing product collections
+  const productCollections =
+    data?.data?.filter((section: any) => section.type === "product_collection") || [];
 
-//         {/* TAB LIST (RESPONSIVE) */}
-//         <div className="flex justify-center">
-//           <TabsList
-//            variant="line"
-//           className="flex w-full overflow-x-auto sm:overflow-visible justify-start sm:justify-center gap-3 sm:gap-6 px-2 sm:px-2"
-//           >
-//             <TabsTrigger
-//               value="dresses"
-//               className="text-sm sm:text-base data-[state=active]:text-primary "
-//             >
-//               Dresses & Jumpsuits
-//             </TabsTrigger>
+  const [activeTab, setActiveTab] = useState<number>(0);
 
-//             <TabsTrigger
-//               value="jackets"
-//               className="text-sm sm:text-base data-[state=active]:text-primary "
-//             >
-//               Jackets & Blazers
-//             </TabsTrigger>
+  if (isLoading) return <div className="text-center py-10">Loading products...</div>;
+  if (error) return <div className="text-center py-10">Failed to load products.</div>;
+  if (!productCollections.length) return null;
 
-//             <TabsTrigger
-//               value="babydresss"
-//               className="text-sm sm:text-base data-[state=active]:text-primary "
-//             >
-//               Baby Dress
-//             </TabsTrigger>
-//           </TabsList>
-//         </div>
+  const activeCollection = productCollections[activeTab] || productCollections[0];
 
-//         {/* CONTENT */}
-//         <TabsContent value="dresses" className="mt-6">
-//           <ProductCard1 />
-//         </TabsContent>
+  return (
+    <section className="w-full py-8 md:py-12">
+      <div className="container mx-auto px-4 md:px-20">
+        
+        {/* TITLE SECTION */}
+        <div className="text-center pb-8">
+          <h1 className="text-3xl md:text-4xl font-medium tracking-tight text-slate-800">
+            Trending Products
+          </h1>
+          <div className="flex justify-center mt-3">
+            <div className="h-[2px] w-16 bg-[#C2A38E]"></div>
+          </div>
+        </div>
 
-//         <TabsContent value="jackets" className="mt-6">
-//           <Jackets />
-//         </TabsContent>
+        {/* DYNAMIC TAB NAVIGATION */}
+        <div className="flex justify-center mb-8">
+          <div className="flex w-full overflow-x-auto sm:overflow-visible justify-start sm:justify-center gap-6 sm:gap-12 p-0 border-b border-transparent">
+            {productCollections.map((collection: any, idx: number) => (
+              <button
+                key={collection.uid || idx}
+                onClick={() => setActiveTab(idx)}
+                className={`whitespace-nowrap pb-2 pt-0 px-0 text-base transition-all bg-transparent ${
+                  activeTab === idx
+                    ? "font-semibold text-slate-800 border-b-2 border-slate-900"
+                    : "font-medium text-slate-800 border-b-2 border-transparent hover:text-slate-900"
+                }`}
+              >
+                {collection.name}
+              </button>
+            ))}
+          </div>
+        </div>
 
-//         <TabsContent value="babydress" className="mt-6">
-//           <Sheos />
-//         </TabsContent>
+        {/* DYNAMIC PRODUCT GRID */}
+        <DressandjumpsuitsTab 
+          title={activeCollection?.name || "Products"} 
+          products={activeCollection?.products || []} 
+        />
 
-//       </Tabs>
-//         </div>
-     
-//     </section>
-//   )
-// }
+      </div>
+    </section>
+  );
+}

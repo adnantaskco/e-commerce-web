@@ -4,6 +4,8 @@ import React from "react";
 import useSWR from "swr";
 
 import ProductSlider from "@/components/Productcard/Rawdealcard";
+import DiscountBanners2 from "./DiscountPoster2";
+import DiscountBanners22 from "./DiscountPoster22";
 
 const API_URL =
   "https://demo.app.taskcocommerce.com/api/v1/offer-with-products";
@@ -37,7 +39,7 @@ type OfferResponse = {
   data: Offer[];
 };
 
-export default function SpcialOffersPage() {
+export default function RawSpcialOffersPage() {
   const {
     data,
     error,
@@ -86,15 +88,28 @@ export default function SpcialOffersPage() {
     );
   }
 
-  return (
-    <div className="container mx-auto px-3 sm:px-4 md:px-8 lg:px-16 py-6 space-y-8">
-      {activeOffers.map((section) => (
+return (
+  <div className="container mx-auto px-3 sm:px-4 md:px-8 lg:px-16 py-6">
+
+    {activeOffers.map((section, index) => (
+      <React.Fragment key={section.uid}>
+
+        {/* Offer Section */}
         <ProductSlider
-          key={section.uid}
           title={section.name}
           products={section.products}
         />
-      ))}
-    </div>
-  );
+
+        {/* Banner after every Offer */}
+        {index % 2 === 0 ? (
+          <DiscountBanners22 />
+        ) : (
+          <DiscountBanners2 />
+        )}
+
+      </React.Fragment>
+    ))}
+
+  </div>
+);
 }

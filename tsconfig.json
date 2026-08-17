@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "components/ui/button-group.jsx"  ],
+, "components/ui/button-group.jsx", "app/Home2"  ],
   "exclude": ["node_modules"]
 }

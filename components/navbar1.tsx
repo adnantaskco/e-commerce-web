@@ -11,12 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 interface Navbar1Props {
   isLoading?: boolean;
 }
 
 function Navbar1({ isLoading = false }: Navbar1Props) {
+
+const router = useRouter();
+
+  const handleNavigation = (value: string) => {
+    if (value) {
+      router.push(value);
+    }
+  };
+
   // Skeleton Loading State
   if (isLoading) {
     return (
@@ -146,50 +156,45 @@ function Navbar1({ isLoading = false }: Navbar1Props) {
             </Select>
 
             {/* ================= CURRENCY ================= */}
-            <div className="hidden md:block">
-              <Select
-                defaultValue="usd"
-                onValueChange={(value) => {
-                  console.log("Currency:", value);
-                }}
-              >
-                <SelectTrigger
-                  className="
-                    h-8
-                    w-auto
-                    min-w-[80px]
-                    border-0
-                    bg-transparent
-                    px-1
-                    sm:px-2
-                    text-text-secondary
-                    shadow-none
-                    focus:ring-0
-                    focus:ring-offset-0
-                    hover:text-primary
-                    transition-colors
-                  "
-                >
-                  <SelectValue placeholder="Currency" />
-                </SelectTrigger>
+<div className="hidden md:block">
+      <Select onValueChange={handleNavigation}>
+        <SelectTrigger
+          className="
+            h-8
+            w-auto
+            min-w-[80px]
+            border-0
+            bg-transparent
+            px-1
+            sm:px-2
+            text-text-secondary
+            shadow-none
+            focus:ring-0
+            focus:ring-offset-0
+            hover:text-primary
+            transition-colors
+          "
+        >
+          <SelectValue placeholder="Select Home" />
+        </SelectTrigger>
 
-                <SelectContent className="bg-background border-border">
-                  <SelectItem
-                    value="usd"
-                    className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
-                  >
-                    $ USD
-                  </SelectItem>
+        <SelectContent className="bg-background border-border">
+          <SelectItem
+            value="/home"
+            className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary"
+          >
+            Home 1
+          </SelectItem>
 
-                  <SelectItem
-                    value="eur"
-                    className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary "
-                  >
-                    € EUR
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <SelectItem
+            value="/Home2"
+            className="cursor-pointer transition-colors hover:text-primary focus:bg-primary focus:text-primary"
+          >
+            Home 2
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
 
           </div>
         </div>

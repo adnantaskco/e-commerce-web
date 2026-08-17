@@ -30,29 +30,19 @@ interface DressandjumpsuitsProps {
   products: Product[];
 }
 
-const Dressandjumpsuits = ({
+const DressandjumpsuitsTab = ({
   title,
   products,
 }: DressandjumpsuitsProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
   const { addToCart } = useCart();
   const { currency } = UseCurrency();
+  const [addingToCartId, setAddingToCartId] = useState<string | number | null>(null);
+const [cartedIds, setCartedIds] = useState<(string | number)[]>([]);
 
   return (
-    <section className="container mx-auto px-3 sm:px-4 md:px-16 sm:py-5 md:py-4 lg:py-5 bg-background">
-      {/* Section Title */}
-      <div className="flex items-end justify-between mb-4 md:mb-6">
-        <h2 className="text-xl md:text-3xl text-text-primary font-bold capitalize ">
-          {title}
-        </h2>
-
-        <button
-          type="button"
-          className="text-xs md:text-base font-medium text-text-blue hover:text-primary hover:underline underline-offset-4 transition-colors duration-200"
-        >
-          See All
-        </button>
-      </div>
+    <section className="sm:py-5 md:py-4 lg:py-5 bg-background">
+      
 
       {/* Products Horizontal Snap-Scroll on Mobile / Grid on Desktop */}
       <div className="flex overflow-x-auto no-scrollbar scroll-smooth snap-x snap-mandatory gap-2 pb-2 md:pb-0 md:grid md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 md:gap-4">
@@ -94,10 +84,29 @@ const Dressandjumpsuits = ({
                 {/* Add to Cart Button */}
                 <button
                   type="button"
-                  disabled={!item.in_stock || item.stock_qty <= 0}
-                  title="Add to Cart"
-                  onClick={(e) => {
+                  disabled={
+                    !item.in_stock ||
+                    item.stock_qty <= 0 ||
+                    addingToCartId === item.id
+                  }
+                  title={
+                    !item.in_stock || item.stock_qty <= 0
+                      ? "Out of stock"
+                      : cartedIds.includes(item.id)
+                        ? "Product added to cart"
+                        : "Add to Cart"
+                  }
+                  onClick={async (e) => {
                     e.stopPropagation();
+
+                    if (!item.in_stock || item.stock_qty <= 0) return;
+                    if (addingToCartId === item.id) return;
+
+                    setAddingToCartId(item.id);
+
+                    // Show loading state
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+
                     addToCart({
                       id: item.id,
                       image: item.image || "/placeholder.png",
@@ -105,26 +114,40 @@ const Dressandjumpsuits = ({
                       name: item.name,
                       price: Number(item.sale_price),
                     });
+
+                    // Show Carted state
+                    setCartedIds((prev) =>
+                      prev.includes(item.id) ? prev : [...prev, item.id]
+                    );
+
+                    setAddingToCartId(null);
                   }}
-                  className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[10px] sm:text-xs font-medium py-1.5 px-1 sm:px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all disabled:opacity-50"
+                  className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-sm sm:text-xs font-medium py-1.5 px-1 sm:px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
-                  <span className="truncate">
-                    {!item.in_stock || item.stock_qty <= 0
-                      ? "Out of stock"
-                      : "Add to Cart"}
-                  </span>
+                  {addingToCartId === item.id ? (
+                    <>
+                      <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
+                      <span className="truncate">Adding...</span>
+                    </>
+                  ) : !item.in_stock || item.stock_qty <= 0 ? (
+                    <>
+                      <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
+                      <span className="truncate">Out of stock</span>
+                    </>
+                  ) : cartedIds.includes(item.id) ? (
+                    <>
+                      <span className="text-xs shrink-0">✓</span>
+                      <span className="truncate">Carted</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
+                      <span className="truncate">Add to Cart</span>
+                    </>
+                  )}
                 </button>
 
-                {/* Quick View Button
-                <Link
-                  href={`/products/${item.slug}`}
-                  onClick={(e) => e.stopPropagation()}
-                  title="Quick View"
-                  className="w-7 h-7 sm:w-8 sm:h-8 bg-background text-ring hover:bg-blue-600 hover:text-text-secondary rounded flex items-center justify-center shadow hover:shadow-md active:scale-95 transition-all shrink-0"
-                >
-                  <FaEye className="text-[10px] sm:text-xs" />
-                </Link> */}
+              
               </div>
             </div>
 
@@ -133,7 +156,7 @@ const Dressandjumpsuits = ({
               <div>
                 
 
-                <h2 className="font-semibold text-text-primary text-sm sm:text-md md:text-xl lg:text-xl line-clamp-1 hover:text-primary transition">
+                <h2 className="font-semibold text-text-primary text-xs sm:text-sm md:text-base line-clamp-1 hover:text-primary transition">
                   {item.name}
                 </h2>
 
@@ -168,4 +191,4 @@ const Dressandjumpsuits = ({
   );
 };
 
-export default Dressandjumpsuits;
+export default DressandjumpsuitsTab;

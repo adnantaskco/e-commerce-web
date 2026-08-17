@@ -3,8 +3,8 @@
 import useSWR from "swr";
 
 import HeroSection from "@/components/heroSection";
-import Dressandjumpsuits from "@/components/Productcard/Dresscard";
-import ProductSlider from "@/components/Productcard/dealcard";
+import Dressandjumpsuits from "@/components/Productcard/GridDresscard";
+import ProductSlider from "@/components/Productcard/Rawdealcard";
 import DiscountBanners from "@/components/DiscountPoster";
 
 import CategorySection from "@/components/scrollsection";

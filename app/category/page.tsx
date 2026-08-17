@@ -245,7 +245,7 @@ function ProductsContent() {
               <div className="flex items-center gap-3 w-full sm:max-w-xs">
                 <button 
                   onClick={() => setIsMobileFilterOpen(true)}
-                  className="lg:hidden flex items-center justify-center p-2.5 rounded-lg border border-ring/10 bg-gray-50 hover:bg-ring/10 active:scale-95 transition-all"
+                  className="lg:hidden flex items-center justify-center p-2.5 rounded-lg border border-ring/10 bg-background hover:bg-ring/10 active:scale-95 transition-all"
                   title="Open Filters"
                 >
                   <FaSliders className="w-4 h-4 text-ring" />

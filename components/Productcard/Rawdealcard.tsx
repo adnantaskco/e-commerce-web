@@ -119,40 +119,41 @@ export default function ProductSlider({
       }
     }, 3500);
   };
-
+    const [addingToCartId, setAddingToCartId] = useState<string | number | null>(null);
+      const [cartedIds, setCartedIds] = useState<(string | number)[]>([]);
   // Mouse Drag Handlers
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    const slider = sliderRef.current;
-    if (!slider) return;
+      const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+        const slider = sliderRef.current;
+        if (!slider) return;
 
-    isDragging.current = true;
-    startX.current = e.pageX - slider.offsetLeft;
-    scrollLeft.current = slider.scrollLeft;
-    slider.style.cursor = "grabbing";
+        isDragging.current = true;
+        startX.current = e.pageX - slider.offsetLeft;
+        scrollLeft.current = slider.scrollLeft;
+        slider.style.cursor = "grabbing";
 
-    if (intervalRef.current) clearInterval(intervalRef.current);
-  };
+        if (intervalRef.current) clearInterval(intervalRef.current);
+      };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDragging.current) return;
-    e.preventDefault();
+      const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!isDragging.current) return;
+        e.preventDefault();
 
-    const slider = sliderRef.current;
-    if (!slider) return;
+        const slider = sliderRef.current;
+        if (!slider) return;
 
-    const x = e.pageX - slider.offsetLeft;
-    const walk = (x - startX.current) * 2;
-    slider.scrollLeft = scrollLeft.current - walk;
-  };
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX.current) * 2;
+        slider.scrollLeft = scrollLeft.current - walk;
+      };
 
-  const stopDragging = () => {
-    isDragging.current = false;
-    const slider = sliderRef.current;
-    if (slider) {
-      slider.style.cursor = "grab";
-    }
-    startAutoSlide();
-  };
+      const stopDragging = () => {
+        isDragging.current = false;
+        const slider = sliderRef.current;
+        if (slider) {
+          slider.style.cursor = "grab";
+        }
+        startAutoSlide();
+      };
 
   useEffect(() => {
     if (products.length > 0) {
@@ -225,29 +226,70 @@ export default function ProductSlider({
                       : "opacity-0 translate-y-2 pointer-events-none group-hover/card:opacity-100 group-hover/card:translate-y-0 group-hover/card:pointer-events-auto"
                   }`}
                 >
-                  <button
-                    type="button"
-                    disabled={!item.in_stock || item.stock_qty <= 0}
-                    title="Add to Cart"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addToCart({
-                        id: item.id,
-                        image: item.image || "/placeholder.png",
-                        brand: "Taskco",
-                        name: item.name,
-                        price: Number(item.sale_price),
-                      });
-                    }}
-                    className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[10px] sm:text-xs font-medium py-1.5 px-1 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all disabled:opacity-50"
-                  >
-                    <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
-                    <span className="truncate">
-                      {!item.in_stock || item.stock_qty <= 0
-                        ? "Out of stock"
-                        : "Add to Cart"}
-                    </span>
-                  </button>
+                <button
+                  type="button"
+                  disabled={
+                    !item.in_stock ||
+                    item.stock_qty <= 0 ||
+                    addingToCartId === item.id
+                  }
+                  title={
+                    !item.in_stock || item.stock_qty <= 0
+                      ? "Out of stock"
+                      : cartedIds.includes(item.id)
+                        ? "Product added to cart"
+                        : "Add to Cart"
+                  }
+                  onClick={async (e) => {
+                    e.stopPropagation();
+
+                    if (!item.in_stock || item.stock_qty <= 0) return;
+                    if (addingToCartId === item.id) return;
+
+                    setAddingToCartId(item.id);
+
+                    // Show loading state
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+
+                    addToCart({
+                      id: item.id,
+                      image: item.image || "/placeholder.png",
+                      brand: "Taskco",
+                      name: item.name,
+                      price: Number(item.sale_price),
+                    });
+
+                    // Show Carted state
+                    setCartedIds((prev) =>
+                      prev.includes(item.id) ? prev : [...prev, item.id]
+                    );
+
+                    setAddingToCartId(null);
+                  }}
+                  className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-sm sm:text-xs font-medium py-1.5 px-1 sm:px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {addingToCartId === item.id ? (
+                    <>
+                      <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
+                      <span className="truncate">Adding...</span>
+                    </>
+                  ) : !item.in_stock || item.stock_qty <= 0 ? (
+                    <>
+                      <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
+                      <span className="truncate">Out of stock</span>
+                    </>
+                  ) : cartedIds.includes(item.id) ? (
+                    <>
+                      <span className="text-xs shrink-0">✓</span>
+                      <span className="truncate">Carted</span>
+                    </>
+                  ) : (
+                    <>
+                      <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
+                      <span className="truncate">Add to Cart</span>
+                    </>
+                  )}
+                </button>
                 </div>
               </div>
 

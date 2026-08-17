@@ -64,7 +64,7 @@ export default function HeroSection() {
   const heroImages = [...data.sliders];
 
   return (
-    <section className="container mx-auto px-2 md:px-16">
+    <section className="">
       <Carousel
         plugins={[plugin]}
         opts={{ loop: true }}

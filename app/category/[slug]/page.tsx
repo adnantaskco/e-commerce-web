@@ -49,7 +49,8 @@ const fetcher = (url: string) => fetch(url).then((res) => {
 
 export default function CategoryPage({ params }: CategoryPageProps) {
   const { slug } = use(params);
-  
+  const [addingToCartId, setAddingToCartId] = useState<string | number | null>(null);
+  const [cartedIds, setCartedIds] = useState<(string | number)[]>([]);
   const { addToCart } = useCart();
   const { currency } = UseCurrency();
 
@@ -222,96 +223,136 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
           {!isLoading && !error && filteredProducts.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
-              {filteredProducts.map((item) => (
-                <div
-                  key={item.id}
-                  onMouseEnter={() => setHovered(item.id)}
-                  onMouseLeave={() => setHovered(null)}
-                  onClick={() => setHovered(hovered === item.id ? null : item.id)}
-                  className="bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
-                >
-                  {/* IMAGE AREA WITH OVERLAID ACTION BUTTONS */}
-                  <div className="relative bg-background w-full flex items-center justify-center p-2 overflow-hidden h-40 sm:h-48">
-                    <img
-                      src={item.image || "/placeholder.png"}
-                      alt={item.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none"
-                    />
+              {filteredProducts.map((item) => {
+                const isInStock = item.in_stock !== false && (item.stock_qty === undefined || item.stock_qty > 0);
 
-                    {/* Discount Badge */}
-                    {item.has_discount && (
-                      <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-secondary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
-                        {item.discount_price}
-                      </div>
-                    )}
+                return (
+                  <div
+                    key={item.id}
+                    onMouseEnter={() => setHovered(item.id)}
+                    onMouseLeave={() => setHovered(null)}
+                    onClick={() => setHovered(hovered === item.id ? null : item.id)}
+                    className="bg-background rounded-lg overflow-hidden border hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group relative flex flex-col"
+                  >
+                    {/* IMAGE AREA WITH OVERLAID ACTION BUTTONS */}
+                    <div className="relative bg-background w-full flex items-center justify-center p-2 overflow-hidden h-40 sm:h-48">
+                      <img
+                        src={item.image || "/placeholder.png"}
+                        alt={item.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none"
+                      />
 
-                    {/* Overlaid Action Bar */}
-                    <div
-                      className={`absolute inset-x-0 bottom-0 p-1.5 sm:p-2 flex items-center justify-center gap-1 sm:gap-1.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent transition-all duration-300 z-20 ${
-                        hovered === item.id
-                          ? "opacity-100 translate-y-0 pointer-events-auto"
-                          : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto"
-                      }`}
-                    >
-                      {/* Add to Cart Button */}
-                      <button
-                        type="button"
-                        disabled={item.in_stock === false || (item.stock_qty !== undefined && item.stock_qty <= 0)}
-                        title="Add to Cart"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addToCart({
-                            id: item.id,
-                            image: item.image || "/placeholder.png",
-                            brand: "Taskco",
-                            name: item.name,
-                            price: Number(item.sale_price),
-                          });
-                        }}
-                        className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-[10px] sm:text-xs font-medium py-1.5 px-1 sm:px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all disabled:opacity-50"
+                      {/* Discount Badge */}
+                      {item.has_discount && (
+                        <div className="absolute top-1.5 left-1.5 z-10 bg-primary text-text-secondary text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded shadow-sm">
+                          {item.discount_price}
+                        </div>
+                      )}
+
+                      {/* Overlaid Action Bar */}
+                      <div
+                        className={`absolute inset-x-0 bottom-0 p-1.5 sm:p-2 flex items-center justify-center gap-1 sm:gap-1.5 bg-gradient-to-t from-foreground/70 via-foreground/30 to-transparent transition-all duration-300 z-20 ${
+                          hovered === item.id
+                            ? "opacity-100 translate-y-0 pointer-events-auto"
+                            : "opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto"
+                        }`}
                       >
-                        <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
-                        <span className="truncate">
-                          {item.in_stock === false || (item.stock_qty !== undefined && item.stock_qty <= 0)
-                            ? "Out of stock"
-                            : "Add to Cart"}
-                        </span>
-                      </button>
-                    </div>
-                  </div>
+                        {/* Add to Cart Button */}
+                        <button
+                          type="button"
+                          disabled={!isInStock || addingToCartId === item.id}
+                          title={
+                            !isInStock
+                              ? "Out of stock"
+                              : cartedIds.includes(item.id)
+                                ? "Product added to cart"
+                                : "Add to Cart"
+                          }
+                          onClick={async (e) => {
+                            e.stopPropagation();
 
-                  {/* DETAILS AREA */}
-                  <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h2 className="font-semibold text-text-primary text-sm sm:text-md md:text-base line-clamp-1 hover:text-primary transition">
-                        {item.name}
-                      </h2>
+                            if (!isInStock || addingToCartId === item.id) return;
 
-                      {/* Rating */}
-                      <div className="flex gap-0.5 text-yellow-400 text-[9px] sm:text-xs mt-1">
-                        {[...Array(5)].map((_, index) => (
-                          <FaStar key={index} />
-                        ))}
+                            setAddingToCartId(item.id);
+
+                            // Show loading state
+                            await new Promise((resolve) => setTimeout(resolve, 500));
+
+                            addToCart({
+                              id: item.id,
+                              image: item.image || "/placeholder.png",
+                              brand: "Taskco",
+                              name: item.name,
+                              price: Number(item.sale_price),
+                            });
+
+                            // Show Carted state
+                            setCartedIds((prev) =>
+                              prev.includes(item.id) ? prev : [...prev, item.id]
+                            );
+
+                            setAddingToCartId(null);
+                          }}
+                          className="flex-1 bg-foreground/80 hover:bg-foreground text-text-secondary text-sm sm:text-xs font-medium py-1.5 px-1 sm:px-2 rounded flex items-center justify-center gap-1 shadow hover:shadow-md active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {addingToCartId === item.id ? (
+                            <>
+                              <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
+                              <span className="truncate">Adding...</span>
+                            </>
+                          ) : !isInStock ? (
+                            <>
+                              <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
+                              <span className="truncate">Out of stock</span>
+                            </>
+                          ) : cartedIds.includes(item.id) ? (
+                            <>
+                              <span className="text-xs shrink-0">✓</span>
+                              <span className="truncate">Carted</span>
+                            </>
+                          ) : (
+                            <>
+                              <FaShoppingCart className="text-[10px] sm:text-xs shrink-0" />
+                              <span className="truncate">Add to Cart</span>
+                            </>
+                          )}
+                        </button>
                       </div>
                     </div>
 
-                    <div className="mt-2">
-                      {/* Price */}
-                      <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
-                        {item.has_discount && (
-                          <span className="line-through text-ring/70 text-[10px] sm:text-xs">
-                            {currency} {Number(item.retail_price).toFixed(0)}
+                    {/* DETAILS AREA */}
+                    <Link href={`/products/${item.slug}`} className="p-2 sm:p-3 flex-1 flex flex-col justify-between">
+                      <div>
+                        <h2 className="font-semibold text-text-primary text-sm sm:text-md md:text-base line-clamp-1 hover:text-primary transition">
+                          {item.name}
+                        </h2>
+
+                        {/* Rating */}
+                        <div className="flex gap-0.5 text-yellow-400 text-[9px] sm:text-xs mt-1">
+                          {[...Array(5)].map((_, index) => (
+                            <FaStar key={index} />
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mt-2">
+                        {/* Price */}
+                        <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+                          {item.has_discount && (
+                            <span className="line-through text-ring/70 text-sm sm:text-xs">
+                              {currency} {Number(item.retail_price).toFixed(0)}
+                            </span>
+                          )}
+
+                          <span className="font-bold text-destructive text-sm sm:text-md md:text-xl">
+                            {currency} {Number(item.sale_price).toFixed(0)}
                           </span>
-                        )}
-
-                        <span className="font-bold text-destructive text-sm sm:text-md md:text-xl">
-                          {currency} {Number(item.sale_price).toFixed(0)}
-                        </span>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
-              ))}
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
           )}
         </main>

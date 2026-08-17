@@ -90,14 +90,14 @@ export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans py-6 sm:py-10">
+    <div className="min-h-screen bg-background text-ring py-6 sm:py-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         
         {/* Navigation & Back Button */}
         <div className="mb-6">
           <Link 
             href="/blogs" 
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-full border border-emerald-200 transition-colors"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-secondary bg-background  px-3 py-1.5 rounded-full border border-emerald-200 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back To Blog
@@ -106,18 +106,18 @@ export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="bg-white border border-gray-200 rounded-2xl p-12 min-h-[400px] flex flex-col items-center justify-center text-center shadow-sm">
-            <Loader2 className="w-8 h-8 text-emerald-500 animate-spin mb-3" />
-            <p className="text-sm font-medium text-gray-500">Loading blog details...</p>
+          <div className="bg-background border  rounded-2xl p-12 min-h-[400px] flex flex-col items-center justify-center text-center shadow-sm">
+            <Loader2 className="w-8 h-8 text-primary animate-spin mb-3" />
+            <p className="text-sm font-medium text-ring">Loading blog details...</p>
           </div>
         )}
 
         {/* Error / Not Found State */}
         {(!isLoading && (error || !blog)) && (
-          <div className="bg-white border border-red-200 rounded-2xl p-12 min-h-[400px] flex flex-col items-center justify-center text-center shadow-sm">
-            <AlertCircle className="w-10 h-10 text-red-500 mb-3" />
-            <h2 className="text-base sm:text-lg font-bold text-red-600">Failed to load article</h2>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1">
+          <div className="bg-background border border-primary/20 rounded-2xl p-12 min-h-[400px] flex flex-col items-center justify-center text-center shadow-sm">
+            <AlertCircle className="w-10 h-10 text-destruction mb-3" />
+            <h2 className="text-base sm:text-lg font-bold text-destruction">Failed to load article</h2>
+            <p className="text-xs sm:text-sm text-ring/80 mt-1">
               The requested blog post could not be found or fetched.
             </p>
           </div>
@@ -125,26 +125,26 @@ export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
 
         {/* Blog Post Content */}
         {!isLoading && !error && blog && (
-          <article className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm p-6 sm:p-10 space-y-6">
+          <article className="bg-background border  rounded-2xl overflow-hidden shadow-sm p-6 sm:p-10 space-y-6">
             
             {/* Title Section */}
-            <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
+            <h1 className="text-2xl sm:text-4xl font-extrabold text-text-primary leading-tight">
               {blog.title}
             </h1>
 
             {/* Subtitle / Excerpt */}
             {(blog.excerpt || blog.short_description) && (
-              <p className="text-sm sm:text-base text-gray-500 font-medium leading-relaxed">
+              <p className="text-sm sm:text-base text-ring font-medium leading-relaxed">
                 {blog.excerpt || blog.short_description}
               </p>
             )}
 
             {/* Article Metadata Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 py-3 border-y border-gray-100 text-xs sm:text-sm text-gray-500">
+            <div className="flex flex-wrap items-center justify-between gap-4 py-3 border-y  text-xs sm:text-sm text-ring">
               <div className="flex items-center gap-4">
                 {blog.created_at && (
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-emerald-500" />
+                    <Calendar className="w-4 h-4 text-primary" />
                     {new Date(blog.created_at).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
@@ -153,14 +153,14 @@ export default function BlogDetailsPage({ params }: BlogDetailsPageProps) {
                   </span>
                 )}
                 <span className="flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-emerald-500" />
+                  <Clock className="w-4 h-4 text-primary" />
                   {blog.read_time || '2 min read'}
                 </span>
               </div>
 
               {/* Share Actions */}
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-400 text-xs mr-1 hidden sm:inline">Share:</span>
+                <span className="font-semibold text-ring text-xs mr-1 hidden sm:inline">Share:</span>
                 <button type="button" className="p-2 rounded-full bg-gray-50 hover:bg-emerald-50 hover:text-emerald-600 text-gray-500 transition-colors">
                   <FaFacebookF className="w-3.5 h-3.5" />
                 </button>

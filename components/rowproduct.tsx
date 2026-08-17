@@ -89,7 +89,7 @@ export default function RawSpcialOffersPage() {
   }
 
 return (
-  <div className="container mx-auto px-3 sm:px-4 md:px-8 lg:px-16 py-6">
+  <div className="container mx-auto px-3 sm:px-4 md:px-8 lg:px-16 ">
 
     {activeOffers.map((section, index) => (
       <React.Fragment key={section.uid}>

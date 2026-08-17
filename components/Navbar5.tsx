@@ -409,7 +409,7 @@ export default function Navbar() {
                 </span>
                 <nav className="mt-3 space-y-1">
                   <Link
-                    href="/terms-and-conditions"
+                    href="/terms-conditions"
                     onClick={() => setOpen(false)}
                     className="flex items-center gap-3.5 py-2.5 text-sm font-medium text-ring hover:text-primary transition-colors"
                   >
